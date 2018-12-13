@@ -66,12 +66,6 @@ if(close > 0){
 }
 
 if(my_health = 0){
-	for(i = 0; i < 360; i += 120){
-		with(instance_create(x, y, AcidStreak)){
-			speed = 8;
-			direction = other.i + random_range(-30, 30);
-		}
-	}
 	for(i = 0; i < 360; i += 45){
 		with(instance_create(x, y, Bullet1)){
 			creator = other;
