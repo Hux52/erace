@@ -27,6 +27,7 @@ mask_index = mskPlayer;
 
 // vars
 close = 0;
+exploded = 0;
 
 #define game_start
 // executed after picking race and starting for each player picking this race
@@ -66,6 +67,12 @@ if(close > 0){
 }
 
 if(my_health = 0){
+	for(i = 0; i < 360; i += 120){
+		with(instance_create(x, y, AcidStreak)){
+			speed = 8;
+			direction = other.i + random_range(-30, 30);
+		}
+	}
 	for(i = 0; i < 360; i += 45){
 		with(instance_create(x, y, Bullet1)){
 			creator = other;
@@ -78,6 +85,7 @@ if(my_health = 0){
 			damage = 2;
 		}
 	}
+	exploded = 1;
 }
 
 #define race_name
