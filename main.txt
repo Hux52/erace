@@ -1,4 +1,3 @@
-/loadmod erace
 /loadwep bandit
 /loadrace maggot
 /loadrace maggotspawn
@@ -13,3 +12,4 @@
 /loadrace snowbot
 /loadwep necromancer
 /loadrace necromancer
+/loadmod erace
