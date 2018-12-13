@@ -9,6 +9,7 @@
 /loadrace fastrat
 /loadrace rat
 /loadrace ratking
+/loadrace exploder
 /loadrace snowbot
 /loadwep necromancer
 /loadrace necromancer
