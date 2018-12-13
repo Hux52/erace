@@ -6,6 +6,22 @@ global.hasGenCont = false;
 // charselect sprite
 global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADMSURBVDhPzZG9DcIwEIXdsgELUMEGCDECOyCKtBkkTXZAoqJHjOMhSHfkWXrWCxgbEYIovii5u/fFP26/mpvinDPv/QDUtK8z4wUs5NAfqOg7gqpuTDlfrhHWVNIeFoEngQZvXRfgd0rAVUwjeAT9MNxDQZT8n6CfsuNsGSgJwHjBerszQJGdNlHAGvpFQW4F0wq4TA6nSAXB29eYFeABUkGCfkoAHF8oSqEBnQ9no4VXaFDnB4JPwNn9XsBtYflBUNon4XUjyHBVN3YHHHs+RZb9XysAAAAASUVORK5CYII=", 1, 0, 0);
 
+// level start init- MUST GO AT END OF INIT
+while(true){
+	// first chunk here happens at the start of the level, second happens in portal
+	if(instance_exists(GenCont)) global.newLevel = 1;
+	else if(global.newLevel){
+		global.newLevel = 0;
+		level_start();
+	}
+	var hadGenCont = global.hasGenCont;
+	global.hasGenCont = instance_exists(GenCont);
+	if (!hadGenCont && global.hasGenCont) {
+		// nothing yet
+	}
+	wait 1;
+}
+
 
 #define create
 // player instance creation of this race
@@ -38,6 +54,18 @@ loop = 0;	// looped sound
 fric = 10;	// control the player has while charging- the higher, the more control
 car = 0;	// has car or not
 lift = 0;	// lifting car duration
+
+
+
+#define level_start
+// stop charging between levels
+with(instances_matching(Player, "race", "snowbot")){
+	charge = 0;
+	canwalk = 1;
+	spr_idle = sprSnowBotIdle;
+	spr_walk = sprSnowBotWalk;
+	sound_stop(loop);
+}
 
 #define game_start
 // executed after picking race and starting for each player picking this race
@@ -172,13 +200,15 @@ if(charge > 0){
 
 // pickup car
 if(distance_to_object(Car) < 20){
-	// attempting to get car sprite- will look into this
+	// car sprite
 	var _c = instance_nearest(x, y, Car);
 	if(_c.spr_idle = sprCarIdle){
 		car = 1;
+		spr_carc = [sprSnowBotRedCarIdle, sprSnowBotRedCarWalk, sprSnowBotRedCarHurt, sprSnowBotRedCarLift, sprSnowBotRedCarThrow]
 	}
 	else{
-		car = 2;
+		car = 1;
+		spr_carc = [sprSnowBotCarIdle, sprSnowBotCarWalk, sprSnowBotCarHurt, sprSnowBotCarLift, sprSnowBotCarThrow]
 	}
 	instance_delete(_c);	// pickup car without blowing it up
 	// stop charging
@@ -194,12 +224,13 @@ if(distance_to_object(Car) < 20){
 // lifting anim
 if(lift > 0){
 	if(lift > 1){
-		spr_idle = sprSnowBotCarLift;
-		spr_walk = sprSnowBotCarLift;
+		spr_idle = spr_carc[3];
+		spr_walk = spr_carc[3];
+		spr_hurt = spr_carc[2]
 	}
 	else if(lift = 1){
-		spr_idle = sprSnowBotCarIdle;
-		spr_walk = sprSnowBotCarWalk;
+		spr_idle = spr_carc[0];
+		spr_walk = spr_carc[1];
 	}
 	lift--;
 }
@@ -322,4 +353,4 @@ switch(argument0){
 
 #define race_ttip
 // return character-specific tooltips
-return choose("WHISKERS", "RABID", "ITCHY", "RODENT");
+return choose("STEEL", "HEAVY METAL", "COMING THROUGH", "SNOWBOT CAN PICK UP CARS");

@@ -77,44 +77,46 @@ else{
 alarm[0]--;
 // right before destruction
 if(alarm[0] = 1){
-	with(Corpse){
-		// if corpse in range
-		if(place_meeting(x, y, other)){
-			o = other;	// other is revive circle
-			o.rev = true;	// prompt to make noise
-			// make freak from corpse
-			with(instance_create(x, y, CustomHitme)){
-				name = "freak";
-				creator = other.o;	// revive circle
-				grandcreator = creator.creator;	// player
-				team = creator.team;
-				spr_idle = sprFreak1Idle;
-				spr_walk = sprFreak1Walk;
-				spr_hurt = sprFreak1Hurt;
-				spr_dead = sprFreak1Dead;
-				sprite_index = spr_idle;
-				my_health = 7;
-				maxspeed = 3.6;
-				mask_index = mskFreak;
-				size = 1;
-				image_speed = 0.3;
-				spr_shadow = shd24;
-				direction = random(360);
-				move_bounce_solid(true);
-				my_damage = 3;
-				right = choose(-1, 1);
-				alarm = [0];	// movement/targeting alarm
-				on_step = script_ref_create(freak_step);
-				on_hurt = script_ref_create(freak_hurt);
-				on_destroy = script_ref_create(freak_destroy);
-				// friendly outline
-				playerColor = player_get_color(grandcreator.index);
-				toDraw = self;
-				script_bind_draw(draw_outline, depth, playerColor, toDraw);
+	if(instance_exists(enemy) or instance_exists(Portal)){	// no softlock
+		with(Corpse){
+			// if corpse in range
+			if(place_meeting(x, y, other)){
+				o = other;	// other is revive circle
+				o.rev = true;	// prompt to make noise
+				// make freak from corpse
+				with(instance_create(x, y, CustomHitme)){
+					name = "freak";
+					creator = other.o;	// revive circle
+					grandcreator = creator.creator;	// player
+					team = creator.team;
+					spr_idle = sprFreak1Idle;
+					spr_walk = sprFreak1Walk;
+					spr_hurt = sprFreak1Hurt;
+					spr_dead = sprFreak1Dead;
+					sprite_index = spr_idle;
+					my_health = 7;
+					maxspeed = 3.6;
+					mask_index = mskFreak;
+					size = 1;
+					image_speed = 0.3;
+					spr_shadow = shd24;
+					direction = random(360);
+					move_bounce_solid(true);
+					my_damage = 3;
+					right = choose(-1, 1);
+					alarm = [0];	// movement/targeting alarm
+					on_step = script_ref_create(freak_step);
+					on_hurt = script_ref_create(freak_hurt);
+					on_destroy = script_ref_create(freak_destroy);
+					// friendly outline
+					playerColor = player_get_color(grandcreator.index);
+					toDraw = self;
+					script_bind_draw(draw_outline, depth, playerColor, toDraw);
+				}
+				// effects and corpse destruction
+				instance_create(x, y, ReviveFX);
+				instance_destroy();
 			}
-			// effects and corpse destruction
-			instance_create(x, y, ReviveFX);
-			instance_destroy();
 		}
 	}
 }
