@@ -66,7 +66,7 @@ if(close > 0){
 	close--;
 }
 
-if(my_health = 0){
+if(my_health = 0 and exploded = 0){
 	for(i = 0; i < 360; i += 120){
 		with(instance_create(x, y, AcidStreak)){
 			speed = 8;
