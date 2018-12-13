@@ -26,8 +26,6 @@ spr_shadow = shd24;
 spr_shadow_y = 0;
 mask_index = mskPlayer;
 
-// vars
-
 
 #define game_start
 // executed after picking race and starting for each player picking this race
@@ -37,6 +35,8 @@ mask_index = mskPlayer;
 #define step
 // executed within each player instance of this race after step
 // most actives and passives handled here
+
+// no weps
 canswap = 0;
 canpick = 0;
 

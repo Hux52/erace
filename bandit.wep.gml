@@ -5,7 +5,7 @@
 #define step
 
 #define weapon_name
-return "BANDITRIFLE";
+return "BANDIT RIFLE";
 
 #define weapon_sprt
 return sprBanditGun;
@@ -38,7 +38,7 @@ return false;
 return "FIRE FIRST, AIM LATER";
 
 #define weapon_fire
-weapon_post(5, 30, 10);
+weapon_post(5, 30, 10);	// weapon kick and screen shake
 sound_play(sndEnemyFire);
 with instance_create(x + lengthdir_x(8, gunangle), y + lengthdir_y(8, gunangle), AllyBullet){
 	creator = other;

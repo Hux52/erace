@@ -26,8 +26,8 @@ spr_shadow_y = 0;
 mask_index = mskPlayer;
 
 // vars
-close = 0;
-exploded = 0;
+close = 0;	// timer for when close to an enemy- prevents sound spam
+exploded = 0;	// prevent extra death frames
 
 #define game_start
 // executed after picking race and starting for each player picking this race
@@ -37,9 +37,12 @@ exploded = 0;
 #define step
 // executed within each player instance of this race after step
 // most actives and passives handled here
+
+// no weps
 canswap = 0;
 canpick = 0;
 
+// face the direction you're moving in- no gun
 if(direction > 90 and direction <= 270){
 	right = -1;
 }
@@ -47,11 +50,13 @@ else{
 	right = 1;
 }
 
+// constant movement
 if(canwalk = 1){
 	move_bounce_solid(true);
 	motion_add(direction, maxspeed / 4);
 }
 
+// explode on contact- make noise when close
 if(collision_rectangle(x + 10, y + 10, x - 10, y - 10, enemy, 0, 1)){
 	my_health = 0;
 }
@@ -62,17 +67,21 @@ else if(collision_rectangle(x + 30, y + 10, x - 30, y - 10, enemy, 0, 1)){
 	}
 }
 
+// noise cooldown to prevent spam
 if(close > 0){
 	close--;
 }
 
+// on death
 if(my_health = 0 and exploded = 0){
+	// effect
 	for(i = 0; i < 360; i += 120){
 		with(instance_create(x, y, AcidStreak)){
 			speed = 8;
 			direction = other.i + random_range(-30, 30);
 		}
 	}
+	// 8 bullets
 	for(i = 0; i < 360; i += 45){
 		with(instance_create(x, y, Bullet1)){
 			creator = other;
@@ -85,7 +94,7 @@ if(my_health = 0 and exploded = 0){
 			damage = 2;
 		}
 	}
-	exploded = 1;
+	exploded = 1;	// prevent extra frames after death
 }
 
 #define race_name

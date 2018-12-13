@@ -1,4 +1,5 @@
 #define init
+// character select button
 global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACgSURBVDhPvZJBDkAwEEW7cQlHdARLibWVc3RrIy7hMlZl8Jtv0iakrZ+8hMz8J4U54jR2aF5z7CcKprF1mi8ysy7WxWBZqCzkFfAxNDHJ4x2wTAOJFqULQssx8CCW/CsAyQJ+H2UEOKsEixLeCQoQP1Qg5QTdXJ0g/VbfV5cUKS/AvQhi86BACrrE8DyfAN+c0UWB51L0v7I3fQDlDILG7f/o4UKsTVyRAAAAAElFTkSuQmCC", 1, 0, 0);
 
 
@@ -19,16 +20,17 @@ snd_hurt = sndBigMaggotHit;
 snd_dead = sndBigMaggotDie;
 
 // stats
-maxspeed = 3.4;
+maxspeed = 3;
 team = 2;
 maxhealth = 22;
 spr_shadow = shd32;
 mask_index = mskPlayer;
 
 // vars
-dig_alarm = 0;
-cooldown = 0;
-coords = [0, 0];
+dig_alarm = 0;	// digging
+cooldown = 0;	// cooldown til you can dig again
+coords = [0, 0];	// dig destination
+died = 0;	// deny extra death frames
 
 
 #define game_start
@@ -39,9 +41,12 @@ coords = [0, 0];
 #define step
 // executed within each player instance of this race after step
 // most actives and passives handled here
+
+// no weps
 canswap = 0;
 canpick = 0;
 
+// face the direction you're moving in- no gun
 if(direction > 90 and direction <= 270){
 	right = -1;
 }
@@ -49,15 +54,19 @@ else{
 	right = 1;
 }
 
+// constant movement
 if(canwalk = 1){
 	move_bounce_solid(true);
-	move_towards_point(x + lengthdir_x(maxspeed, direction), y + lengthdir_y(maxspeed, direction), maxspeed);
+	motion_add(direction, maxspeed / 4);
 }
 
+// special - burrow
 if(button_pressed(index, "spec")){
 	if(cooldown = 0 and canspec = 1){
+		// if floor inside borders...
 		if!(collision_point(mouse_x[index], mouse_y[index] - 8, Wall, false, true)){
 			if(collision_point(mouse_x[index], mouse_y[index] - 8, Floor, false, true)){
+				// start burrowing
 				spr_idle = sprBigMaggotBurrow;
 				spr_walk = sprBigMaggotBurrow;
 				image_index = 0;
@@ -65,6 +74,7 @@ if(button_pressed(index, "spec")){
 				dig_alarm = 50;
 				canwalk = 0;
 				sound_play(sndBigMaggotBurrow);
+				// log coordinates for later
 				coords[0] = mouse_x[index];
 				coords[1] = mouse_y[index] - 8;
 			}
@@ -72,32 +82,36 @@ if(button_pressed(index, "spec")){
 	}
 }
 
-if(dig_alarm = 20){
-	spr_idle = sprBigMaggotAppear;
-	spr_walk = sprBigMaggotAppear;
-	image_index = 1;
-	x = coords[0];
-	y = coords[1];
-	sound_play(sndBigMaggotUnburrow);
-}
-
-if(dig_alarm = 1){
-	cooldown = 30;
-	canwalk = 1;
-	spr_idle = sprBigMaggotIdle;
-	spr_walk = sprBigMaggotIdle;
-}
-
+// digging!
 if(dig_alarm > 0){
+	// emerging
+	if(dig_alarm = 20){
+		spr_idle = sprBigMaggotAppear;
+		spr_walk = sprBigMaggotAppear;
+		image_index = 1;
+		x = coords[0];
+		y = coords[1];
+		sound_play(sndBigMaggotUnburrow);
+	}
+	// fully out
+	else if(dig_alarm = 1){
+		cooldown = 30;
+		canwalk = 1;
+		spr_idle = sprBigMaggotIdle;
+		spr_walk = sprBigMaggotIdle;
+	}
+	// while digging
 	instance_create(x + random_range(-10, 10), y + random(5), Dust);
-	nexthurt = current_frame + 1;
+	nexthurt = current_frame + 1;	// invincibility
 	dig_alarm--;
 }
 
+// cooldown management
 if(cooldown > 0){
 	cooldown--;
 }
 
+// outgoing contact damage
 if(collision_rectangle(x + 20, y + 10, x - 20, y - 10, enemy, 0, 1)){
 	with(instance_nearest(x, y, enemy)){
 		if(sprite_index != spr_hurt){
@@ -109,9 +123,9 @@ if(collision_rectangle(x + 20, y + 10, x - 20, y - 10, enemy, 0, 1)){
 	}
 }
 
-if(my_health = 0){
-	race = "maggot";
-	my_health = 2;
+// on death
+if(my_health = 0 and died = 0){
+	// effects
 	repeat(3){
 		instance_create(x, y, MeatExplosion);
 	}
@@ -121,6 +135,7 @@ if(my_health = 0){
 			direction = other.i + random_range(-30, 30);
 		}
 	}
+	// spawn maggots
 	repeat(5){
 		with(instance_create(x, y, CustomHitme)){
 			name = "Maggot";
@@ -141,26 +156,30 @@ if(my_health = 0){
 			move_bounce_solid(true);
 			my_damage = 1;
 			right = choose(-1, 1);
-			alarm = [0];
+			alarm = [0];	// walking/targeting alarm
 			on_step = script_ref_create(maggot_step);
 			on_hurt = script_ref_create(maggot_hurt);
 			on_destroy = script_ref_create(maggot_destroy);
+			// outline for friendly distinction
 			playerColor = player_get_color(creator.index);
 			toDraw = self;
 			script_bind_draw(draw_outline, depth, playerColor, toDraw);
 		}
 	}
+	died = 1;
+	// become small maggot
+	race = "maggot";
+	my_health = 2;
 }
 
 #define maggot_step
 if(my_health > 0){
-
-	// speed
+	// speed management
 	if(speed > maxspeed){
 		speed = maxspeed;
 	}
 	
-	// collision stuff and variables
+	// collision stuff
 	move_bounce_solid(true);
 	
 	// sprite stuff
@@ -170,15 +189,14 @@ if(my_health > 0){
 	else if(sprite_index != spr_hurt){
 		sprite_index = spr_idle;
 	}
-	
+	// face direction...
 	if(direction > 90 and direction <= 270){
 		right = -1;
 	}
 	else{
 		right = 1;
 	}
-	
-	// face right or left
+	// ...cont
 	if(right = 1){
 		image_xscale = 1;
 	}
@@ -187,7 +205,7 @@ if(my_health > 0){
 	}
 
 
-	// deciding what to target
+	// targeting
 	if(instance_exists(enemy)){
 		var _e = instance_nearest(x, y, enemy);
 		if(distance_to_object(_e) < 100 and !collision_line(x, y, _e.x, _e.y, Wall, true, true)){
@@ -201,27 +219,27 @@ if(my_health > 0){
 		target = noone;
 	}
 	
-
 	// movement
-	if(target = noone){
+	if(target = noone){	// no target- random movement
 		if(alarm[0] = 0){
 			direction = random(360);
 			move_bounce_solid(true);
 			motion_add(direction, maxspeed);
-			alarm[0] = irandom_range(20, 90);
+			alarm[0] = irandom_range(20, 40);
 		}
 	}
 	else{
-		if(alarm[0] = 0){
+		if(alarm[0] = 0){	// target- go for it!
 			direction = point_direction(x, y, target.x, target.y) + random_range(-20, 20);
 			move_bounce_solid(true);
 			motion_add(direction, maxspeed);
-			alarm[0] = irandom_range(20, 50);
+			alarm[0] = irandom_range(30, 50);
 		}
 	}
 
 
 	var _w = instance_nearest(x, y, Wall);
+	// OLD WALL COLLISION DEBUG
 	/*if(collision_rectangle(_w.x, _w.y + 15, _w.x + 15, _w.y, self, false, false)){
 		//trace("hit wall");		// debug
 		var _f = instance_nearest(x, y, Floor);
@@ -229,6 +247,7 @@ if(my_health > 0){
 		y = _f.y + 8;
 	}*/
 
+	// stop showing hurt sprite
 	if(sprite_index = spr_hurt and image_index >= 2){
 		sprite_index = spr_idle;
 	}
@@ -239,6 +258,8 @@ if(my_health > 0){
 			alarm[i]--;
 		}
 	}
+	
+	// outgoing/incoming contact damage
 	if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
 		with(instance_nearest(x, y, enemy)){
 			if(sprite_index != spr_hurt){
@@ -254,12 +275,14 @@ else{
 }
 
 #define maggot_destroy
+// create corpse
 with(instance_create(x, y, Corpse)){
 	sprite_index = sprMaggotDead;
 	size = 1;
 }
 
 #define maggot_hurt(damage, kb_vel, kb_dir)
+// incoming damage
 if(sprite_index != spr_hurt){
 	my_health -= argument0;
 	motion_add(argument2, argument1);

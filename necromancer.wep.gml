@@ -11,19 +11,19 @@ return "NECRO GUN";
 return sprNecrogun;
 
 #define weapon_type
-return 0;
+return 0;	// "melee"
 
 #define weapon_auto
 return false;
 
 #define weapon_load
-return 58;
+return 58;	// reload
 
 #define weapon_cost
-return 0;
+return 0;	// no ammo cost
 
 #define weapon_area
-return -1;
+return -1;	// never drop
 
 #define weapon_swap
 return sndSwapEnergy;
@@ -38,9 +38,11 @@ return false;
 return "RISE FROM YOUR GRAVE";
 
 #define weapon_fire
+// if mouse on floor inside boundaries
 if!(collision_point(mouse_x[index], mouse_y[index] - 8, Wall, false, true)){
 	if(collision_point(mouse_x[index], mouse_y[index] - 8, Floor, false, true)){
 		weapon_post(5, 0, 0);
+		// create revive area
 		with(instance_create(mouse_x, mouse_y, CustomProjectile)){
 			name = "revarea";
 			creator = other;
@@ -48,8 +50,8 @@ if!(collision_point(mouse_x[index], mouse_y[index] - 8, Wall, false, true)){
 			sprite_index = sprReviveArea;
 			mask_index = mskReviveArea;
 			image_speed = 0.5;
-			alarm = [50];
-			rev = false;
+			alarm = [50];	// time til revive occurs
+			rev = false;	// noise prompt
 			on_wall = script_ref_create(revarea_wall);
 			on_hit = script_ref_create(revarea_hit);
 			on_step = script_ref_create(revarea_step);
@@ -58,26 +60,33 @@ if!(collision_point(mouse_x[index], mouse_y[index] - 8, Wall, false, true)){
 	}
 }
 else{
-	reload = 0;
+	reload = 0;	// refund reload upon clicking outside border/wall
 }
 
+
 #define revarea_wall
-// nothing
+// nothing- prevents projectile from being destroyed
+
 
 #define revarea_hit
-// nothing
+// nothing- prevents projectile from being destroyed
+
 
 #define revarea_step
+// alarm management
 alarm[0]--;
+// right before destruction
 if(alarm[0] = 1){
 	with(Corpse){
+		// if corpse in range
 		if(place_meeting(x, y, other)){
-			o = other;
-			o.rev = true;
+			o = other;	// other is revive circle
+			o.rev = true;	// prompt to make noise
+			// make freak from corpse
 			with(instance_create(x, y, CustomHitme)){
 				name = "freak";
-				creator = other.o;
-				grandcreator = creator.creator;
+				creator = other.o;	// revive circle
+				grandcreator = creator.creator;	// player
 				team = creator.team;
 				spr_idle = sprFreak1Idle;
 				spr_walk = sprFreak1Walk;
@@ -94,41 +103,43 @@ if(alarm[0] = 1){
 				move_bounce_solid(true);
 				my_damage = 3;
 				right = choose(-1, 1);
-				alarm = [0];	// 7 - 10
+				alarm = [0];	// movement/targeting alarm
 				on_step = script_ref_create(freak_step);
 				on_hurt = script_ref_create(freak_hurt);
 				on_destroy = script_ref_create(freak_destroy);
+				// friendly outline
 				playerColor = player_get_color(grandcreator.index);
 				toDraw = self;
 				script_bind_draw(draw_outline, depth, playerColor, toDraw);
 			}
+			// effects and corpse destruction
 			instance_create(x, y, ReviveFX);
 			instance_destroy();
 		}
 	}
 }
-
+// destroy circle
 if(alarm[0] <= 0){
 	instance_destroy();
 }
 
 #define revarea_destroy
+// play sound if prompted
 if(rev = true){
 	sound_play(sndNecromancerRevive);
 }
 
 #define freak_step
 if(my_health > 0){
-
-	// speed
+	// speed management
 	if(speed > maxspeed){
 		speed = maxspeed;
 	}
 	
-	// collision stuff and variables
+	// collision
 	move_bounce_solid(true);
 	
-	// sprite stuff
+	// sprite facing based on direction
 	if(speed > 0 and sprite_index != spr_hurt){
 		sprite_index = spr_walk;
 	}
@@ -142,7 +153,6 @@ if(my_health > 0){
 	else{
 		right = 1;
 	}
-	
 	// face right or left
 	if(right = 1){
 		image_xscale = 1;
@@ -151,8 +161,7 @@ if(my_health > 0){
 		image_xscale = -1;
 	}
 
-
-	// deciding what to target
+	// targeting
 	if(instance_exists(enemy)){
 		var _e = instance_nearest(x, y, enemy);
 		if(distance_to_object(_e) < 200 and !collision_line(x, y, _e.x, _e.y, Wall, true, true)){
@@ -167,7 +176,7 @@ if(my_health > 0){
 	}
 
 	// movement
-	if(target = noone){
+	if(target = noone){	// no target, random movement
 		if(alarm[0] = 0){
 			direction = random(360);
 			move_bounce_solid(true);
@@ -176,7 +185,7 @@ if(my_health > 0){
 		}
 	}
 	else{
-		if(alarm[0] = 0){
+		if(alarm[0] = 0){	// target, persue
 			direction = point_direction(x, y, target.x, target.y) + random_range(-50, 50);
 			move_bounce_solid(true);
 			motion_add(direction, maxspeed);
@@ -186,6 +195,7 @@ if(my_health > 0){
 
 
 	var _w = instance_nearest(x, y, Wall);
+	// OLD WALL DEBUG
 	/*if(collision_rectangle(_w.x, _w.y + 15, _w.x + 15, _w.y, self, false, false)){
 		//trace("hit wall");		// debug
 		var _f = instance_nearest(x, y, Floor);
@@ -193,6 +203,7 @@ if(my_health > 0){
 		y = _f.y + 8;
 	}*/
 
+	// stop hit sprite
 	if(sprite_index = spr_hurt and image_index >= 2){
 		sprite_index = spr_idle;
 	}
@@ -203,6 +214,8 @@ if(my_health > 0){
 			alarm[i]--;
 		}
 	}
+	
+	// incoming/outgoing contact damage
 	if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
 		with(instance_nearest(x, y, enemy)){
 			if(sprite_index != spr_hurt){
@@ -222,12 +235,14 @@ else{
 }
 
 #define freak_destroy
+// make corpse
 with(instance_create(x, y, Corpse)){
 	sprite_index = sprFreak1Dead;
 	size = 1;
 }
 
 #define freak_hurt(damage, kb_vel, kb_dir)
+// incoming damage
 if(sprite_index != spr_hurt){
 	my_health -= argument0;
 	motion_add(argument2, argument1);

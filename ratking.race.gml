@@ -31,9 +31,11 @@ spr_shadow_y = 0;
 spr_shadow = shd24;
 mask_index = mskPlayer;
 
-spawn_cool = 0;
-charge_cool = 0;
-spawns = 3;
+// vars
+spawn_cool = 0;	// spawn cooldown
+charge_cool = 0;	// charge cooldown
+died = 0;	// prevent frames after death
+
 
 #define game_start
 // executed after picking race and starting for each player picking this race
@@ -43,13 +45,12 @@ spawns = 3;
 #define step
 // executed within each player instance of this race after step
 // most actives and passives handled here
+
+// no weps
 canswap = 0;
 canpick = 0;
 
-// spawns 4 rats at a time
-// gets 3 spawns
-// spawns 5 after charge
-
+// special- exchange rats for health
 if(button_pressed(index, "spec")){
 	if(canspec = 1){
 		if(spawn_cool = 0 and charge_cool = 0 and my_health > 4){
@@ -59,91 +60,101 @@ if(button_pressed(index, "spec")){
 		}
 	}
 }
+
+if(spawn_cool > 0){
+	if(spawn_cool > 60){
+		// burst spawn of rats
+		if(spawn_cool = 90 or spawn_cool = 85 or spawn_cool = 80 or spawn_cool = 75){
+			with(instance_create(x, y, CustomHitme)){
+				name = "Fastrat";
+				creator = other;
+				team = creator.team;
+				spr_idle = sprFastRatIdle;
+				spr_walk = sprFastRatWalk;
+				spr_hurt = sprFastRatHurt;
+				spr_dead = sprFastRatDead;
+				snd_hurt = sndFastRatHit;
+				snd_dead = sndFastRatDie;
+				sprite_index = spr_idle;
+				my_health = 7;
+				maxspeed = 4;
+				mask_index = mskMaggot;
+				size = 1;
+				image_speed = 0.3;
+				spr_shadow = shd24;
+				direction = random(360);
+				move_bounce_solid(true);
+				my_damage = 2;
+				right = choose(-1, 1);
+				alarm = [0, 900];	// movement and age
+				on_step = script_ref_create(fastrat_step);
+				on_hurt = script_ref_create(fastrat_hurt);
+				on_destroy = script_ref_create(fastrat_destroy);
+				// friendly outline
+				playerColor = player_get_color(grandcreator.index);
+				toDraw = self;
+				script_bind_draw(draw_outline, depth, playerColor, toDraw);
+			}
+		}
+		// no control while spawning
+		canwalk = 0;
+		move_bounce_solid(true);
+		move_towards_point(x + lengthdir_x(maxspeed - 2, direction), y + lengthdir_y(maxspeed - 2, direction), maxspeed - 2);
+		spr_idle = sprRatkingFire;
+		spr_walk = sprRatkingFire;
+	}
+	else if(spawn_cool = 60){
+		// back to normal
+		canwalk = 1;
+		spr_idle = sprRatkingIdle;
+		spr_walk = sprRatkingWalk;
+	}
+	spawn_cool--;	// cooldown
+}
+
+// special b- self destruct charge
 if(button_pressed(index, "fire") and spawn_cool <= 60){
 	sound_play(sndRatkingCharge);
 	charge_cool = 90;
 }
 
+// if charging
 if(charge_cool > 0){
-	canwalk = 0;
+	canwalk = 0;	// lose control
 	charge_cool--;
 	spr_walk = sprRatkingRageAttack;
 	spr_idle = sprRatkingRageAttack;
 	move_towards_point(x + lengthdir_x(maxspeed + 3, direction), y + lengthdir_y(maxspeed + 3, direction), maxspeed + 3);
+	// destroy walls
 	var _w = instance_nearest(x, y, Wall);
-	if(distance_to_object(_w) < 20){
-		with(_w){
-			instance_create(x, y, FloorExplo);
-			instance_destroy();
+	if(instance_exists(_w)){
+		if(distance_to_object(_w) < 20){
+			with(_w){
+				instance_create(x, y, FloorExplo);
+				instance_destroy();
+			}
 		}
 	}
-}
-
-if(spawns = 0){
-	spr_idle = sprRatkingRageWait;
-}
-
-if((charge_cool % 30) = 0 and charge_cool != 90 and canwalk = 0 and charge_cool != 0){
-	sound_play(sndRatkingCharge);
-	direction = random(360);
-}
-
-if(spawn_cool = 90 or spawn_cool = 85 or spawn_cool = 80 or spawn_cool = 75){
-	with(instance_create(x, y, CustomHitme)){
-		name = "Fastrat";
-		creator = other;
-		team = creator.team;
-		spr_idle = sprFastRatIdle;
-		spr_walk = sprFastRatWalk;
-		spr_hurt = sprFastRatHurt;
-		spr_dead = sprFastRatDead;
-		snd_hurt = sndFastRatHit;
-		snd_dead = sndFastRatDie;
-		sprite_index = spr_idle;
-		my_health = 7;
-		maxspeed = 4;
-		mask_index = mskMaggot;
-		size = 1;
-		image_speed = 0.3;
-		spr_shadow = shd24;
-		direction = random(360);
-		move_bounce_solid(true);
-		my_damage = 2;
-		right = choose(-1, 1);
-		alarm = [0, 900];
-		on_step = script_ref_create(fastrat_step);
-		on_hurt = script_ref_create(fastrat_hurt);
-		on_destroy = script_ref_create(fastrat_destroy);
-	}
-}
-
-if(spawn_cool > 60){
-	canwalk = 0;
-	move_bounce_solid(true);
-	move_towards_point(x + lengthdir_x(maxspeed - 2, direction), y + lengthdir_y(maxspeed - 2, direction), maxspeed - 2);
-	spr_idle = sprRatkingFire;
-	spr_walk = sprRatkingFire;
-}
-
-if(spawn_cool = 60){
-	canwalk = 1;
-	spr_idle = sprRatkingIdle;
-	spr_walk = sprRatkingWalk;
-	if(spawns = 0){
+	// change charge directions
+	if((charge_cool % 30) = 0 and charge_cool != 90 and canwalk = 0){
 		sound_play(sndRatkingCharge);
+		direction = random(360);
 	}
 }
 
-if(spawn_cool > 0){
-	spawn_cool--;
+// death on charge end
+if(charge_cool = 1){
+	charge_cool = -1;
+	sound_play(snd_dead);
+	my_health = 0;
 }
 
-
-
+// outgoing contact damage
 if(collision_rectangle(x + 15, y + 15, x - 15, y - 10, enemy, 0, 1)){
 	with(instance_nearest(x, y, enemy)){
 		if(sprite_index != spr_hurt){
 			my_health -= 1;
+			// increased damage on rage charge
 			if(other.charge_cool > 0){
 				my_health -= 3;
 			}
@@ -153,28 +164,24 @@ if(collision_rectangle(x + 15, y + 15, x - 15, y - 10, enemy, 0, 1)){
 	}
 }
 
-if(charge_cool = 1){
-	charge_cool = -1;
-	sound_play(snd_dead);
-	my_health = 0;
-}
-
-if(my_health = 0){
+// on death
+if(my_health = 0 and died = 0){
 	for(i = 0; i < 360; i += 72){
 		with(instance_create(x, y, AcidStreak)){
 			speed = 8;
 			direction = other.i + random_range(-30, 30);
 		}
 	}
+	// if died from rage...
 	if(charge_cool = -1){
+		// destroy nearby walls
 		with(Wall){
 			if(distance_to_object(other) < 100){
 				instance_create(x, y, FloorExplo);
 				instance_destroy();
 			}
 		}
-		race = "fastrat";
-		my_health = 7;
+		// spawn rats
 		repeat(4){
 			with(instance_create(x, y, CustomHitme)){
 				name = "Fastrat";
@@ -197,33 +204,38 @@ if(my_health = 0){
 				move_bounce_solid(true);
 				my_damage = 2;
 				right = choose(-1, 1);
-				alarm = [0, 900];
+				alarm = [0, 900];	// movement and age
 				on_step = script_ref_create(fastrat_step);
 				on_hurt = script_ref_create(fastrat_hurt);
 				on_destroy = script_ref_create(fastrat_destroy);
+				// friendly outline
 				player_get_color(creator.index);
 				toDraw = self;
 				script_bind_draw(draw_outline, depth, playerColor, toDraw);
 			}
 		}
+		// become a fast rat
+		race = "fastrat";
+		my_health = 7;
 	}
+	died = 1;
 }
 
 
 #define fastrat_step
 if(my_health > 0){
-	// speed
+	// speed management
 	if(speed > maxspeed){
 		speed = maxspeed;
 	}
 
-	// age
+	// age management
 	alarm[1]--;
 
-	// collision stuff and variables
+	// collision
 	move_bounce_solid(true);
 	
-	// sprite stuff
+	// sprite facing based on direction
 	if(speed > 0 and sprite_index != spr_hurt){
 		sprite_index = spr_walk;
 	}
@@ -237,7 +249,6 @@ if(my_health > 0){
 	else{
 		right = 1;
 	}
-	
 	// face right or left
 	if(right = 1){
 		image_xscale = 1;
@@ -245,9 +256,8 @@ if(my_health > 0){
 	else{
 		image_xscale = -1;
 	}
-
-
-	// deciding what to target
+	
+	// targeting
 	if(instance_exists(enemy)){
 		var _e = instance_nearest(x, y, enemy);
 		if(distance_to_object(_e) < 200 and !collision_line(x, y, _e.x, _e.y, Wall, true, true)){
@@ -262,7 +272,7 @@ if(my_health > 0){
 	}
 
 	// movement
-	if(target = noone){
+	if(target = noone){	// no target, wander
 		if(alarm[0] = 0){
 			direction = random(360);
 			move_bounce_solid(true);
@@ -276,23 +286,24 @@ if(my_health > 0){
 		}
 	}
 	else{
-		if(alarm[0] = 0){
+		if(alarm[0] = 0){	// target, persue
 			direction = point_direction(x, y, target.x, target.y) + random_range(-20, 20);
 			move_bounce_solid(true);
 			motion_add(direction, maxspeed);
-			alarm[0] = irandom_range(20, 50);
+			alarm[0] = irandom_range(40, 80);
 		}
 	}
 
-
-	var _w = instance_nearest(x, y, Wall);
-	/*if(collision_rectangle(_w.x, _w.y + 15, _w.x + 15, _w.y, self, false, false)){
+	// OLD WALL DEBUG
+	/*var _w = instance_nearest(x, y, Wall);
+	if(collision_rectangle(_w.x, _w.y + 15, _w.x + 15, _w.y, self, false, false)){
 		//trace("hit wall");		// debug
 		var _f = instance_nearest(x, y, Floor);
 		x = _f.x + 8;
 		y = _f.y + 8;
 	}*/
 
+	// stop hurt sprite
 	if(sprite_index = spr_hurt and image_index >= 2){
 		sprite_index = spr_idle;
 	}
@@ -303,6 +314,8 @@ if(my_health > 0){
 			alarm[i]--;
 		}
 	}
+	
+	// incoming/outgoing contact damage
 	if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
 		with(instance_nearest(x, y, enemy)){
 			if(sprite_index != spr_hurt){
@@ -313,6 +326,8 @@ if(my_health > 0){
 			}
 		}
 	}
+	
+	// death from aging
 	if(alarm[1] <= 0){
 		my_health = 0;
 	}
@@ -322,17 +337,21 @@ else{
 }
 
 #define fastrat_destroy
+// effects
 with(instance_create(x, y, AcidStreak)){
 	speed = 8;
 	direction = other.direction;
 }
 sound_play(sndFastRatDie);
+
+// corpse
 with(instance_create(x, y, Corpse)){
 	sprite_index = sprFastRatDead;
 	size = 1;
 }
 
 #define fastrat_hurt(damage, kb_vel, kb_dir)
+// incoming damage
 if(sprite_index != spr_hurt){
 	sound_play(sndFastRatHit);
 	my_health -= argument0;

@@ -27,9 +27,10 @@ spr_shadow_y = 5;
 mask_index = mskPlayer;
 
 // vars
-cooldown = 0;
-venom = 0;
-dir = 0;
+cooldown = 0;	// cooldown for shooting
+venom = 0;	// shooting duration
+dir = 0;	// initial firing direction
+died = 0;	// prevent frames after death
 
 
 #define game_start
@@ -40,22 +41,27 @@ dir = 0;
 #define step
 // executed within each player instance of this race after step
 // most actives and passives handled here
+
+// no weps
 canswap = 0;
 canpick = 0;
 
+// special- shoot venom
 if(button_pressed(index, "spec")){
 	if(cooldown = 0){
-		cooldown = 90;
-		venom = 25;
-		dir = gunangle;
+		cooldown = 90;	// shoot venom again in 90 frames
+		venom = 25;	// shoot venom for 25 frames
+		dir = gunangle;	// initial direction, as you can't change firing direction once started
 		spr_idle = sprGoldScorpionFire;
 		spr_walk = sprGoldScorpionFire;
-		sound_play_pitch(sndScorpionFireStart, 0.7);
+		sound_play_pitch(sndScorpionFireStart, 0.7);	// can't find the sound file for this, if any
 	}
 }
 
+// while firing
 if(venom > 0){
-	canwalk = 0;
+	canwalk = 0;	// no walking
+	// sprite based on direction, as you can't fire right now
 	if(dir > 90 and dir <= 270){
 		right = -1;
 	}
@@ -63,6 +69,7 @@ if(venom > 0){
 		right = 1;
 	}
 	sound_play_gun(sndScorpionFire, 0.2, 0.6);
+	// ambient, slow spread of bullets
 	with(instance_create(x, y, Bullet1)){
 		var acc = 80;
 		creator = other;
@@ -74,6 +81,7 @@ if(venom > 0){
 		speed = 2;
 		damage = 2;
 	}
+	// fast, concentrated bullets
 	with(instance_create(x, y, Bullet1)){
 		var acc = 20;
 		creator = other;
@@ -88,15 +96,18 @@ if(venom > 0){
 	venom--;
 }
 else{
+	// fix sprites when not firing
 	spr_idle = sprGoldScorpionIdle;
 	spr_walk = sprGoldScorpionWalk;
 	canwalk = 1;
 }
 
+// cooldown management
 if(cooldown > 0){
 	cooldown--;
 }
 
+// outgoing contact damage
 if(collision_rectangle(x + 20, y + 10, x - 20, y - 10, enemy, 0, 1)){
 	with(instance_nearest(x, y, enemy)){
 		if(sprite_index != spr_hurt){
@@ -108,7 +119,9 @@ if(collision_rectangle(x + 20, y + 10, x - 20, y - 10, enemy, 0, 1)){
 	}
 }
 
-if(my_health = 0){
+// on death
+if(my_health = 0 and died = 0){
+	// bullets
 	for(i = 0; i < 360; i += 5){
 		with(instance_create(x, y, Bullet1)){
 			creator = other;
@@ -121,12 +134,14 @@ if(my_health = 0){
 			damage = 2;
 		}
 	}
+	// effect
 	for(i = 0; i < 360; i += 120){
 		with(instance_create(x, y, AcidStreak)){
 			speed = 8;
 			direction = other.i + random_range(-30, 30);
 		}
 	}
+	died = 1;
 }
 
 #define race_name

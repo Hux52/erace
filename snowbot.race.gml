@@ -32,12 +32,12 @@ spr_shadow = shd24;
 mask_index = mskPlayer;
 
 // vars
-spr_fire = sprSnowBotFire;
-charge = 0;
-loop = 0;
-fric = 10;
-car = 0;
-lift = 0;
+spr_fire = sprSnowBotFire;	// charging sprite
+charge = 0;	// charging duration
+loop = 0;	// looped sound
+fric = 10;	// control the player has while charging- the higher, the more control
+car = 0;	// has car or not
+lift = 0;	// lifting car duration
 
 #define game_start
 // executed after picking race and starting for each player picking this race
@@ -47,9 +47,12 @@ lift = 0;
 #define step
 // executed within each player instance of this race after step
 // most actives and passives handled here
+
+// no wep
 canswap = 0;
 canpick = 0;
 
+// sprite faces direction when unequipped, as you have no weapon
 if(car = 0){
 	if(direction > 90 and direction <= 270){
 		right = -1;
@@ -59,9 +62,10 @@ if(car = 0){
 	}
 }
 
-
+// special- charge
 if(button_pressed(index, "spec")){
-	if(canspec = 1 and charge = 0 and car = 0){
+	if(canspec = 1 and charge = 0 and car = 0){	// if no car and not already charging
+		// charge init
 		spr_idle = spr_fire;
 		spr_walk = spr_fire;
 		sound_play(sndSnowBotSlideStart);
@@ -70,100 +74,105 @@ if(button_pressed(index, "spec")){
 	}
 }
 
-if(charge > 1){
-	canwalk = 0;
-	if(button_check(index, "nort")){
-		if(button_check(index, "east")){
-			if(direction > 45 and direction < 225){
-				direction -= fric;
-			}
-			else{
-				direction += fric;
-			}
-		}
-		else if(button_check(index, "west")){
-			if(direction > 135 and direction < 315){
-				direction -= fric;
-			}
-			else{
-				direction += fric;
-			}
-		}
-		else{
-			if(direction > 85 and direction < 265){
-				direction -= fric;
-			}
-			else{
-				direction += fric;
-			}
-		}
-	}
-	else if(button_check(index, "sout")){
-		if(button_check(index, "east")){
-			if(direction < 315 and direction > 135){
-				direction += fric;
-			}
-			else{
-				direction -= fric;
-			}
-		}
-		else if(button_check(index, "west")){
-			if(direction < 225 and direction > 45){
-				direction += fric;
-			}
-			else{
-				direction -= fric;
-			}
-		}
-		else{
-			if(direction < 265 and direction > 85){
-				direction += fric;
-			}
-			else{
-				direction -= fric;
-			}
-		}
-	}
-	else if(button_check(index, "east")){
-		if(direction > 0 and direction < 180){
-			direction -= fric;
-		}
-		else{
-			direction += fric;
-		}
-	}
-	else if(button_check(index, "west")){
-		if(direction > 180 and direction < 360){
-			direction -= fric;
-		}
-		else{
-			direction += fric;
-		}
-	}
-	motion_add(direction, maxspeed + 4);
-	instance_create(x, y, Dust);
-	if(collision_rectangle(x + 15, y + 15, x - 15, y - 10, enemy, 0, 1)){
-		with(instance_nearest(x, y, enemy)){
-			if(sprite_index != spr_hurt){
-				my_health -= 4;
-				sound_play(snd_hurt);
-				sprite_index = spr_hurt;
-			}
-		}
-	}
-}
-else if(charge = 1){
-	canwalk = 1;
-	spr_idle = sprSnowBotIdle;
-	spr_walk = sprSnowBotWalk;
-	sound_stop(loop);
-}
-
 if(charge > 0){
+	// if charging
+	if(charge > 1){
+		// disable normal controls
+		canwalk = 0;
+		// crazy bullshit for limited control
+		if(button_check(index, "nort")){
+			if(button_check(index, "east")){
+				if(direction > 45 and direction < 225){
+					direction -= fric;
+				}
+				else{
+					direction += fric;
+				}
+			}
+			else if(button_check(index, "west")){
+				if(direction > 135 and direction < 315){
+					direction -= fric;
+				}
+				else{
+					direction += fric;
+				}
+			}
+			else{
+				if(direction > 85 and direction < 265){
+					direction -= fric;
+				}
+				else{
+					direction += fric;
+				}
+			}
+		}
+		else if(button_check(index, "sout")){
+			if(button_check(index, "east")){
+				if(direction < 315 and direction > 135){
+					direction += fric;
+				}
+				else{
+					direction -= fric;
+				}
+			}
+			else if(button_check(index, "west")){
+				if(direction < 225 and direction > 45){
+					direction += fric;
+				}
+				else{
+					direction -= fric;
+				}
+			}
+			else{
+				if(direction < 265 and direction > 85){
+					direction += fric;
+				}
+				else{
+					direction -= fric;
+				}
+			}
+		}
+		else if(button_check(index, "east")){
+			if(direction > 0 and direction < 180){
+				direction -= fric;
+			}
+			else{
+				direction += fric;
+			}
+		}
+		else if(button_check(index, "west")){
+			if(direction > 180 and direction < 360){
+				direction -= fric;
+			}
+			else{
+				direction += fric;
+			}
+		}
+		motion_add(direction, maxspeed + 4);
+		instance_create(x, y, Dust);
+		if(collision_rectangle(x + 15, y + 15, x - 15, y - 10, enemy, 0, 1)){
+			with(instance_nearest(x, y, enemy)){
+				if(sprite_index != spr_hurt){
+					my_health -= 4;
+					sound_play(snd_hurt);
+					sprite_index = spr_hurt;
+				}
+			}
+		}
+	}
+	else if(charge = 1){
+		// charge end, return to normal
+		canwalk = 1;
+		spr_idle = sprSnowBotIdle;
+		spr_walk = sprSnowBotWalk;
+		sound_stop(loop);
+	}
 	charge--;
 }
 
+// pickup car
 if(distance_to_object(Car) < 20){
+	// attempting to get car sprite- will look into this
 	var _c = instance_nearest(x, y, Car);
 	if(_c.spr_idle = sprCarIdle){
 		car = 1;
@@ -171,16 +180,18 @@ if(distance_to_object(Car) < 20){
 	else{
 		car = 2;
 	}
-	instance_delete(_c);
+	instance_delete(_c);	// pickup car without blowing it up
+	// stop charging
 	charge = 0;
 	canwalk = 1;
 	spr_idle = sprSnowBotIdle;
 	spr_walk = sprSnowBotWalk;
 	sound_stop(loop);
+	// start lifting anim
 	lift = 6;
 }
 
-
+// lifting anim
 if(lift > 0){
 	if(lift > 1){
 		spr_idle = sprSnowBotCarLift;
@@ -193,21 +204,25 @@ if(lift > 0){
 	lift--;
 }
 
-if(button_pressed(index, "spec")){
+// spec b- throw car
+if(button_pressed(index, "spec") or button_pressed(index, "fire")){	// included fire as this can be confusing
 	if(lift = 0 and car = 1){
 		spr_idle = sprSnowBotIdle;
 		spr_walk = sprSnowBotWalk;
+		// car projectile creation
 		with(instance_create(x + lengthdir_x(10, gunangle), y + lengthdir_y(10, gunangle), CarThrow)){
 			creator = other;
 			team = other;
-			speed = 12;
+			speed = 18;
 			direction = other.gunangle;
 			image_angle = direction;
 		}
+		// no longer has car
 		car = 0;
 	}
 }
 
+// stop that infernal racket
 if(my_health = 0){
 	sound_stop(loop);
 }

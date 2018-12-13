@@ -26,7 +26,9 @@ maxhealth = 7;
 spr_shadow_y = 0;
 mask_index = mskPlayer;
 canwalk = 1;
-age = 900;
+
+// vars
+age = 900;	// die in 30 seconds
 
 
 #define game_start
@@ -37,9 +39,12 @@ age = 900;
 #define step
 // executed within each player instance of this race after step
 // most actives and passives handled here
+
+// no weps
 canswap = 0;
 canpick = 0;
 
+// face direction you're moving in- no weps
 if(direction > 90 and direction <= 270){
 	right = -1;
 }
@@ -47,6 +52,7 @@ else{
 	right = 1;
 }
 
+// outgoing contact damage
 if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 	with(instance_nearest(x, y, enemy)){
 		if(sprite_index != spr_hurt){
@@ -58,13 +64,15 @@ if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 	}
 }
 
+// age management and consequence
 age--;
-
 if(age = 0){
 	my_health = 0;
 }
 
+// on death
 if(my_health = 0){
+	// effect
 	with(instance_create(x, y, AcidStreak)){
 		speed = 8;
 		direction = other.direction;

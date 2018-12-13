@@ -15,7 +15,7 @@ spr_sit1 = sprMutant15GoSit;
 spr_sit2 = sprMutant15Sit;
 
 // stats
-maxspeed = 3;
+maxspeed = 2.5;
 team = 2;
 maxhealth = 2;
 spr_shadow = shd16;
@@ -32,9 +32,12 @@ canwalk = 1;
 #define step
 // executed within each player instance of this race after step
 // most actives and passives handled here
+
+// no weps
 canswap = 0;
 canpick = 0;
 
+// face direction you're moving in, as you have no weps
 if(direction > 90 and direction <= 270){
 	right = -1;
 }
@@ -42,11 +45,13 @@ else{
 	right = 1;
 }
 
+// constant movement
 if(canwalk = 1){
 	move_bounce_solid(true);
-	move_towards_point(x + lengthdir_x(maxspeed, direction), y + lengthdir_y(maxspeed, direction), maxspeed);
+	motion_add(direction, maxspeed / 4);
 }
 
+// outgoing contact damage
 if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
 	with(instance_nearest(x, y, enemy)){
 		if(sprite_index != spr_hurt){
@@ -153,4 +158,4 @@ switch(argument0){
 
 #define race_ttip
 // return character-specific tooltips
-return choose("HUNGRY", "WRIGGLE", "FAMILY");
+return choose("HUNGRY", "WRIGGLE", "FAMILY", "PLEASE DON'T CALL ME THAT");

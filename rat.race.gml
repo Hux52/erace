@@ -34,9 +34,12 @@ mask_index = mskPlayer;
 #define step
 // executed within each player instance of this race after step
 // most actives and passives handled here
+
+// no weps
 canswap = 0;
 canpick = 0;
 
+// sprite faces direction, as you have no weps
 if(direction > 90 and direction <= 270){
 	right = -1;
 }
@@ -44,6 +47,7 @@ else{
 	right = 1;
 }
 
+// outgoing contact damage
 if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 	with(instance_nearest(x, y, enemy)){
 		if(sprite_index != spr_hurt){

@@ -27,9 +27,9 @@ spr_shadow_y = 5;
 mask_index = mskPlayer;
 
 // vars
-cooldown = 0;
-venom = 0;
-dir = 0;
+cooldown = 0;	// cooldown til next fire
+venom = 0;	// firing duration
+dir = 0;	// initial fire direction
 
 
 #define game_start
@@ -40,30 +40,37 @@ dir = 0;
 #define step
 // executed within each player instance of this race after step
 // most actives and passives handled here
+
+// no weps
 canswap = 0;
 canpick = 0;
 
+// special- venom
 if(button_pressed(index, "spec")){
 	if(cooldown = 0){
-		cooldown = 60;
-		venom = 15;
-		dir = gunangle;
+		cooldown = 60;	// cooldown til next fire
+		venom = 15;	// firing duration
+		dir = gunangle;	// inital firing direction, as you may not control after starting
 		spr_idle = sprScorpionFire;
 		spr_walk = sprScorpionFire;
 		sound_play(sndScorpionFireStart);
 	}
 }
 
+// while firing
 if(venom > 0){
+	// lose control and slide
 	canwalk = 0;
 	move_bounce_solid(true);
 	move_towards_point(x + lengthdir_x(maxspeed, direction), y + lengthdir_y(maxspeed, direction), maxspeed);
+	// face direction as you are not in control of wep
 	if(dir > 90 and dir <= 270){
 		right = -1;
 	}
 	else{
 		right = 1;
 	}
+	// bullets
 	sound_play_gun(sndScorpionFire, 0.2, 0.6);
 	with(instance_create(x, y, Bullet1)){
 		var acc = 60;
@@ -79,15 +86,18 @@ if(venom > 0){
 	venom--;
 }
 else{
+	// return to normal
 	spr_idle = sprScorpionIdle;
 	spr_walk = sprScorpionWalk;
 	canwalk = 1;
 }
 
+// cooldown management
 if(cooldown > 0){
 	cooldown--;
 }
 
+// outgoing contact damage
 if(collision_rectangle(x + 20, y + 10, x - 20, y - 10, enemy, 0, 1)){
 	with(instance_nearest(x, y, enemy)){
 		if(sprite_index != spr_hurt){
@@ -99,7 +109,9 @@ if(collision_rectangle(x + 20, y + 10, x - 20, y - 10, enemy, 0, 1)){
 	}
 }
 
+// on death
 if(my_health = 0){
+	// effect
 	for(i = 0; i < 360; i += 120){
 		with(instance_create(x, y, AcidStreak)){
 			speed = 8;
