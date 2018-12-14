@@ -1,6 +1,6 @@
 
 #define init
-healthChance = 30; //percent chance of transforming an ammo pickup into a health pickup
+global.healthChance = 30; //percent chance of transforming an ammo pickup into a health pickup
 trace ("Welcome to Hell.");
 trace ("Type '/ehelp list' for a list of commands.");
 
@@ -21,7 +21,7 @@ with(AmmoChest){
 
 // chance for ammo pickups to become hp- delete otherwise
 with(AmmoPickup){
-	if(random(100) > 100 - healthChance){
+	if(random(100) > 100 - global.healthChance){
 		instance_create(x, y, HPPickup);
 	}
 	instance_destroy();
@@ -67,8 +67,8 @@ switch(command){
 	case "ECHANCE":
 		switch(parameter){
 		case "DEFAULT":
-			healthChance = 30;
-			trace("Health pickup transform reverted to normal. (" + string(healthChance) + "%)");
+			global.healthChance = 30;
+			trace("Health pickup transform reverted to normal. (" + string(global.healthChance) + "%)");
 		break;
 		
 		case "":
@@ -76,8 +76,8 @@ switch(command){
 		break;
 		
 		default:
-			healthChance = real(parameter);
-			trace("Chance to transform into a health pickup now " + string(healthChance) + "%");
+			global.healthChance = real(parameter);
+			trace("Chance to transform into a health pickup now " + string(global.healthChance) + "%");
 		}
 	return true;
 	break;
