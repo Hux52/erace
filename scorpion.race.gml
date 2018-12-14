@@ -1,7 +1,6 @@
 #define init
 global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADJSURBVDhPrZK9DcJADEazBDuAxAAMQY2oKVOwADU1E2QGGlagZyAkg5Ge5VhOQuREetHd+b53P0lzv7VSoS74PvpKi/9QF2xWa1EQzZU15/1FInNkdcFxe5AxpkR2B1MMSeqC7A488ShRZHfASrHtySR1wXvXiELIQw0I92RZMEMn0+7tyk8aY1Cghe56ktfzYWifMdpRYMfCHsMItObDCGwHiwkIEWDM972EBU0Av2/r+gT8GLtbTuAn8Ichoh4lBgUfzAT5nFY+0Mns1z+fF7oAAAAASUVORK5CYII=", 1, 0, 0);
 
-
 #define create
 // player instance creation of this race
 // https://bitbucket.org/YellowAfterlife/nuclearthronetogether/wiki/Scripting/Objects/Player
@@ -31,15 +30,22 @@ cooldown = 0;	// cooldown til next fire
 venom = 0;	// firing duration
 dir = 0;	// initial fire direction
 
-
 #define game_start
 // executed after picking race and starting for each player picking this race
 // player-specific global variable init
 
-
 #define step
 // executed within each player instance of this race after step
 // most actives and passives handled here
+
+if (ultra_get("scorpion",1) = 1){
+	if (player_get_race(index) == "scorpion"){
+		player_set_race(index, "goldscorpion");
+		race = "goldscorpion";
+	}
+}
+
+u2 = ultra_get("scorpion",2);
 
 // no weps
 canswap = 0;
@@ -62,6 +68,16 @@ if(venom > 0){
 	// lose control and slide
 	canwalk = 0;
 	move_bounce_solid(true);
+	if (u2 = 1){
+		if(place_meeting(x + (hspeed*5.5), y + (vspeed*5.5), Wall)){
+			with(instance_nearest(x + hspeed, y + vspeed, Wall)){
+				if(random(10) < 3) sound_play_pitch(sndHammerHeadEnd, random_range(0.8,1.2));
+				sound_play_pitch(sndHammerHeadProc, random_range(0.8,1.2));
+				instance_create(x, y, FloorExplo);
+				instance_destroy();
+			}
+		}
+	}
 	move_towards_point(x + lengthdir_x(maxspeed, direction), y + lengthdir_y(maxspeed, direction), maxspeed);
 	// face direction as you are not in control of wep
 	if(dir > 90 and dir <= 270){
@@ -186,7 +202,8 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "NOTHING";
+	case 1: return "EVOLVE";
+	case 2: return "HAMMER STINGER";
 	default: return "";
 }
 
@@ -194,7 +211,8 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "DOES NOTHING";
+	case 1: return "YOUR SCORPION IS EVOLVING!";
+	case 2: return "FUCK WALLS";
 	default: return "";
 }
 
@@ -211,7 +229,6 @@ switch(argument0){
 // recieves ultra mutation index
 // called when ultra for race is picked
 // player of race may not be alive at the time
-
 
 #define race_ttip
 // return character-specific tooltips
