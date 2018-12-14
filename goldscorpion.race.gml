@@ -61,6 +61,7 @@ if(button_pressed(index, "spec")){
 // while firing
 if(venom > 0){
 	canwalk = 0;	// no walking
+	speed = 0;
 	// sprite based on direction, as you can't fire right now
 	if(dir > 90 and dir <= 270){
 		right = -1;

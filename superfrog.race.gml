@@ -180,7 +180,7 @@ return "SUPERFROG";
 
 #define race_text
 // return passive and active for character selection screen
-return "CAN'T STAND STILL";
+return "CAN'T STAND STILL#EXPLODE ON CONTACT#AMBIENT VENOM";
 
 
 #define race_portrait

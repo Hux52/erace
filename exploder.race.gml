@@ -104,7 +104,7 @@ return "EXPLODER";
 
 #define race_text
 // return passive and active for character selection screen
-return "CAN'T STAND STILL";
+return "CAN'T STAND STILL#EXPLODE ON CONTACT";
 
 
 #define race_portrait
