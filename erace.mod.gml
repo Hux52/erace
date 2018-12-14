@@ -1,29 +1,51 @@
 
 #define init
 global.healthChance = 30; //percent chance of transforming an ammo pickup into a health pickup
-trace ("Welcome to Hell.");
-trace ("Type '/ehelp list' for a list of commands.");
 
 for(i = 1; i < 16; i++){
 	race_set_active(i, 0);
 }
 
+trace ("Welcome to Hell.");
+trace ("Type '/ehelp list' for a list of commands.");
+
 #define step
 // replace big chests with health chests
-with(WeaponChest){
-	instance_create(x, y, HealthChest);
-	instance_destroy();
-}
+if (instance_exists(GenCont) == false){
 with(AmmoChest){
-	instance_create(x, y, HealthChest);
-	instance_destroy();
+		instance_create(x, y, HealthChest);
+		instance_create(x, y, HealFX);
+		instance_create(x, y, BloodLust);
+		instance_destroy();
+	}
+	
+	with(WeaponChest){
+		instance_create(x, y, HealthChest);
+		instance_create(x, y, HealFX);
+		instance_create(x, y, BloodLust);
+		instance_destroy();
+	}
+	
 }
-
 // chance for ammo pickups to become hp- delete otherwise
 with(AmmoPickup){
 	if(random(100) > 100 - global.healthChance){
 		instance_create(x, y, HPPickup);
+		instance_create(x, y, HealFX);
+		instance_create(x, y, BloodLust)
 	}
+	instance_destroy();
+}
+
+// weapons become hp, guaranteed
+with(WepPickup){
+	instance_create(x, y, HPPickup);
+	instance_create(x, y, HealFX);
+	instance_create(x, y, BloodLust);
+	instance_create(x, y, StrongSpirit);
+	sound_play_pitchvol(sndSwapGold,0.8,1);
+	sound_play_pitchvol(sndSwapCursed,0.8,2);
+	
 	instance_destroy();
 }
 
@@ -43,7 +65,7 @@ switch(command){
 			case "LIST":
 				//list commands
 				trace("List of ERACE commands:");
-				trace("/ehelp - only use this in case of severe confusion");
+				trace("/ehelp [command] - only use this in case of severe confusion");
 				trace("/echance - chance for small ammo pickups to become health pickups");
 			break;
 			
