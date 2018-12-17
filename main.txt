@@ -1,18 +1,33 @@
+
 /loadwep bandit
+/loadwep bandit_popgun
+/loadwep gator_shotgun
+/loadwep gator_autoshotgun
+/loadwep gator_flakcannon
+
 /loadrace maggot
 /loadrace maggotspawn
 /loadrace bigmaggot
 /loadrace bandit
 /loadrace scorpion
-/loadrace goldscorpion
+
 /loadrace fastrat
 /loadrace rat
 /loadrace ratking
 /loadrace exploder
-/loadrace superfrog
+/loadrace gator
 /loadwep assassin
 /loadrace assassin
+
 /loadrace snowbot
+
 /loadwep necromancer
 /loadrace necromancer
+
+/loadrace bandit_snow
+/loadrace bandit_jungle
+/loadrace goldscorpion
+/loadrace superfrog
+/loadrace buffgator
+
 /loadmod erace

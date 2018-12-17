@@ -8,10 +8,10 @@ global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAA
 // https://bitbucket.org/YellowAfterlife/nuclearthronetogether/wiki/Scripting/Objects/Player
 
 // sprites
-spr_idle = sprBanditIdle;
-spr_walk = sprBanditWalk;
-spr_hurt = sprBanditHurt;
-spr_dead = sprBanditDead;
+spr_idle = sprJungleBanditIdle;
+spr_walk = sprJungleBanditWalk;
+spr_hurt = sprJungleBanditHurt;
+spr_dead = sprJungleBanditDead;
 spr_sit1 = sprMutant15GoSit;
 spr_sit2 = sprMutant15Sit;
 
@@ -20,9 +20,9 @@ snd_hurt = sndBanditHit;
 snd_dead = sndBanditDie;
 
 // stats
-maxspeed = 3;
+maxspeed = 3.6;
 team = 2;
-maxhealth = 4;
+maxhealth = 9;
 
 
 #define game_start
@@ -36,27 +36,10 @@ maxhealth = 4;
 canswap = 0;
 canpick = 0;
 
-// ULTRA A: SNOWY JABRONI
-if (ultra_get("bandit",1) = 1){
-	if (player_get_race(index) == "bandit"){
-		player_set_race(index, "bandit_snow");
-		race = "bandit_snow";
-	}
-}
-
-// ULTRA B: JUNGLE JAPER
-if (ultra_get("bandit",2) = 1){
-	if (player_get_race(index) == "bandit"){
-		player_set_race(index, "bandit_jungle");
-		race = "bandit_jungle";
-		wep = "bandit_popgun";
-	}
-}
-
 
 #define race_name
 // return race name for character select and various menus
-return "Bandit";
+return "Jungle Bandit";
 
 
 #define race_text
@@ -76,30 +59,30 @@ return sprMapIconChickenHeadless;
 
 #define race_swep
 // return ID for race starting weapon
-return "bandit";
+return "bandit_popgun";
 
 
 #define race_avail
 // return if race is unlocked
-return 1;
+return 0;
 
 
 #define race_menu_button
 // return race menu button icon
-sprite_index = global.sprMenuButton;
+return mskNone;
 
 #define race_skins
 // return number of skins the race has
-return 1;
+return 0;
 
 
 #define race_skin_avail
 // return if skin is unlocked
-return 1;
+return 0;
 
 #define race_skin_button
 // return skin switch button sprite
-return sprMapIconChickenHeadless;
+return mskNone;
 
 
 #define race_soundbank
@@ -120,8 +103,7 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "FESTIVITY";
-	case 2: return "OVERGROWTH";
+	case 1: return "NOTHING";
 	default: return "";
 }
 
@@ -129,8 +111,7 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "TIME TO CELEBRATE";
-	case 2: return "MERCENARY MODE";
+	case 1: return "DOES NOTHING";
 	default: return "";
 }
 
@@ -151,4 +132,4 @@ switch(argument0){
 
 #define race_ttip
 // return character-specific tooltips
-return choose("Warm Barrels", "Dust Proof", "Plunder", "Fire First, Aim Later");
+return choose("Been waiting for this", "Squad's dead", "Tactical superiority", "Entering mission area");

@@ -3,7 +3,7 @@
 global.newLevel = instance_exists(GenCont);
 global.hasGenCont = false;
 
-global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACySURBVDhPY/CJdPtPCUYxgIGBAQMjy2PD1DMApNhphSYGJmQQUA5hm0q0JhgjGwATg6mhvgHYFMMwNjlkC2lnALIYOoapgRuGTRJZDB1jGPDHguE/CCNLEINBejBcQA6m3ACYk2AhSzKm2ACYU0CGNO1lJRpTzwCYF0C4wKEJjFt/SoExiA3TAJODYZgYQQOQ2cgYJka5AchhgK4IhHEZAMPUNcCGyx0FY9OAjik0oOk/AAPExSzmQZwnAAAAAElFTkSuQmCC", 1, 0, 0);
+//global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACySURBVDhPY/CJdPtPCUYxgIGBAQMjy2PD1DMApNhphSYGJmQQUA5hm0q0JhgjGwATg6mhvgHYFMMwNjlkC2lnALIYOoapgRuGTRJZDB1jGPDHguE/CCNLEINBejBcQA6m3ACYk2AhSzKm2ACYU0CGNO1lJRpTzwCYF0C4wKEJjFt/SoExiA3TAJODYZgYQQOQ2cgYJka5AchhgK4IhHEZAMPUNcCGyx0FY9OAjik0oOk/AAPExSzmQZwnAAAAAElFTkSuQmCC", 1, 0, 0);
 
 // level start init- MUST GO AT END OF INIT
 while(true){
@@ -200,12 +200,12 @@ return 0;
 
 #define race_avail
 // return if race is unlocked
-return 1;
+return false;
 
 
 #define race_menu_button
 // return race menu button icon
-sprite_index = global.sprMenuButton;
+return mskNone;
 
 #define race_skins
 // return number of skins the race has

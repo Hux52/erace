@@ -1,5 +1,5 @@
 #define init
-global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADpSURBVDhPvZI9CgIxEEYHvIWttYWdpWfYI3gNK4s9huAJrKzt7Bc8g6UHEIToBF74ErKL4K7Fg2Qm38vPrj0uTXDMLEHtG6LAQ8v9LPJ/gYZVArWQYrvNIjga1nEtpNi9OwWHHT3YPucRajCN4HZchT4QDl3nU7f4BorXCOtpphPwDuV7eFCvA5mABexejpWa5HfBa23BIaTQA8KZrBas4YsZZ6fSRUP0CrxxaLehu54TPqfGuBSka2Evwwi8p2EE6QSjCQgRoKZzlbBhEkD8tjInoDVON55AF/CHIaJfShI0NFgT1Nc04Q2YTjeSiZKRigAAAABJRU5ErkJggg==", 1, 0, 0);
+//global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADpSURBVDhPvZI9CgIxEEYHvIWttYWdpWfYI3gNK4s9huAJrKzt7Bc8g6UHEIToBF74ErKL4K7Fg2Qm38vPrj0uTXDMLEHtG6LAQ8v9LPJ/gYZVArWQYrvNIjga1nEtpNi9OwWHHT3YPucRajCN4HZchT4QDl3nU7f4BorXCOtpphPwDuV7eFCvA5mABexejpWa5HfBa23BIaTQA8KZrBas4YsZZ6fSRUP0CrxxaLehu54TPqfGuBSka2Evwwi8p2EE6QSjCQgRoKZzlbBhEkD8tjInoDVON55AF/CHIaJfShI0NFgT1Nc04Q2YTjeSiZKRigAAAABJRU5ErkJggg==", 1, 0, 0);
 
 
 #define create
@@ -172,25 +172,24 @@ return 0;
 
 #define race_avail
 // return if race is unlocked
-return 1;
-
+return false;
 
 #define race_menu_button
 // return race menu button icon
-sprite_index = global.sprMenuButton;
+return mskNone;
 
 #define race_skins
 // return number of skins the race has
-return 1;
+return 0;
 
 
 #define race_skin_avail
 // return if skin is unlocked
-return 1;
+return 0;
 
 #define race_skin_button
 // return skin switch button sprite
-return sprMapIconChickenHeadless;
+return mskNone;
 
 
 #define race_soundbank

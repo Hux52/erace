@@ -8,21 +8,21 @@ global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAA
 // https://bitbucket.org/YellowAfterlife/nuclearthronetogether/wiki/Scripting/Objects/Player
 
 // sprites
-spr_idle = sprBanditIdle;
-spr_walk = sprBanditWalk;
-spr_hurt = sprBanditHurt;
-spr_dead = sprBanditDead;
+spr_idle = sprBuffGatorIdle;
+spr_walk = sprBuffGatorWalk;
+spr_hurt = sprBuffGatorHurt;
+spr_dead = sprBuffGatorDead;
 spr_sit1 = sprMutant15GoSit;
 spr_sit2 = sprMutant15Sit;
 
 // sounds
-snd_hurt = sndBanditHit;
-snd_dead = sndBanditDie;
+snd_hurt = sndBuffGatorHit;
+snd_dead = sndBuffGatorDie;
 
 // stats
 maxspeed = 3;
 team = 2;
-maxhealth = 4;
+maxhealth = 30;
 
 
 #define game_start
@@ -36,32 +36,14 @@ maxhealth = 4;
 canswap = 0;
 canpick = 0;
 
-// ULTRA A: SNOWY JABRONI
-if (ultra_get("bandit",1) = 1){
-	if (player_get_race(index) == "bandit"){
-		player_set_race(index, "bandit_snow");
-		race = "bandit_snow";
-	}
-}
-
-// ULTRA B: JUNGLE JAPER
-if (ultra_get("bandit",2) = 1){
-	if (player_get_race(index) == "bandit"){
-		player_set_race(index, "bandit_jungle");
-		race = "bandit_jungle";
-		wep = "bandit_popgun";
-	}
-}
-
-
 #define race_name
 // return race name for character select and various menus
-return "Bandit";
+return "Buff Gator";
 
 
 #define race_text
 // return passive and active for character selection screen
-return "HAS BANDIT RIFLE";
+return "GREEN AND MEAN";
 
 
 #define race_portrait
@@ -76,17 +58,17 @@ return sprMapIconChickenHeadless;
 
 #define race_swep
 // return ID for race starting weapon
-return "bandit";
+return "gator_flakcannon";
 
 
 #define race_avail
 // return if race is unlocked
-return 1;
+return false;
 
 
 #define race_menu_button
 // return race menu button icon
-sprite_index = global.sprMenuButton;
+return mskNone;
 
 #define race_skins
 // return number of skins the race has
@@ -120,8 +102,7 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "FESTIVITY";
-	case 2: return "OVERGROWTH";
+	case 1: return "STRENGTH";
 	default: return "";
 }
 
@@ -129,8 +110,7 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "TIME TO CELEBRATE";
-	case 2: return "MERCENARY MODE";
+	case 1: return "STRONGER THAN EVER BEFORE";
 	default: return "";
 }
 
@@ -151,4 +131,4 @@ switch(argument0){
 
 #define race_ttip
 // return character-specific tooltips
-return choose("Warm Barrels", "Dust Proof", "Plunder", "Fire First, Aim Later");
+return choose("Rippling pecs", "Absolutely massive", "Make way", "Blast em");

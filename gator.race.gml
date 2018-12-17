@@ -8,21 +8,21 @@ global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAA
 // https://bitbucket.org/YellowAfterlife/nuclearthronetogether/wiki/Scripting/Objects/Player
 
 // sprites
-spr_idle = sprBanditIdle;
-spr_walk = sprBanditWalk;
-spr_hurt = sprBanditHurt;
-spr_dead = sprBanditDead;
+spr_idle = sprGatorIdle;
+spr_walk = sprGatorWalk;
+spr_hurt = sprGatorHurt;
+spr_dead = sprGatorDead;
 spr_sit1 = sprMutant15GoSit;
 spr_sit2 = sprMutant15Sit;
 
 // sounds
-snd_hurt = sndBanditHit;
-snd_dead = sndBanditDie;
+snd_hurt = sndGatorHit;
+snd_dead = sndGatorDie;
 
 // stats
-maxspeed = 3;
+maxspeed = 2.8;
 team = 2;
-maxhealth = 4;
+maxhealth = 12;
 
 
 #define game_start
@@ -36,32 +36,28 @@ maxhealth = 4;
 canswap = 0;
 canpick = 0;
 
-// ULTRA A: SNOWY JABRONI
-if (ultra_get("bandit",1) = 1){
-	if (player_get_race(index) == "bandit"){
-		player_set_race(index, "bandit_snow");
-		race = "bandit_snow";
+// ULTRA A: EVOLUTION - BUFF GATOR
+if (ultra_get("gator",1) = 1){
+	if (player_get_race(index) == "gator"){
+		player_set_race(index, "buffgator");
+		race = "buffgator";
+		wep = "gator_flakcannon"
 	}
 }
 
-// ULTRA B: JUNGLE JAPER
-if (ultra_get("bandit",2) = 1){
-	if (player_get_race(index) == "bandit"){
-		player_set_race(index, "bandit_jungle");
-		race = "bandit_jungle";
-		wep = "bandit_popgun";
-	}
+// ULTRA B: SHOOTIER SHOTGUN
+if (ultra_get("gator",2) = 1){
+	wep = "gator_autoshotgun";
 }
-
 
 #define race_name
 // return race name for character select and various menus
-return "Bandit";
+return "Gator";
 
 
 #define race_text
 // return passive and active for character selection screen
-return "HAS BANDIT RIFLE";
+return "GREEN AND MEAN";
 
 
 #define race_portrait
@@ -76,7 +72,7 @@ return sprMapIconChickenHeadless;
 
 #define race_swep
 // return ID for race starting weapon
-return "bandit";
+return "gator_shotgun";
 
 
 #define race_avail
@@ -120,8 +116,8 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "FESTIVITY";
-	case 2: return "OVERGROWTH";
+	case 1: return "BUFF";
+	case 2: return "ARSENAL";
 	default: return "";
 }
 
@@ -129,8 +125,8 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "TIME TO CELEBRATE";
-	case 2: return "MERCENARY MODE";
+	case 1: return "MAXIMUM MUSCULATURE";
+	case 2: return "RAPID FIRE";
 	default: return "";
 }
 
@@ -140,6 +136,7 @@ switch(argument0){
 // recieves ultra mutation index
 switch(argument0){
 	case 1: return mskNone;
+	case 2: return mskNone;
 }
 
 
@@ -151,4 +148,4 @@ switch(argument0){
 
 #define race_ttip
 // return character-specific tooltips
-return choose("Warm Barrels", "Dust Proof", "Plunder", "Fire First, Aim Later");
+return choose("Chomp", "Smells like home", "Tail whip", "Watch the tail");

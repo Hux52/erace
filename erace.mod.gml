@@ -6,10 +6,20 @@ for(i = 1; i < 16; i++){
 	race_set_active(i, 0);
 }
 
+skill_set_active(mut_throne_butt, 0);
+skill_set_active(mut_bolt_marrow, 0);
+skill_set_active(mut_recycle_gland, 0);
+skill_set_active(mut_laser_brain, 0);
+skill_set_active(mut_shotgun_shoulders, 0);
+skill_set_active(mut_lucky_shot, 0);
+skill_set_active(mut_back_muscle, 0);
+
 trace ("Welcome to Hell.");
 trace ("Type '/ehelp list' for a list of commands.");
 
 #define step
+
+//if (Player.reload>0)trace(Player.reload) //for testing reloads
 // replace big chests with health chests
 if (instance_exists(GenCont) == false){
 with(AmmoChest){
