@@ -55,6 +55,7 @@ fly_index = 0;	// image index for fly
 spr_fly = sprRavenFly;	// current flight sprite
 tempView = -4;	// temp view for player flying- avoid player interacting with pickups and lingering effects
 tempView_array = -4;	// array that manages temp views
+can_fly = 0;
 
 #define level_start
 // stop flying in between levels
@@ -85,6 +86,7 @@ with(instances_matching(Player, "race", "raven")){
 		instance_delete(tempView);
 	}
 	view_object = self;
+	canfly = 0;
 }
 
 
@@ -108,48 +110,121 @@ if(button_pressed(index, "spec")){
 		if!(collision_point(mouse_x[index], mouse_y[index] - 8, Wall, false, true)){
 			if(collision_point(mouse_x[index], mouse_y[index] - 8, Floor, false, true)){
 				if!(instance_number(enemy) = 0 and instance_exists(Portal)){
-					// start flying
-					spr_idle = mskNone;	// no sprite
-					spr_walk = mskNone;
-					spr_fly = sprRavenLift;
-					mask_index = mskNone;	// no hit
-					fly_index = 0;	// set index for flight sprite
-					sound_play(sndRavenLift);
-					cooldown = -1;
-					fly_alarm = 40;	// flight duration
-					speed = 0;	// no sliding
-					canwalk = 0;	// no walking
-					reload = 999; // no shooting
-					// dust effect
-					repeat(5){
-						with(instance_create(x + irandom_range(-10, 10), y + irandom(4), Dust)){
-							direction = random(360);
-							speed = random_range(0.5, 1.5);
-						}
-					}
-					// log coordinates for later
+					// log coordinates for later and check for wall
+					canfly = 0;
 					coords[0] = mouse_x[index];
 					coords[1] = mouse_y[index] - 8;
-					with(Wall){
-						if(distance_to_point(other.coords[0] - 8, other.coords[1] - 8) < 2){
-							other.coords[0] = other.coords[0] + 8;
-							other.coords[1] = other.coords[1] + 8;
+					coords[0] = round(coords[0]);
+					coords[1] = round(coords[1]);
+					var _x1 = coords[0];
+					var _x2 = coords[0];
+					var _y1 = coords[1];
+					var _y2 = coords[1];
+					
+					// nearest 8 x
+					while(_x1 % 8 != 0){
+						_x1--;
+					}
+					while(_x2 % 8 != 0){
+						_x2++;
+					}
+					if(_x1 < _x2){
+						coords[0] = _x1;
+					}
+					else if(_x2 < _x1){
+						coords[0] = _x2;
+					}
+					else{
+						coords[0] = _x1;
+					}
+					
+					// nearest 8 y
+					while(_y1 % 8 != 0){
+						_y1--;
+					}
+					while(_y2 % 8 != 0){
+						_y2++;
+					}
+					if(_y1 < _y2){
+						coords[1] = _y1;
+					}
+					else if(_y2 < _y1){
+						coords[1] = _y2;
+					}
+					else{
+						coords[1] = _y1;
+					}
+					
+					// wall checks
+					// just swap x
+					if(place_meeting(coords[0], coords[1], Wall)){
+						if(coords[0] = _x1){
+							coords[0] = _x2;
 						}
-						else if(distance_to_point(other.coords[0], other.coords[1]) < 2){
-							other.coords[0] = other.coords[0] - 8;
+						else{
+							coords[0] = _x1;
 						}
 					}
+					else{
+						canfly = 1;
+					}
+					// swap x and y
+					if(place_meeting(coords[0], coords[1], Wall) and canfly = 0){
+						if(coords[1] = _y1){
+							coords[1] = _y2;
+						}
+						else{
+							coords[1] = _y1;
+						}
+					}
+					else{
+						canfly = 1;
+					}
+					// just swap y
+					if(place_meeting(coords[0], coords[1], Wall) and canfly = 0){
+						if(coords[0] = _x1){
+							coords[0] = _x2;
+						}
+						else{
+							coords[0] = _x1;
+						}
+					}
+					else{
+						canfly = 1;
+					}
+					
+					if(canfly = 1){
+						// start flying
+						spr_idle = mskNone;	// no sprite
+						spr_walk = mskNone;
+						spr_fly = sprRavenLift;
+						mask_index = mskNone;	// no hit
+						fly_index = 0;	// set index for flight sprite
+						sound_play(sndRavenLift);
+						cooldown = -1;
+						fly_alarm = 40;	// flight duration
+						speed = 0;	// no sliding
+						canwalk = 0;	// no walking
+						reload = 999; // no shooting
+						// dust effect
+						repeat(5){
+							with(instance_create(x + irandom_range(-10, 10), y + irandom(4), Dust)){
+								direction = random(360);
+								speed = random_range(0.5, 1.5);
+							}
+						}
+						with(instance_create(x, y, CustomHitme)){
+							creator = other;
+							mask_index = mskNone;
+							spr_shadow = shd24;
+						}
+						tempView_array = instances_matching(CustomHitme, "creator", self);
+						tempView = tempView_array[0];
+						view_object = tempView;
+						x = -9999;
+						y = -9999;
+					}
 				}
-				with(instance_create(x, y, CustomHitme)){
-					creator = other;
-					mask_index = mskNone;
-					spr_shadow = shd24;
-				}
-				tempView_array = instances_matching(CustomHitme, "creator", self);
-				tempView = tempView_array[0];
-				view_object = tempView;
-				x = -9999;
-				y = -9999;
 			}
 		}
 	}
@@ -181,6 +256,7 @@ if(instance_number(enemy) = 0 and instance_exists(Portal) and fly_alarm > 0){
 		instance_delete(tempView);
 	}
 	view_object = self;
+	canfly = 0;
 }
 
 // flying!
@@ -231,6 +307,7 @@ if(fly_alarm > 0){
 		}
 		view_object = self;
 		instance_delete(tempView);
+		canfly = 0;
 	}
 }
 
