@@ -4,6 +4,7 @@
 /loadwep gator_shotgun
 /loadwep gator_autoshotgun
 /loadwep gator_flakcannon
+/loadwep raven
 
 /loadrace maggot
 /loadrace maggotspawn
@@ -18,6 +19,8 @@
 /loadrace gator
 /loadwep assassin
 /loadrace assassin
+
+/loadrace raven
 
 /loadrace snowbot
 
