@@ -168,8 +168,15 @@ if(button_pressed(index, "spec")){
 					else{
 						canfly = 1;
 					}
-					// swap x and y
-					if(place_meeting(coords[0], coords[1], Wall) and canfly = 0){
+					
+					// just swap y (swap x back)
+					if(place_meeting(coords[0], coords[1], Wall)){
+						if(coords[0] = _x1){
+							coords[0] = _x2;
+						}
+						else{
+							coords[0] = _x1;
+						}
 						if(coords[1] = _y1){
 							coords[1] = _y2;
 						}
@@ -180,13 +187,19 @@ if(button_pressed(index, "spec")){
 					else{
 						canfly = 1;
 					}
-					// just swap y
+					// swap x and y
 					if(place_meeting(coords[0], coords[1], Wall) and canfly = 0){
-						if(coords[0] = _x1){
-							coords[0] = _x2;
+						if(coords[1] = _y1){
+							coords[1] = _y2;
 						}
 						else{
-							coords[0] = _x1;
+							coords[1] = _y1;
+						}
+						if(coords[1] = _y1){
+							coords[1] = _y2;
+						}
+						else{
+							coords[1] = _y1;
 						}
 					}
 					else{
