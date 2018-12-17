@@ -130,6 +130,15 @@ if(button_pressed(index, "spec")){
 					// log coordinates for later
 					coords[0] = mouse_x[index];
 					coords[1] = mouse_y[index] - 8;
+					with(Wall){
+						if(distance_to_point(other.coords[0] - 8, other.coords[1] - 8) < 2){
+							other.coords[0] = other.coords[0] + 8;
+							other.coords[1] = other.coords[1] + 8;
+						}
+						else if(distance_to_point(other.coords[0], other.coords[1]) < 2){
+							other.coords[0] = other.coords[0] - 8;
+						}
+					}
 				}
 				with(instance_create(x, y, CustomHitme)){
 					creator = other;
