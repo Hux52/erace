@@ -227,12 +227,14 @@ if(button_pressed(index, "spec")){
 								speed = random_range(0.5, 1.5);
 							}
 						}
-						with(instance_create(x, y, CustomHitme)){
+						with(instance_create(x, y, Tangle)){
 							creator = other;
 							mask_index = mskNone;
+							sprite_index = mskNone;
 							spr_shadow = shd24;
+							name = "ravenview";
 						}
-						tempView_array = instances_matching(CustomHitme, "creator", self);
+						tempView_array = instances_matching(Tangle, "creator", self);
 						tempView = tempView_array[0];
 						view_object = tempView;
 						x = -9999;

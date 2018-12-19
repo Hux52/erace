@@ -63,9 +63,17 @@ with(instances_matching(Player, "race", "assassin")){
 		toDraw = self;
 		script_bind_draw(draw_outline, depth, playerColor, toDraw);
 	}
+	// temp lighting fix
+	with(instance_create(x, y, Tangle)){
+		creator = other;
+		index = creator.index;
+		sprite_index = mskNone;
+		mask_index = mskNone;
+	}
 	x = -99999999;
 	y = -99999999;
 	fake = instances_matching(CustomHitme, "index", index);
+	light = instances_matching(Tangle, "index", index);
 	view_object = fake[0];
 	mask_index = mskNone;
 }
@@ -114,7 +122,8 @@ if(getup > 0){
 			other.getup = 0;
 			reload = 0;
 			view_object = self;
-			instance_delete(other);
+			instance_delete(fake[0]);
+			instance_delete(light[0]);
 		}
 	}
 }
