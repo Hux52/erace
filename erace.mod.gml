@@ -71,6 +71,11 @@ with(WepPickup){
 	instance_destroy();
 }
 
+// no contact damage
+with(instances_matching_ne(enemy, "canmelee", 0)){
+	canmelee = 0;
+}
+
 #define chat_command
 // chat commands
 var command = string_upper(argument0);

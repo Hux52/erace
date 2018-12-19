@@ -209,7 +209,7 @@ if(my_health = 0 and died = 0){
 				on_hurt = script_ref_create(fastrat_hurt);
 				on_destroy = script_ref_create(fastrat_destroy);
 				// friendly outline
-				player_get_color(creator.index);
+				playerColor = player_get_color(creator.index);
 				toDraw = self;
 				script_bind_draw(draw_outline, depth, playerColor, toDraw);
 			}
