@@ -55,7 +55,8 @@ fly_index = 0;	// image index for fly
 spr_fly = sprRavenFly;	// current flight sprite
 tempView = -4;	// temp view for player flying- avoid player interacting with pickups and lingering effects
 tempView_array = -4;	// array that manages temp views
-can_fly = 0;
+can_fly = 0;	// disallow flight
+died = 0;	// disallow extra frames after death
 
 #define level_start
 // stop flying in between levels
@@ -341,7 +342,7 @@ else{
 }
 
 // on death
-if(my_health = 0){
+if(my_health = 0 and died = 0){
 	// effects
 	for(i = 0; i < 360; i += 120){
 		with(instance_create(x, y, Feather)){
@@ -349,6 +350,7 @@ if(my_health = 0){
 			direction = other.i + random_range(-30, 30);
 		}
 	}
+	died = 1;
 }
 
 

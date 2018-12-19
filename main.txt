@@ -5,6 +5,7 @@
 /loadwep gator_autoshotgun
 /loadwep gator_flakcannon
 /loadwep raven
+/loadwep guardian
 
 /loadrace maggot
 /loadrace maggotspawn
@@ -32,5 +33,7 @@
 /loadrace goldscorpion
 /loadrace superfrog
 /loadrace buffgator
+
+/loadrace guardian
 
 /loadmod erace
