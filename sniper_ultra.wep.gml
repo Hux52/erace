@@ -18,7 +18,7 @@ return 0;
 return false;
 
 #define weapon_load
-return 180;
+return 60;
 
 #define weapon_cost
 return 0;
@@ -49,6 +49,7 @@ wait(30);
 // can walk again
 canwalk = 1;
 for (i = 0; i < 100; i++){
+	reload = 60;
 	//if(reload>0)trace(reload);
 	weapon_post(5, 20, 5);	// weapon kick and screen shake
 	sound_play_pitch(sndSnowTankShoot,1 + (i/200));
