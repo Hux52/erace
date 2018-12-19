@@ -6,6 +6,8 @@
 /loadwep gator_flakcannon
 /loadwep raven
 /loadwep guardian
+/loadwep sniper
+/loadwep sniper_ultra
 
 /loadrace maggot
 /loadrace maggotspawn
@@ -20,6 +22,7 @@
 /loadrace gator
 /loadwep assassin
 /loadrace assassin
+/loadrace sniper
 
 /loadrace raven
 

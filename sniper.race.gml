@@ -1,7 +1,7 @@
 #define init
 // character select button
 global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACOSURBVDhPYwCC/9jw231BRGGgWgoNmNua9B8bJtYgyg24cHTLf3yYkEGUG4DN+dgwLoMoNwCbs5Ex7Q2ASaDjPxaoGCZOPwNIwFgFice2GvL/QTjfw5IkTD0DsEkSgzFcgAtj0wzC1DMAmyQ+DDOYegbA0jxMApsmEEbXCE+JFBsAy23oGKYBl0YIDvoPABoXHHo1+L+9AAAAAElFTkSuQmCCAAAAAAAAAA==", 1, 0, 0);
-global.sprPortrait = sprite_add("img/Bandit6.png", 1, 25, 210);
+global.sprPortrait = sprBigPortraitRebelBHooded; //temp
 
 #define create
 // player instance creation of this race
@@ -43,6 +43,9 @@ if (my_health == 0 && hasDied == false){
 	hasDied = true;
 }
 
+if (ultra_get("sniper", 1) == 1){
+	wep = "sniper_ultra";
+}
 
 #define race_name
 // return race name for character select and various menus
@@ -110,8 +113,7 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "FESTIVITY";
-	case 2: return "OVERGROWTH";
+	case 1: return "CAN'T THINK OF A NAME";
 	default: return "";
 }
 
@@ -120,7 +122,6 @@ switch(argument0){
 // recieves ultra mutation index and returns description
 switch(argument0){
 	case 1: return "TIME TO CELEBRATE";
-	case 2: return "MERCENARY MODE";
 	default: return "";
 }
 

@@ -6,7 +6,7 @@ firing = false;
 #define step
 
 #define weapon_name
-return "SNIPER RIFLE";
+return "HYPER SNIPER";
 
 #define weapon_sprt
 return sprSniperGun;
@@ -18,7 +18,7 @@ return 0;
 return false;
 
 #define weapon_load
-return 60;
+return 180;
 
 #define weapon_cost
 return 0;
@@ -44,22 +44,39 @@ speed = 0;
 canwalk = 0;
 // effect
 sound_play(sndSniperTarget);
-// delay til swing
+// delay
 wait(30);
 // can walk again
 canwalk = 1;
-weapon_post(5, 20, 5);	// weapon kick and screen shake
-sound_play(sndSniperFire);
-
-for (i = 0; i < 3; i++){
-	with(instance_create(x + lengthdir_x(8, gunangle), y + lengthdir_y(8, gunangle), Bullet1)){
+for (i = 0; i < 100; i++){
+	//if(reload>0)trace(reload);
+	weapon_post(5, 20, 5);	// weapon kick and screen shake
+	sound_play_pitch(sndSnowTankShoot,1 + (i/200));
+	motion_add(gunangle+180, 10);
+	
+	if(i > random(100)){
+		with(instance_create(x,y,Smoke)){
+			direction = random(360);
+			friction = 0.3;
+			speed = 4;
+		}
+	}
+	
+	with(instance_create(x + lengthdir_x(4, gunangle), y + lengthdir_y(4, gunangle), Bullet2)){
 		creator = other;
 		team = creator.team;
-		direction = creator.gunangle - 5 + (5*creator.i);
+		
+		if (creator.i mod 2 == 0){
+			a = 1;
+		} else {a = -1;}
+		
+		direction = creator.gunangle + (((creator.i/6) * a) * 1);
 		image_angle = direction;
 		speed = 20;
-		friction = 0;
-		damage = 3;
+		friction = 0.5;
+		damage = 4;
+	}
+	if (i mod 2 == 1){
+		wait(2);
 	}
 }
-firing = false;
