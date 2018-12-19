@@ -1,6 +1,24 @@
 #define init
 // character select button
 global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACOSURBVDhPYwCC/9jw231BRGGgWgoNmNua9B8bJtYgyg24cHTLf3yYkEGUG4DN+dgwLoMoNwCbs5Ex7Q2ASaDjPxaoGCZOPwNIwFgFice2GvL/QTjfw5IkTD0DsEkSgzFcgAtj0wzC1DMAmyQ+DDOYegbA0jxMApsmEEbXCE+JFBsAy23oGKYBl0YIDvoPABoXHHo1+L+9AAAAAElFTkSuQmCCAAAAAAAAAA==", 1, 0, 0);
+// character select portrait
+global.sprPortrait = sprite_add("/sprites/sprPortraitBandit.png", 1, 22, 210);
+
+// character select sounds
+global.sndSelect = sound_add("sounds/sndBanditSelect.ogg");
+var _race = [];
+for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
+while(true){
+	//character selection sound
+	for(var i = 0; i < maxp; i++){
+		var r = player_get_race(i);
+		if(_race[i] != r && r = "bandit"){
+			sound_play(global.sndSelect);
+		}
+		_race[i] = r;
+	}
+	wait 1;
+}
 
 
 #define create
@@ -56,7 +74,7 @@ if (ultra_get("bandit",2) = 1){
 
 #define race_name
 // return race name for character select and various menus
-return "Bandit";
+return "BANDIT";
 
 
 #define race_text
@@ -66,7 +84,7 @@ return "HAS BANDIT RIFLE";
 
 #define race_portrait
 // return portrait for character selection screen and pause menu
-return sprBigPortraitChickenHeadless;
+return global.sprPortrait;
 
 
 #define race_mapicon
@@ -151,4 +169,4 @@ switch(argument0){
 
 #define race_ttip
 // return character-specific tooltips
-return choose("Warm Barrels", "Dust Proof", "Plunder", "Fire First, Aim Later");
+return choose("WARM BARRELS", "DUST PROOF", "PLUNDER", "FIRE FIRST, AIM LATER");

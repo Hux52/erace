@@ -22,9 +22,9 @@
 /loadrace gator
 /loadwep assassin
 /loadrace assassin
-/loadrace sniper
 
 /loadrace raven
+/loadrace sniper
 
 /loadrace snowbot
 

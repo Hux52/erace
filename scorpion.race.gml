@@ -1,6 +1,22 @@
 #define init
 global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADJSURBVDhPrZK9DcJADEazBDuAxAAMQY2oKVOwADU1E2QGGlagZyAkg5Ge5VhOQuREetHd+b53P0lzv7VSoS74PvpKi/9QF2xWa1EQzZU15/1FInNkdcFxe5AxpkR2B1MMSeqC7A488ShRZHfASrHtySR1wXvXiELIQw0I92RZMEMn0+7tyk8aY1Cghe56ktfzYWifMdpRYMfCHsMItObDCGwHiwkIEWDM972EBU0Av2/r+gT8GLtbTuAn8Ichoh4lBgUfzAT5nFY+0Mns1z+fF7oAAAAASUVORK5CYII=", 1, 0, 0);
 
+// character select sounds
+global.sndSelect = sndScorpionFire;
+var _race = [];
+for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
+while(true){
+	//character selection sound
+	for(var i = 0; i < maxp; i++){
+		var r = player_get_race(i);
+		if(_race[i] != r && r = "scorpion"){
+			sound_play_pitchvol(global.sndSelect, 1, 5);
+		}
+		_race[i] = r;
+	}
+	wait 1;
+}
+
 #define create
 // player instance creation of this race
 // https://bitbucket.org/YellowAfterlife/nuclearthronetogether/wiki/Scripting/Objects/Player

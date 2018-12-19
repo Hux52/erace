@@ -1,6 +1,24 @@
 #define init
 // character select button
 global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACgSURBVDhPvZJBDkAwEEW7cQlHdARLibWVc3RrIy7hMlZl8Jtv0iakrZ+8hMz8J4U54jR2aF5z7CcKprF1mi8ysy7WxWBZqCzkFfAxNDHJ4x2wTAOJFqULQssx8CCW/CsAyQJ+H2UEOKsEixLeCQoQP1Qg5QTdXJ0g/VbfV5cUKS/AvQhi86BACrrE8DyfAN+c0UWB51L0v7I3fQDlDILG7f/o4UKsTVyRAAAAAElFTkSuQmCC", 1, 0, 0);
+// character select portrait
+global.sprPortrait = sprite_add("/sprites/sprPortraitBigMaggot.png", 1, 10, 230);
+
+// character select sounds
+global.sndSelect = sound_add("sounds/sndBigMaggotSelect.ogg");
+var _race = [];
+for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
+while(true){
+	//character selection sound
+	for(var i = 0; i < maxp; i++){
+		var r = player_get_race(i);
+		if(_race[i] != r && r = "bigmaggot"){
+			sound_play(global.sndSelect);
+		}
+		_race[i] = r;
+	}
+	wait 1;
+}
 
 
 #define create
@@ -302,7 +320,7 @@ return "CONTACT DAMAGE#CAN'T STAND STILL#CAN BURROW";
 
 #define race_portrait
 // return portrait for character selection screen and pause menu
-return sprBigPortraitChickenHeadless;
+return global.sprPortrait;
 
 
 #define race_mapicon
