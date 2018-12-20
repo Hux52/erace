@@ -43,6 +43,7 @@ mask_index = mskPlayer;
 // vars
 close = 0;	// timer for when close to an enemy- prevents sound spam
 exploded = 0;	// prevent extra death frames
+melee = 0;	// can melee or not
 
 #define game_start
 // executed after picking race and starting for each player picking this race

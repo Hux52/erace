@@ -39,6 +39,9 @@ spr_shadow_y = 0;
 mask_index = mskMaggot;
 canwalk = 1;
 
+// vars
+melee = 1;	// can melee or not
+
 
 #define game_start
 // executed after picking race and starting for each player picking this race

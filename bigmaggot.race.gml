@@ -49,6 +49,7 @@ dig_alarm = 0;	// digging
 cooldown = 0;	// cooldown til you can dig again
 coords = [0, 0];	// dig destination
 died = 0;	// deny extra death frames
+melee = 1;	// can melee or not
 
 
 #define game_start

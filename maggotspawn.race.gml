@@ -45,6 +45,7 @@ mask_index = mskPlayer;
 // vars
 self_destruct = -1;	// self destruction alarm init
 died = 0;	// prevent frames after death
+melee = 0;	// can melee or not
 
 
 #define game_start

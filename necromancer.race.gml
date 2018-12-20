@@ -26,6 +26,9 @@ spr_shadow = shd24;
 spr_shadow_y = 0;
 mask_index = mskPlayer;
 
+// vars
+melee = 0;	// can melee or not
+
 
 #define game_start
 // executed after picking race and starting for each player picking this race

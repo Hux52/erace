@@ -54,6 +54,7 @@ loop = 0;	// looped sound
 fric = 10;	// control the player has while charging- the higher, the more control
 car = 0;	// has car or not
 lift = 0;	// lifting car duration
+melee = 1;	// can melee or not
 
 
 

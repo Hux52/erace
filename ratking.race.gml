@@ -52,6 +52,7 @@ mask_index = mskPlayer;
 spawn_cool = 0;	// spawn cooldown
 charge_cool = 0;	// charge cooldown
 died = 0;	// prevent frames after death
+melee = 1;	// can melee or not
 
 
 #define game_start

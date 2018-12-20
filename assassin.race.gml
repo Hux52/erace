@@ -43,6 +43,7 @@ snd_dead = sndAssassinDie;
 maxspeed = 4.5;
 team = 2;
 maxhealth = 7;
+melee = 0;	// can melee or not
 
 // vars
 getup = 0;	// alarm to get up from faking

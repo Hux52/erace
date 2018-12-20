@@ -23,6 +23,7 @@ snd_dead = sndBanditDie;
 maxspeed = 3.6;
 team = 2;
 maxhealth = 9;
+melee = 0;	// can melee or not
 
 
 #define game_start

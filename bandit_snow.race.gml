@@ -24,6 +24,7 @@ maxspeed = 3;
 team = 2;
 maxhealth = 8;
 mask_index = mskPlayer;
+melee = 0;	// can melee or not
 
 
 #define game_start

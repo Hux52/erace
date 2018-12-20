@@ -49,6 +49,7 @@ mask_index = mskPlayer;
 close = 0;	// timer for when close to an enemy- prevents sound spam
 exploded = 0;	// prevent extra death frames
 ambience = 0;	// ambient bullet frequence
+melee = 0;	// can melee or not
 
 #define level_start
 // toxic on start

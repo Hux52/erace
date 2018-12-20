@@ -74,10 +74,20 @@ with(WepPickup){
 // no contact damage, rad bonus
 with(enemy){
 	if("erace" not in self){
-		canmelee = 0;
 		raddrop += 1;
 		erace = true;
 	}
+	if(meleedamage > 0){
+        var _p = instance_nearest(x, y, Player);
+        if(Player.melee = true){
+            if(point_distance(x, y, _p.x, _p.y) < 40){
+                canmelee = 0;
+            }
+            else{
+                canmelee = 1;
+            }
+        }
+    }
 }
 
 #define chat_command

@@ -47,6 +47,7 @@ hasDied = false;
 
 // vars
 age = 900;	// die in 30 seconds
+melee = 1;	// can melee or not
 
 
 #define game_start

@@ -23,6 +23,7 @@ snd_dead = sndGatorDie;
 maxspeed = 2.8;
 team = 2;
 maxhealth = 12;
+melee = 0;	// can melee or not
 
 
 #define game_start

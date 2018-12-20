@@ -31,6 +31,7 @@ cooldown = 0;	// cooldown for shooting
 venom = 0;	// shooting duration
 dir = 0;	// initial firing direction
 died = 0;	// prevent frames after death
+melee = 1;	// can melee or not
 
 
 #define game_start

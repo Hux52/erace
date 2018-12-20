@@ -57,6 +57,7 @@ tempView = -4;	// temp view for player flying- avoid player interacting with pic
 tempView_array = -4;	// array that manages temp views
 can_fly = 0;	// disallow flight
 died = 0;	// disallow extra frames after death
+melee = 0;	// can melee or not
 
 #define level_start
 // stop flying in between levels

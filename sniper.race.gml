@@ -25,6 +25,9 @@ team = 2;
 maxhealth = 6;
 hasDied = false;
 
+// vars
+melee = 0;	// can melee or not
+
 
 #define game_start
 // executed after picking race and starting for each player picking this race

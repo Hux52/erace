@@ -63,6 +63,7 @@ coords = [0, 0];	// teleport destination
 nudge = 15;	// movement jitter
 died = 0;	// deny extra death frames
 canwalk = 0;
+melee = 0;	// can melee or not
 
 
 #define game_start
