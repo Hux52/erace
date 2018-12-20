@@ -5,6 +5,7 @@ global.hasGenCont = false;
 
 // charselect sprite
 global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADHSURBVDhPtZM9CgIxEIVzDk9hKR5gK8FarLyAt7CwsvEoNjZ29l7BYwjC6ht4w+zmaYTE4oPJ8OZLsj/pfjn2KSXndj0ZqBerrkgbAfkm4AZZv7lABVGfD2sj9qVgvpw6FKH+ryAObfebjCigxPk0NIYbZKJqgQormgn87m/sIaqwolpAOOivUYVKVJ0ADAS4lwr90jcRGs9ZcrAuwWwbwe4xkaF47Ej8+ZAzAR8KwBqoYUW9AEODDyOIWHM97hlxOApAud/1L4adBDd3VCKFAAAAAElFTkSuQmCC", 1, 0, 0);
+global.sprPortrait = sprite_add("sprites/sprPortraitRatKing.png",1,24,200);
 
 // character select sounds
 global.sndSelect = sound_add("sounds/sndRatKingSelect2.ogg");	// not sure
@@ -399,7 +400,7 @@ return "CONTACT DAMAGE#SPAWN RATS";
 
 #define race_portrait
 // return portrait for character selection screen and pause menu
-return sprBigPortraitChickenHeadless;
+return global.sprPortrait;
 
 
 #define race_mapicon
