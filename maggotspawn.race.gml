@@ -1,5 +1,6 @@
 #define init
 global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADPSURBVDhPxZG9DcIwEEY9TipmoKSmpmIXBmAAtqCmo2eRzGByhz/zlFxEoliieNL5u7uXH6f+ccxGSsnReSlVUIMiWirbLlgzHJGuh302JCLRwph2gtOuc3SOpKFAi5HAYC8SbRdoSE1KuMyckvoGEtwu58mioWVKHA00E7ye929z4KcAhUOBf2OpKeEDB2rhrBbUv1mCOYHltqhl7BUTBlXPidXzvl5LDbsFDqn+j4Awn9wCAxuUlGJmNo9+YwGbGlammjOhgOhnjfMPXX4DRsPkhw/CD04AAAAASUVORK5CYII=", 1, 0, 0);
+global.sprPortrait = sprite_add("sprites/sprPortraitMaggotSpawn.png",1 , 0, 190);
 
 // character select sounds
 global.sndSelect = sound_add("sounds/sndMaggotSpawnSelect.ogg");
@@ -255,7 +256,7 @@ if(sprite_index != spr_hurt){
 
 #define race_name
 // return race name for character select and various menus
-return "MAGGOTSPAWN";
+return "CORPSE";
 
 
 #define race_text
@@ -265,7 +266,7 @@ return "CAN'T MOVE#SELF DESCTRUCT";
 
 #define race_portrait
 // return portrait for character selection screen and pause menu
-return sprBigPortraitChickenHeadless;
+return global.sprPortrait;
 
 
 #define race_mapicon
