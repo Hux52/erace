@@ -1,5 +1,6 @@
 #define init
 global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACiSURBVDhPvZIxDkBAEEX3SEqJXiVRi8oF3EOlcRmNu7iHZFnxN+ub1cwiebLZ+f8VjKma0mowx+Ne4jAEOc4fZ6VgXSbr4AAzj+0NP0su6IdOBPP0Ain8Bor+I0qhNx6Cos5siFQKSS/AYMvNCQsZ5CBKJ2AQkGaO7wXABy948fQCrCYXcf8oMGoBAizAPX4fClggv0hqARdjxET/CcBdUNodXNPrwW8RonsAAAAASUVORK5CYII=", 1, 0, 0);
+global.sprPortrait = sprite_add("sprites/sprPortraitGreenRat.png",1 , 15, 185);
 
 // character select sounds
 global.sndSelect = sound_add("sounds/sndFastRatSelect.ogg");
@@ -42,6 +43,8 @@ spr_shadow_y = 0;
 mask_index = mskPlayer;
 canwalk = 1;
 
+hasDied = false;
+
 // vars
 age = 900;	// die in 30 seconds
 
@@ -81,17 +84,42 @@ if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 
 // age management and consequence
 age--;
-if(age = 0){
-	my_health = 0;
+if(my_health > 0) {
+	hasDied = false;
+}
+
+if(my_health > lsthealth){
+	if (age < 450){
+	age = 450;
+	instance_create(x,y,HorrorTB);
+	}	
+}
+
+if(age mod 30 = 0){ 
+	with(instance_create(x,y,AllyDamage)){
+		depth = -100;
+	} 
+}
+
+if(age <= 0){
+	if(sprite_index != spr_hurt){sprite_index = spr_hurt; image_index = 0;}
+	with(instance_create(x,y,ThrowHit)){
+		depth = -100;
+	}
+	sound_play(snd_hurt);
+	age = 150;
+	my_health -= 1;
 }
 
 // on death
-if(my_health = 0){
+if(my_health = 0 && hasDied = false){
+	sound_play(snd_dead);
 	// effect
 	with(instance_create(x, y, AcidStreak)){
 		speed = 8;
 		direction = other.direction;
 	}
+	hasDied = true;
 }
 
 #define race_name
@@ -106,7 +134,7 @@ return "AGING#CONTACT DAMAGE";
 
 #define race_portrait
 // return portrait for character selection screen and pause menu
-return sprBigPortraitChickenHeadless;
+return global.sprPortrait;
 
 
 #define race_mapicon
