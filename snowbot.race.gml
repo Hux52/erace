@@ -91,7 +91,7 @@ if(car = 0){
 }
 
 // special- charge
-if(button_pressed(index, "spec")){
+if(button_pressed(index, "fire")){
 	if(canspec = 1 and charge = 0 and car = 0){	// if no car and not already charging
 		// charge init
 		spr_idle = spr_fire;
@@ -236,7 +236,7 @@ if(lift > 0){
 }
 
 // spec b- throw car
-if(button_pressed(index, "spec") or button_pressed(index, "fire")){	// included fire as this can be confusing
+if(button_pressed(index, "fire")){
 	if(lift = 0 and car = 1){
 		spr_idle = sprSnowBotIdle;
 		spr_walk = sprSnowBotWalk;

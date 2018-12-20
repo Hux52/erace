@@ -5,7 +5,6 @@ global.hasGenCont = false;
 
 // charselect sprite
 global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADHSURBVDhPtZM9CgIxEIVzDk9hKR5gK8FarLyAt7CwsvEoNjZ29l7BYwjC6ht4w+zmaYTE4oPJ8OZLsj/pfjn2KSXndj0ZqBerrkgbAfkm4AZZv7lABVGfD2sj9qVgvpw6FKH+ryAObfebjCigxPk0NIYbZKJqgQormgn87m/sIaqwolpAOOivUYVKVJ0ADAS4lwr90jcRGs9ZcrAuwWwbwe4xkaF47Ej8+ZAzAR8KwBqoYUW9AEODDyOIWHM97hlxOApAud/1L4adBDd3VCKFAAAAAElFTkSuQmCC", 1, 0, 0);
-global.sprPortrait = sprite_add("sprites/sprPortraitRatKing.png",1 , 24, 200);
 
 // character select sounds
 global.sndSelect = sound_add("sounds/sndRatKingSelect2.ogg");	// not sure
@@ -67,13 +66,23 @@ died = 0;	// prevent frames after death
 canswap = 0;
 canpick = 0;
 
+if(charge_cool > 0){
+	// sprite faces direction when charging
+	if(direction > 90 and direction <= 270){
+		right = -1;
+	}
+	else{
+		right = 1;
+	}
+}
+
 // special- exchange rats for health
-if(button_pressed(index, "spec")){
+if(button_pressed(index, "fire")){
 	if(canspec = 1){
 		if(spawn_cool = 0 and charge_cool = 0 and my_health > 4){
 			sound_play(sndRatKingVomit);
 			spawn_cool = 90;
-			my_health -= 4;
+			my_health -= 6;
 		}
 	}
 }
@@ -108,7 +117,7 @@ if(spawn_cool > 0){
 				on_hurt = script_ref_create(fastrat_hurt);
 				on_destroy = script_ref_create(fastrat_destroy);
 				// friendly outline
-				playerColor = player_get_color(grandcreator.index);
+				playerColor = player_get_color(creator.index);
 				toDraw = self;
 				script_bind_draw(draw_outline, depth, playerColor, toDraw);
 			}
@@ -130,7 +139,7 @@ if(spawn_cool > 0){
 }
 
 // special b- self destruct charge
-if(button_pressed(index, "fire") and spawn_cool <= 60){
+if(button_pressed(index, "spec") and spawn_cool <= 60){
 	sound_play(sndRatkingCharge);
 	charge_cool = 90;
 }
@@ -390,7 +399,7 @@ return "CONTACT DAMAGE#SPAWN RATS";
 
 #define race_portrait
 // return portrait for character selection screen and pause menu
-return global.sprPortrait;
+return sprBigPortraitChickenHeadless;
 
 
 #define race_mapicon

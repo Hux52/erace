@@ -47,7 +47,7 @@ canswap = 0;
 canpick = 0;
 
 // special- shoot venom
-if(button_pressed(index, "spec")){
+if(button_pressed(index, "fire")){
 	if(cooldown = 0){
 		cooldown = 90;	// shoot venom again in 90 frames
 		venom = 25;	// shoot venom for 25 frames

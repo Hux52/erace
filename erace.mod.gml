@@ -71,9 +71,13 @@ with(WepPickup){
 	instance_destroy();
 }
 
-// no contact damage
-with(instances_matching_ne(enemy, "canmelee", 0)){
-	canmelee = 0;
+// no contact damage, rad bonus
+with(enemy){
+	if("erace" not in self){
+		canmelee = 0;
+		raddrop += 1;
+		erace = true;
+	}
 }
 
 #define chat_command

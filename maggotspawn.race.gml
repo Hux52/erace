@@ -70,7 +70,7 @@ else{
 }
 
 // special- self destruct init
-if(button_pressed(index, "spec")){
+if(button_pressed(index, "spec") or button_pressed(index, "fire")){
 	if(self_destruct = -1){
 		spr_idle = sprMSpawnChrg;
 		spr_walk = sprMSpawnIdle;

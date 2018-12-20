@@ -69,7 +69,7 @@ canswap = 0;
 canpick = 0;
 
 // special- venom
-if(button_pressed(index, "spec")){
+if(button_pressed(index, "fire")){
 	if(cooldown = 0){
 		cooldown = 60;	// cooldown til next fire
 		venom = 15;	// firing duration
