@@ -1,6 +1,6 @@
 #define init
 //global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADpSURBVDhPvZI9CgIxEEYHvIWttYWdpWfYI3gNK4s9huAJrKzt7Bc8g6UHEIToBF74ErKL4K7Fg2Qm38vPrj0uTXDMLEHtG6LAQ8v9LPJ/gYZVArWQYrvNIjga1nEtpNi9OwWHHT3YPucRajCN4HZchT4QDl3nU7f4BorXCOtpphPwDuV7eFCvA5mABexejpWa5HfBa23BIaTQA8KZrBas4YsZZ6fSRUP0CrxxaLehu54TPqfGuBSka2Evwwi8p2EE6QSjCQgRoKZzlbBhEkD8tjInoDVON55AF/CHIaJfShI0NFgT1Nc04Q2YTjeSiZKRigAAAABJRU5ErkJggg==", 1, 0, 0);
-
+global.sprPortrait = sprite_add("sprites/sprPortraitScorpion.png",1 , 10, 200);
 
 #define create
 // player instance creation of this race
@@ -157,7 +157,7 @@ return "CONTACT DAMAGE#CAN SPRAY VENOM";
 
 #define race_portrait
 // return portrait for character selection screen and pause menu
-return sprBigPortraitChickenHeadless;
+return global.sprPortrait;
 
 
 #define race_mapicon
