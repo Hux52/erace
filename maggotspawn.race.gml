@@ -82,7 +82,7 @@ if(button_pressed(index, "spec")){
 if(self_destruct > 0){
 	self_destruct--;
 }
-else{
+else if(self_destruct != -1){
 	my_health = 0;
 }
 
