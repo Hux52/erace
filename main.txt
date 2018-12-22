@@ -8,6 +8,7 @@
 /loadwep guardian
 /loadwep sniper
 /loadwep sniper_ultra
+/loadwep super_sniper_cannon
 
 /loadrace maggot
 /loadrace maggotspawn

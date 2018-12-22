@@ -20,10 +20,15 @@ snd_hurt = sndSniperHit;
 //snd_dead = doesn't have one
 
 // stats
-maxspeed = 1.1;
+maxspeed_base = 1.1;
+maxspeed = maxspeed_base;
 team = 2;
 maxhealth = 6;
 hasDied = false;
+firing = false;
+cooldown_base = 45;
+cooldown = 0;
+dash_speed = 7;
 
 // vars
 melee = 0;	// can melee or not
@@ -40,6 +45,45 @@ melee = 0;	// can melee or not
 canswap = 0;
 canpick = 0;
 
+//basic stuff
+if (cooldown > 0){
+	cooldown--;
+	canspec = false;
+} else {
+	canspec = true;
+}
+
+if(firing == true){
+	canwalk = false;
+} else {
+	if(cooldown < cooldown_base - 5){ //can't walk for 5 frames
+		canwalk = true;
+	} else {
+		canwalk = false;
+	}
+}
+
+//fixing speed
+if(maxspeed > maxspeed_base){
+	maxspeed *= 0.85;
+} else {maxspeed = maxspeed_base;}
+
+//dash event
+if(button_pressed(index, "spec")){
+	if(canspec = true && firing = false){
+		instance_create(x,y,Dust);
+		
+		maxspeed = dash_speed;
+		motion_add(direction, dash_speed);
+		cooldown = cooldown_base;
+		sound_play(sndAssassinGetUp);
+	}
+}
+
+if (reload > 30 && wep == "sniper"){
+	firing = true;
+} else {firing = false;}
+
 if (my_health == 0 && hasDied == false){
 	sound_play(sndExplosion);
 	instance_create(x,y,Explosion);
@@ -50,6 +94,10 @@ if (ultra_get("sniper", 1) == 1){
 	wep = "sniper_ultra";
 }
 
+if (ultra_get("sniper", 2) == 1){
+	wep = "super_sniper_cannon";
+}
+
 #define race_name
 // return race name for character select and various menus
 return "Sniper";
@@ -57,7 +105,7 @@ return "Sniper";
 
 #define race_text
 // return passive and active for character selection screen
-return "LONG RANGED#EXPLODES ON DEATH";
+return "LONG RANGED#EXPLODES ON DEATH#CAN DASH";
 
 
 #define race_portrait
@@ -116,7 +164,8 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "CAN'T THINK OF A NAME";
+	case 1: return "ARMAMENT UPGRADE";
+	case 2: return "CLONING";
 	default: return "";
 }
 
@@ -124,7 +173,8 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "TIME TO CELEBRATE";
+	case 1: return "IT LOOKS FAMILIAR";
+	case 2: return "NOW THIS IS SILLY";
 	default: return "";
 }
 

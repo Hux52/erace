@@ -12,7 +12,7 @@ return "SNIPER RIFLE";
 return sprSniperGun;
 
 #define weapon_type
-return 0;
+return 1;
 
 #define weapon_auto
 return false;
@@ -33,24 +33,24 @@ return sndSwapHammer;
 return false;
 
 #define weapon_laser_sight
-return true;
+return firing;
 
 #define weapon_text
 return "IN MY SIGHTS";
 
 #define weapon_fire
 // no moving
-speed = 0;
 canwalk = 0;
+firing = true;
 // effect
 sound_play(sndSniperTarget);
 // delay til swing
 wait(30);
 // can walk again
+firing = false;
 canwalk = 1;
 weapon_post(5, 20, 5);	// weapon kick and screen shake
 sound_play(sndSniperFire);
-
 for (i = 0; i < 3; i++){
 	with(instance_create(x + lengthdir_x(8, gunangle), y + lengthdir_y(8, gunangle), Bullet1)){
 		creator = other;
@@ -62,4 +62,3 @@ for (i = 0; i < 3; i++){
 		damage = 3;
 	}
 }
-firing = false;
