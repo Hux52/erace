@@ -81,7 +81,7 @@ if(charge_cool > 0){
 // special- exchange rats for health
 if(button_pressed(index, "fire")){
 	if(canspec = 1){
-		if(spawn_cool = 0 and charge_cool = 0 and my_health > 4){
+		if(spawn_cool = 0 and charge_cool = 0 and my_health > 6){
 			sound_play(sndRatKingVomit);
 			spawn_cool = 90;
 			my_health -= 6;
