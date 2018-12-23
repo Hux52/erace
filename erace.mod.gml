@@ -1,5 +1,6 @@
 #define init
 global.healthChance = 30; //percent chance of transforming an ammo pickup into a health pickup
+global.erace_raddrop = 1; //extra rads to drop
 
 // disable default races
 for(i = 1; i < 16; i++){
@@ -73,19 +74,21 @@ with(WepPickup){
 
 // no contact damage, rad bonus
 with(enemy){
-	if("erace" not in self){
-		raddrop += 1;
-		erace = true;
+	if("erace_has_dropped_rads" not in self){
+		raddrop += global.erace_raddrop;
+		erace_has_dropped_rads = true;
 	}
 	if(meleedamage > 0){
         var _p = instance_nearest(x, y, Player);
-        if(Player.melee = true){
-            if(point_distance(x, y, _p.x, _p.y) < 40){
-                canmelee = 0;
-            }
-            else{
-                canmelee = 1;
-            }
+		if(instance_exists(_p)){
+			if(Player.melee = true){
+				if(point_distance(x, y, _p.x, _p.y) < 40){
+					canmelee = 0;
+				}
+				else{
+					canmelee = 1;
+				}
+			}
         }
     }
 }
@@ -108,16 +111,22 @@ switch(command){
 				trace("List of ERACE commands:");
 				trace("/ehelp [command] - only use this in case of severe confusion");
 				trace("/echance - chance for small ammo pickups to become health pickups");
+				trace("/erads - change how many rads the enemies drop for a less unpleasant experience");
 			break;
 			
 			case "EHELP":
-				trace("If you need help with getting help, I'm not sure what to tell you.");
+				trace("If you need help with getting help, you are truly lost.");
 				//I mean, you can't argue there
 			break;
 			
 			case "ECHANCE":
 				trace("Sets the chance, in percent, to transform an ammo pickup into a health pickup.");
 				trace("/echance default to return to the industry standard of 30.78916478246%.")
+			break;
+			
+			case "ERADS":
+				trace("Sets how many additional rads the enemies drop on death. (Default - 1)");
+				trace("Use this if you just feel like the enemies don't drop enough rads for your liking.");
 			break;
 			
 			default:
@@ -141,6 +150,27 @@ switch(command){
 		default:
 			global.healthChance = real(parameter);
 			trace("Chance to transform into a health pickup now " + string(global.healthChance) + "%");
+		break;
+		}
+	return true;
+	break;
+	
+	case "ERADS":
+		switch(parameter){
+			case "":
+				trace("Enemies now drop " + string(global.erace_raddrop) + " more rads on death.");
+			break;
+			
+			default:
+			if (real(parameter) < 0){
+				trace("Enter a non-negative number, please.");
+			} else if (real(parameter) > 0) {
+				global.erace_raddrop = real(parameter);
+				trace("Enemies now drop " + string(global.erace_raddrop) + " more rads on death.");
+			} else {
+				global.erace_raddrop = 0;
+				trace("Enemies drop the regular number of rads on death.");
+			}
 		}
 	return true;
 	break;
