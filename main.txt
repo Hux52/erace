@@ -25,6 +25,7 @@
 /loadrace assassin
 
 /loadrace raven
+/loadrace salamander
 /loadrace sniper
 
 /loadrace snowbot
