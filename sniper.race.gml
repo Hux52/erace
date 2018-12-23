@@ -68,18 +68,25 @@ if(maxspeed > maxspeed_base){
 	maxspeed *= 0.85;
 } else {maxspeed = maxspeed_base;}
 
+//fixing scale
+if (image_xscale < 1){
+	image_xscale *= 1.34;
+} else {
+	image_xscale = 1;
+	image_yscale = image_xscale;
+}
+
 //dash event
 if(button_pressed(index, "spec")){
 	if(canspec = true && firing = false){
 		instance_create(x,y,Dust);
-		
+		image_xscale = 0.5;
 		maxspeed = dash_speed;
 		motion_add(direction, dash_speed);
 		cooldown = cooldown_base;
 		sound_play(sndAssassinGetUp);
 	}
 }
-
 if (reload > 30 && wep == "sniper"){
 	firing = true;
 } else {firing = false;}
