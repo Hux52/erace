@@ -185,6 +185,7 @@ if(charge > 0){
 					my_health -= 4;
 					sound_play(snd_hurt);
 					sprite_index = spr_hurt;
+					direction = other.direction;
 				}
 			}
 		}

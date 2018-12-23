@@ -74,6 +74,7 @@ if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 			sound_play(snd_hurt);
 			sound_play(sndRatMelee);
 			sprite_index = spr_hurt;
+			direction = other.direction;
 		}
 	}
 }

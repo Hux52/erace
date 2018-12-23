@@ -78,6 +78,7 @@ if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
 			sound_play(snd_hurt);
 			sound_play(sndMaggotBite);
 			sprite_index = spr_hurt;
+			direction = other.direction;
 		}
 	}
 }
