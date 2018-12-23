@@ -180,8 +180,8 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "IT LOOKS FAMILIAR";
-	case 2: return "NOW THIS IS SILLY";
+	case 1: return "MOW THEM DOWN";
+	case 2: return "IT LOOKS FAMILIAR";
 	default: return "";
 }
 
