@@ -52,7 +52,7 @@ canwalk = 1;
 weapon_post(5, 20, 5);	// weapon kick and screen shake
 sound_play(sndSniperFire);
 for (i = 0; i < 3; i++){
-	with(instance_create(x + lengthdir_x(8, gunangle), y + lengthdir_y(8, gunangle), HeavyBullet)){
+	with(instance_create(x + lengthdir_x(8, gunangle), y + lengthdir_y(8, gunangle), Bullet1)){
 		creator = other;
 		team = creator.team;
 		direction = creator.gunangle - 3 + (3*creator.i);
