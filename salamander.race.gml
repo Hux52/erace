@@ -51,6 +51,7 @@ fire_max = 60;
 fire_angle = 0;
 fire_angle_increase = 0;
 fireBar_alpha = 2;
+loop = 0;
 
 #define game_start
 // executed after picking race and starting for each player picking this race
@@ -72,6 +73,11 @@ if(cooldown > 0){
 
 if(button_pressed(index, 'spec') && canspec = true){
 	is_spewing_fire = true;
+
+		sound_play(sndSalamanderFire);
+		sound_play(sndSalamanderCharge);
+
+	loop = sound_loop(sndSalamanderFireLoop);
 	fire_angle = point_direction(x,y,mouse_x,mouse_y);
 }
 
@@ -93,6 +99,7 @@ if(is_spewing_fire){
 		image_angle = direction;
 		speed = 6;
 		sprite_index = sprSalamanderBullet;
+		damage = 2;
 	}
 } else {
 	if(fire_remaining < 60){
@@ -104,6 +111,8 @@ if(is_spewing_fire){
 	spr_idle = sprSalamanderIdle;
 	spr_walk = sprSalamanderWalk;
 	canwalk = true;
+	
+	sound_stop(loop);
 }
 
 if(fire_remaining <= 0){
@@ -111,10 +120,50 @@ if(fire_remaining <= 0){
 }
 
 #define draw
+//center coords
+xx = x - 10;
+yy = y - 10;
+r = 8;
+num = 32;
+
 a = draw_get_alpha();
 draw_set_alpha(fireBar_alpha);
-draw_line_width_color(x - ((fire_remaining/fire_max) * 24)/2, y - 10, x + ((fire_remaining/fire_max) * 24)/2, y - 10, 3, c_yellow, c_red);
+//draw_triangle_color(x - 15, y - 10, x - 15 + ((fire_remaining/fire_max)*30), y - 10, x - 15 + ((fire_remaining/fire_max)*30), y - 10 - ((fire_remaining/fire_max)*5),c_red,c_orange,c_yellow, false);
+draw_primitive_begin(pr_trianglestrip);
+draw_set_color(c_red);
+draw_vertex(xx, yy);
+for(i = 0; i <= num; i += 1){
+	if((fire_remaining/fire_max) >= (i / num)){
+		draw_set_color(make_color_hsv(40 * (i/num),255,255));
+		draw_vertex(xx - lengthdir_x(r, -90 + (360*i / num)), yy - lengthdir_y(r, -90 + (360*i / num)));
+		draw_vertex(xx - lengthdir_x(r/2, -90 + (360*i / num)), yy - lengthdir_y(r/2, -90 + (360*i / num)));
+	}
+}
+draw_primitive_end();
+
+draw_primitive_begin(pr_linestrip);
+draw_set_color(c_black);
+for(i = 0; i <= num; i += 1){
+	if((fire_remaining/fire_max) * 360 >= (360*i / num)){
+		draw_set_color(c_black);
+		draw_vertex(xx - lengthdir_x(r/2, -90 + (360*i / num)), yy - lengthdir_y(r/2, -90 + (360*i / num)));
+	}
+}
+draw_primitive_end();
+
+draw_primitive_begin(pr_linestrip);
+draw_set_color(c_black);
+for(i = 0; i <= num; i += 1){
+	if((fire_remaining/fire_max) * 360 >= (360*i / num)){
+		draw_set_color(c_black);
+		draw_vertex(xx - lengthdir_x(r, -90 + (360*i / num)), yy - lengthdir_y(r, -90 + (360*i / num)));
+	}
+}
+draw_primitive_end();
+
 draw_set_alpha(a);
+//alternate firebar:
+//draw_line_width_color(x - ((fire_remaining/fire_max) * 24)/2, y - 10, x + ((fire_remaining/fire_max) * 24)/2, y - 10, 3, c_yellow, c_red);
 
 #define race_name
 // return race name for character select and various menus
