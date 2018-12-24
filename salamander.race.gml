@@ -134,7 +134,11 @@ draw_set_color(c_red);
 draw_vertex(xx, yy);
 for(i = 0; i <= num; i += 1){
 	if((fire_remaining/fire_max) >= (i / num)){
+		if(fireBar_alpha = 1.5 || fireBar_alpha = 1.6 || fireBar_alpha = 1.8 || fireBar_alpha = 1.9){
+			draw_set_color(c_white);
+		} else {
 		draw_set_color(make_color_hsv(40 * (i/num),255,255));
+		}
 		draw_vertex(xx - lengthdir_x(r, -90 + (360*i / num)), yy - lengthdir_y(r, -90 + (360*i / num)));
 		draw_vertex(xx - lengthdir_x(r/2, -90 + (360*i / num)), yy - lengthdir_y(r/2, -90 + (360*i / num)));
 	}

@@ -14,7 +14,7 @@ return sprRavenGun;
 return 1;
 
 #define weapon_auto
-return false;
+return true;
 
 #define weapon_load
 return 30;

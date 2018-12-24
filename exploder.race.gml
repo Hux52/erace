@@ -111,10 +111,18 @@ if(collision_rectangle(x + 10, y + 10, x - 10, y - 10, enemy, 0, 1) && exploded 
 			}
 		}
 	}
+	
+	// effect
+	for(i = 0; i < 360; i += 120){
+		with(instance_create(x, y, AcidStreak)){
+			speed = 8;
+			direction = other.i + random_range(-30, 30);
+		}
+	}
+	
 	if (u2 = 1){
 		sound_play(sndDevastator);
 	}
-	exploded = 30;	// prevent extra frames after death
 
 	my_health -= 1;
 }
