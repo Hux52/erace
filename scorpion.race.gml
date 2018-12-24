@@ -73,7 +73,7 @@ canpick = 0;
 if(button_pressed(index, "fire")){
 	if(cooldown = 0){
 		cooldown = 60;	// cooldown til next fire
-		venom = 15;	// firing duration
+		venom = 18;	// firing duration
 		dir = gunangle;	// inital firing direction, as you may not control after starting
 		spr_idle = sprScorpionFire;
 		spr_walk = sprScorpionFire;
@@ -114,7 +114,7 @@ if(venom > 0){
 		direction = other.dir + (random(creator.accuracy) * choose(1, -1) * random(acc));
 		image_angle = direction;
 		friction = 0;
-		speed = 5;
+		speed = 3.5;
 		damage = 2;
 	}
 	venom--;
