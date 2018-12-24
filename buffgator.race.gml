@@ -24,6 +24,7 @@ maxspeed = 3;
 team = 2;
 maxhealth = 30;
 melee = 0;	// can melee or not
+weapon_custom_delay = -1; // delay for shotgun
 
 #define game_start
 // executed after picking race and starting for each player picking this race

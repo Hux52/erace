@@ -8,7 +8,7 @@ global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAA
 // https://bitbucket.org/YellowAfterlife/nuclearthronetogether/wiki/Scripting/Objects/Player
 
 // sprites
-spr_idle = sprGatorIdle;
+spr_idle = sprGatorIdleSmoke;
 spr_walk = sprGatorWalk;
 spr_hurt = sprGatorHurt;
 spr_dead = sprGatorDead;
@@ -24,7 +24,8 @@ maxspeed = 2.8;
 team = 2;
 maxhealth = 12;
 melee = 0;	// can melee or not
-
+weapon_custom_delay = -1; //for shotgun delay
+s = 45; //smoking
 
 #define game_start
 // executed after picking race and starting for each player picking this race
@@ -36,6 +37,18 @@ melee = 0;	// can melee or not
 // most actives and passives handled here
 canswap = 0;
 canpick = 0;
+
+// smoking at the start of the level
+s--;
+if(sprite_index = sprGatorIdleSmoke){
+	if(s <= 0){
+		spr_idle = sprGatorSmoke;
+	}
+}
+
+if(sprite_index = sprGatorWalk){
+	spr_idle = sprGatorIdle;
+}
 
 // ULTRA A: EVOLUTION - BUFF GATOR
 if (ultra_get("gator",1) = 1){

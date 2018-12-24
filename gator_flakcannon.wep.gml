@@ -3,6 +3,23 @@
 #define game_start
 
 #define step
+if(weapon_custom_delay >= 0){
+	weapon_custom_delay--;
+}
+
+if(weapon_custom_delay = 0){
+	weapon_post(6, 10, 10);	// weapon kick and screen shake
+	sound_play_pitch(sndFlakCannon, random_range(0.85,1.15));
+	with instance_create(x + lengthdir_x(8, gunangle), y + lengthdir_y(8, gunangle), FlakBullet){
+		creator = other;
+		team = creator.team;
+		direction = creator.gunangle + random_range(-5,5);
+		image_angle = direction;
+		friction = 0.35;
+		speed = 9;
+		damage = 1;
+	}
+}
 
 with(Bullet2){
     if("boosted" not in self){
@@ -49,15 +66,4 @@ return "Pop pop pop pop";
 // effect
 instance_create(x, y - 8, AssassinNotice);
 // delay to shoot
-wait(5);
-weapon_post(6, 10, 10);	// weapon kick and screen shake
-sound_play_pitch(sndFlakCannon, random_range(0.85,1.15));
-	with instance_create(x + lengthdir_x(8, gunangle), y + lengthdir_y(8, gunangle), FlakBullet){
-		creator = other;
-		team = creator.team;
-		direction = creator.gunangle + random_range(-5,5);
-		image_angle = direction;
-		friction = 0.35;
-		speed = 9;
-		damage = 1;
-	}
+weapon_custom_delay = 5;
