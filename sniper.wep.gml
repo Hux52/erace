@@ -39,16 +39,18 @@ return firing;
 return "IN MY SIGHTS";
 
 #define weapon_fire
-// no moving
-canwalk = 0;
-firing = true;
-// effect
-sound_play(sndSniperTarget);
-// delay til swing
-wait(30);
-// can walk again
-firing = false;
-canwalk = 1;
+if(instance_exists(Player)){
+	// no moving
+	canwalk = 0;
+	firing = true;
+	// effect
+	sound_play(sndSniperTarget);
+	// delay til swing
+	wait(30);
+	// can walk again
+	firing = false;
+	canwalk = 1;
+}
 weapon_post(5, 20, 5);	// weapon kick and screen shake
 sound_play(sndSniperFire);
 for (i = 0; i < 3; i++){
