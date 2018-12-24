@@ -34,6 +34,7 @@ trace ("Type '/ehelp list' for a list of commands.");
 
 //if (Player.reload>0)trace(Player.reload) //for testing reloads
 // replace big chests with health chests
+
 if (instance_exists(GenCont) == false){
 with(AmmoChest){
 		instance_create(x, y, HealthChest);
@@ -49,6 +50,11 @@ with(AmmoChest){
 		instance_destroy();
 	}
 	
+} else {
+	//stop snowbot loop in portal
+		if(audio_is_playing(sndSnowBotSlideLoop)){
+		sound_stop(sndSnowBotSlideLoop);
+	}
 }
 // chance for ammo pickups to become hp- delete otherwise
 with(AmmoPickup){
