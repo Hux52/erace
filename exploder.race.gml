@@ -85,7 +85,33 @@ if(canwalk = 1){
 
 // explode on contact- make noise when close
 if(collision_rectangle(x + 10, y + 10, x - 10, y - 10, enemy, 0, 1) && exploded <= 0){
-	exploded = 30;
+	exploder_explode();
+	my_health -= 1;
+}
+else if(collision_rectangle(x - 30, y - 10, x + 30, y + 10, enemy, 0, 1)){
+	if(close = 0){
+		sound_play(sndFrogClose);
+		close = 30;
+	}
+}
+
+if(exploded > 0){
+	exploded--;
+}
+
+// noise cooldown to prevent spam
+if(close > 0){
+	close--;
+}
+
+// on death
+if(my_health = 0 && dead = false){
+	exploder_explode();
+	dead = true;
+}
+
+#define exploder_explode
+exploded = 30;
 	sound_play_pitchvol(sndFrogPistol, random_range(0.9, 1.1), 0.5);
 	// 8 bullets
 	for(i = 0; i < 360; i += 45){
@@ -127,38 +153,6 @@ if(collision_rectangle(x + 10, y + 10, x - 10, y - 10, enemy, 0, 1) && exploded 
 	if (u2 = 1){
 		sound_play(sndDevastator);
 	}
-
-	my_health -= 1;
-}
-else if(collision_rectangle(x - 30, y - 10, x + 30, y + 10, enemy, 0, 1)){
-	if(close = 0){
-		sound_play(sndFrogClose);
-		close = 30;
-	}
-}
-
-if(exploded > 0){
-	exploded--;
-}
-
-// noise cooldown to prevent spam
-if(close > 0){
-	close--;
-}
-
-// on death
-if(my_health = 0 && dead = false){
-	// effect
-	for(i = 0; i < 360; i += 60){
-		with(instance_create(x, y, AcidStreak)){
-			speed = 8;
-			direction = other.i + random_range(-30, 30);
-			image_angle = direction;
-			friction = 0.85;
-		}
-	}
-	dead = true;
-}
 
 #define race_name
 // return race name for character select and various menus
