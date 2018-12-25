@@ -51,6 +51,7 @@ close = 0;	// timer for when close to an enemy- prevents sound spam
 exploded = 0;	// prevent extra death frames
 ambience = 0;	// ambient bullet frequence
 melee = 0;	// can melee or not
+dead = false; //for effect
 
 #define level_start
 // toxic on start
@@ -113,28 +114,15 @@ if(ambience > 0){
 }
 
 // explode on contact- make noise when close
-if(collision_rectangle(x + 10, y + 10, x - 10, y - 10, enemy, 0, 1)){
-	my_health = 0;
-}
-else if(collision_rectangle(x + 30, y + 10, x - 30, y - 10, enemy, 0, 1)){
-	if(close = 0){
-		sound_play(sndFrogClose);
-		close = 30;
-	}
-}
-
-// noise cooldown to prevent spam
-if(close > 0){
-	close--;
-}
-
-// on death
-if(my_health = 0 and exploded = 0){
+if(collision_rectangle(x + 10, y + 10, x - 10, y - 10, enemy, 0, 1) && exploded <= 0){
+	exploded = 30;
 	// effect
 	for(i = 0; i < 360; i += 120){
 		with(instance_create(x, y, AcidStreak)){
 			speed = 8;
 			direction = other.i + random_range(-30, 30);
+			image_angle = direction;
+			friction = 0.9;
 		}
 	}
 	// 12 bullets
@@ -172,7 +160,37 @@ if(my_health = 0 and exploded = 0){
 			speed = random_range(0.5, 1);
 		}
 	}
-	exploded = 1;	// prevent extra frames after death
+	
+	my_health -= 1;
+}
+else if(collision_rectangle(x + 30, y + 10, x - 30, y - 10, enemy, 0, 1)){
+	if(close = 0){
+		sound_play(sndFrogClose);
+		close = 30;
+	}
+}
+
+// noise cooldown to prevent spam
+if(close > 0){
+	close--;
+}
+
+if(exploded > 0){
+	exploded--;
+}
+
+// on death
+if(my_health = 0 && dead = false){
+	// effect
+	for(i = 0; i < 360; i += 120){
+		with(instance_create(x, y, AcidStreak)){
+			speed = 8;
+			direction = other.i + random_range(-30, 30);
+			image_angle = direction;
+			friction = 0.9;
+		}
+	}
+	dead = true;
 }
 
 #define race_name

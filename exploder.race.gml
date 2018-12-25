@@ -45,6 +45,7 @@ mask_index = mskPlayer;
 close = 0;	// timer for when close to an enemy- prevents sound spam
 exploded = 0;	// prevent extra death frames
 melee = 1;	// can melee or not
+dead = false; // death effect
 
 #define game_start
 // executed after picking race and starting for each player picking this race
@@ -85,6 +86,7 @@ if(canwalk = 1){
 // explode on contact- make noise when close
 if(collision_rectangle(x + 10, y + 10, x - 10, y - 10, enemy, 0, 1) && exploded <= 0){
 	exploded = 30;
+	sound_play_pitchvol(sndFrogPistol, random_range(0.9, 1.1), 0.5);
 	// 8 bullets
 	for(i = 0; i < 360; i += 45){
 		if(u2 = 0){
@@ -117,6 +119,8 @@ if(collision_rectangle(x + 10, y + 10, x - 10, y - 10, enemy, 0, 1) && exploded 
 		with(instance_create(x, y, AcidStreak)){
 			speed = 8;
 			direction = other.i + random_range(-30, 30);
+			image_angle = direction;
+			friction = 0.9;
 		}
 	}
 	
@@ -143,14 +147,17 @@ if(close > 0){
 }
 
 // on death
-if(my_health = 0){
+if(my_health = 0 && dead = false){
 	// effect
-	for(i = 0; i < 360; i += 120){
+	for(i = 0; i < 360; i += 60){
 		with(instance_create(x, y, AcidStreak)){
 			speed = 8;
 			direction = other.i + random_range(-30, 30);
+			image_angle = direction;
+			friction = 0.85;
 		}
 	}
+	dead = true;
 }
 
 #define race_name
