@@ -6,6 +6,8 @@ global.hasGenCont = false;
 // character select button
 global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACESURBVDhPYwCC/+g41NmeaAxUT6EBETph/9ExKQbRxgAYJsYgyg3QFNX4TwjDDMJm2CAwAJvf0TFtDUCWhOE/FqgYWY4+BpCIsQoSj0sTnP/PbU0iGVPPAGySxGDqGQDyAi6MTSMMU88AbJL4MMxw6hkAyiwwQWwaQBgmj6wRkpTt/wMAPXKuCw+8+LAAAAAASUVORK5CYIIAAAAAAAAAAAAAAAAAAAAAAA==", 1, 0, 0);
 
+global.sprPortrait = sprite_add("sprites/sprPortraitAssassin.png", 1, 15, 205);
+
 // level start init- MUST GO AT END OF INIT
 while(true){
 	// first chunk here happens at the start of the level, second happens in portal
@@ -141,7 +143,7 @@ return "CAN HIDE#HAS PIPE";
 
 #define race_portrait
 // return portrait for character selection screen and pause menu
-return sprBigPortraitChickenHeadless;
+return global.sprPortrait;
 
 
 #define race_mapicon
