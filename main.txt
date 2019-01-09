@@ -1,4 +1,5 @@
-
+weps
+/loadwep assassin
 /loadwep bandit
 /loadwep bandit_popgun
 /loadwep gator_shotgun
@@ -6,39 +7,44 @@
 /loadwep gator_flakcannon
 /loadwep raven
 /loadwep guardian
+/loadwep necromancer
 /loadwep sniper
 /loadwep sniper_ultra
 /loadwep super_sniper_cannon
 
-/loadrace maggot
+desert
 /loadrace maggotspawn
 /loadrace bigmaggot
 /loadrace bandit
 /loadrace scorpion
 
-/loadrace fastrat
+sewers
 /loadrace rat
 /loadrace ratking
 /loadrace exploder
 /loadrace gator
-/loadwep assassin
 /loadrace assassin
 
+scrapyards
 /loadrace raven
 /loadrace salamander
 /loadrace sniper
 
+frozen city
 /loadrace snowbot
 
-/loadwep necromancer
+labs
 /loadrace necromancer
 
+palace
+/loadrace guardian
+
+/loadrace maggot
 /loadrace bandit_snow
 /loadrace bandit_jungle
 /loadrace goldscorpion
+/loadrace fastrat
 /loadrace superfrog
 /loadrace buffgator
-
-/loadrace guardian
 
 /loadmod erace
