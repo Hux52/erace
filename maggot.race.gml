@@ -30,6 +30,10 @@ spr_dead = sprMaggotDead;
 spr_sit1 = sprMutant15GoSit;
 spr_sit2 = sprMutant15Sit;
 
+// sounds
+snd_hurt = sndHitFlesh;
+snd_dead = sndEnemyDie;
+
 // stats
 maxspeed = 2.5;
 team = 2;
@@ -110,21 +114,21 @@ return 0;
 
 #define race_avail
 // return if race is unlocked
-return 1;
+return false;
 
 
 #define race_menu_button
 // return race menu button icon
-sprite_index = global.sprMenuButton;
+return -1;
 
 #define race_skins
 // return number of skins the race has
-return 1;
+return 0;
 
 
 #define race_skin_avail
 // return if skin is unlocked
-return 1;
+return 0;
 
 #define race_skin_button
 // return skin switch button sprite

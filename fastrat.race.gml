@@ -151,12 +151,12 @@ return 0;
 
 #define race_avail
 // return if race is unlocked
-return 1;
+return false;
 
 
 #define race_menu_button
 // return race menu button icon
-sprite_index = global.sprMenuButton;
+return -1;
 
 #define race_skins
 // return number of skins the race has
