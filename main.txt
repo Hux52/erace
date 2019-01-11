@@ -30,6 +30,9 @@ scrapyards
 /loadrace salamander
 /loadrace sniper
 
+crystal caves
+/loadrace spider
+
 frozen city
 /loadrace snowbot
 
