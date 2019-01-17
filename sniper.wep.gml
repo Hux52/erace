@@ -4,7 +4,33 @@ firing = false;
 #define game_start
 
 #define step
-
+if ("weapon_custom_delay" not in self){
+	weapon_custom_delay = 0;
+}
+if(weapon_custom_delay >= 0){
+	weapon_custom_delay--;
+	// no moving
+	canwalk = false;
+	firing = true;
+}
+if(weapon_custom_delay = 0){
+	// can walk again
+	firing = false;
+	canwalk = 1;
+	weapon_post(5, 20, 5);	// weapon kick and screen shake
+	sound_play(sndSniperFire);
+	for (i = 0; i < 3; i++){
+		with(instance_create(x + lengthdir_x(8, gunangle), y + lengthdir_y(8, gunangle), Bullet1)){
+			creator = other;
+			team = creator.team;
+			direction = creator.gunangle - 3 + (3*creator.i);
+			image_angle = direction;
+			speed = 20;
+			friction = 0;
+			damage = 6;
+		}
+	}
+}
 #define weapon_name
 return "SNIPER RIFLE";
 
@@ -39,28 +65,6 @@ return firing;
 return "IN MY SIGHTS";
 
 #define weapon_fire
-if(instance_exists(Player)){
-	// no moving
-	canwalk = 0;
-	firing = true;
 	// effect
 	sound_play(sndSniperTarget);
-	// delay til swing
-	wait(30);
-	// can walk again
-	firing = false;
-	canwalk = 1;
-}
-weapon_post(5, 20, 5);	// weapon kick and screen shake
-sound_play(sndSniperFire);
-for (i = 0; i < 3; i++){
-	with(instance_create(x + lengthdir_x(8, gunangle), y + lengthdir_y(8, gunangle), Bullet1)){
-		creator = other;
-		team = creator.team;
-		direction = creator.gunangle - 3 + (3*creator.i);
-		image_angle = direction;
-		speed = 20;
-		friction = 0;
-		damage = 6;
-	}
-}
+	weapon_custom_delay = 30;

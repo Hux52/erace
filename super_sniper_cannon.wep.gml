@@ -1,4 +1,5 @@
 #define init
+firing = false;
 global.sprSniper = sprSniperGun;
 global.sprSniperBullet = sprHeavyBullet;
 global.mskSniperBullet = mskHeavyBullet;
@@ -6,6 +7,45 @@ global.mskSniperBullet = mskHeavyBullet;
 #define game_start
 
 #define step
+if ("weapon_custom_delay" not in self){
+	weapon_custom_delay = 0;
+}
+if(weapon_custom_delay >= 0){
+	weapon_custom_delay--;
+	// no moving
+	canwalk = false;
+	firing = true;
+}
+if(weapon_custom_delay = 0){
+
+firing = false;
+canwalk = 1;
+weapon_post(5, 30, 10);
+sound_play(sndSniperFire);
+with(instance_create(x + lengthdir_x(8, gunangle), y + lengthdir_y(8, gunangle), CustomHitme)){
+	creator = other;
+	team = creator.team;
+	name = "SniperBoy";
+	spr_idle = sprSniperIdle;
+	spr_dead = sprSniperDead;
+	direction = creator.gunangle;
+	sprite_index = spr_idle;
+	mask_index = mskBandit;
+	speed = 12;
+	friction = 0.6;
+	spr_shadow_y = 6;
+	image_speed = 0.2;
+	sizeb = 1.5;
+	image_yscale = 1.5;
+	spr_shadow = shd32;
+	alarm = [-1, -1];
+	offset = random(360);
+	on_step = script_ref_create(boy_step);
+	on_destroy = script_ref_create(boy_die);
+}
+
+}
+
 
 #define weapon_name
 return "SUPER SNIPER CANNON";
@@ -35,37 +75,15 @@ return sndSwapMachinegun;
 return false;
 
 #define weapon_laser_sight
-return true;
+return firing;
 
 #define weapon_text
 return "HEADSHOT";
 
 #define weapon_fire
-weapon_post(5, 30, 10);
-sound_play(sndSniperFire);
+weapon_custom_delay = 30;
+	sound_play(sndSniperTarget);
 
-
-with(instance_create(x + lengthdir_x(8, gunangle), y + lengthdir_y(8, gunangle), CustomHitme)){
-	creator = other;
-	team = creator.team;
-	name = "SniperBoy";
-	spr_idle = sprSniperIdle;
-	spr_dead = sprSniperDead;
-	direction = creator.gunangle;
-	sprite_index = spr_idle;
-	mask_index = mskBandit;
-	speed = 12;
-	friction = 0.6;
-	spr_shadow_y = 6;
-	image_speed = 0.2;
-	sizeb = 1.5;
-	image_yscale = 1.5;
-	spr_shadow = shd32;
-	alarm = [-1, -1];
-	offset = random(360);
-	on_step = script_ref_create(boy_step);
-	on_destroy = script_ref_create(boy_die);
-}
 
 #define boy_step
 move_bounce_solid(true);
