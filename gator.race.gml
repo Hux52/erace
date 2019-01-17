@@ -38,7 +38,7 @@ maxhealth_buff = 30;
 smoke_buff = 0; 
 smoke_buff_bullets = 0;
 smoke_buff_max_bullets = 3;
-smoke_buff_threshold = 60;
+smoke_buff_threshold = 45;
 
 #define game_start
 // executed after picking race and starting for each player picking this race
@@ -78,7 +78,7 @@ if (u1 = 1){
 
 // ULTRA B: Blaze & Blast
 if (u2 = 1){
-	smoke_buff_threshold = 40;
+	smoke_buff_threshold = 30;
 	smoke_buff_max_bullets = 5;
 }
 if(reload>0)trace(reload)
@@ -102,43 +102,52 @@ if(button_check(index, "spec")){
 		}
 	}
 
-if(reload > weapon_get_load(wep)-2 && has_reloaded = true){
+if(reload > weapon_get_load(wep)-2){
 	if(smoke_buff_bullets > 0){
-		reload = reload / (smoke_buff_bullets+1);
+		reload = reload / 3;
 		smoke_buff_bullets -= 1;
 	}
 }
 
-has_reloaded = reload > 0 ? false : true
-
+if(reload <= 1) reload = 0;
 	
 #define draw
 origalpha = draw_get_alpha();
-smoke_buff_offsetx = 13;
+smoke_buff_offsetx = 11;
+smoke_buff_offsety = 20;
 draw_set_color(c_red);
 draw_set_alpha(0.4);
 if(smoke_buff_bullets = 0 && smoke_buff > 0){
-	draw_rectangle(x - smoke_buff_offsetx, y - 20, x - smoke_buff_offsetx + 4, y - 20 - ((smoke_buff/smoke_buff_threshold)*8), false);
+	draw_rectangle(x - smoke_buff_offsetx, y - smoke_buff_offsety, x - smoke_buff_offsetx + 4, y - smoke_buff_offsety - ((smoke_buff/smoke_buff_threshold)*8), false);
 	}
 if(smoke_buff_bullets = 1 && smoke_buff > 0){
-	draw_rectangle(x - smoke_buff_offsetx + 10, y - 20, x - smoke_buff_offsetx +  10 + 4, y - 20 - ((smoke_buff/smoke_buff_threshold)*8), false);
+	draw_rectangle(x - smoke_buff_offsetx + 8, y - smoke_buff_offsety, x - smoke_buff_offsetx +  8 + 4, y - smoke_buff_offsety - ((smoke_buff/smoke_buff_threshold)*8), false);
 	}
 if(smoke_buff_bullets = 2 && smoke_buff > 0){
-	draw_rectangle(x - smoke_buff_offsetx + 20, y - 20, x - smoke_buff_offsetx +  20 + 4, y - 20 - ((smoke_buff/smoke_buff_threshold)*8), false);
+	draw_rectangle(x - smoke_buff_offsetx + 16, y - smoke_buff_offsety, x - smoke_buff_offsetx +  16 + 4, y - smoke_buff_offsety - ((smoke_buff/smoke_buff_threshold)*8), false);
 	}
 if(smoke_buff_bullets = 3 && smoke_buff > 0){
-	draw_rectangle(x - smoke_buff_offsetx + 30, y - 20, x - smoke_buff_offsetx +  30 + 4, y - 20 - ((smoke_buff/smoke_buff_threshold)*8), false);
+	draw_rectangle(x - smoke_buff_offsetx + 4, y - 32, x - smoke_buff_offsetx + 4 + 4, y - 32 - ((smoke_buff/smoke_buff_threshold)*8), false);
 	}
 if(smoke_buff_bullets = 4 && smoke_buff > 0){
-	draw_rectangle(x - smoke_buff_offsetx + 40, y - 20, x - smoke_buff_offsetx +  40 + 4, y - 20 - ((smoke_buff/smoke_buff_threshold)*8), false);
+	draw_rectangle(x - smoke_buff_offsetx + 12, y - 32, x - smoke_buff_offsetx +  12 + 4, y - 32 - ((smoke_buff/smoke_buff_threshold)*8), false);
 	}
 
 draw_set_alpha(1);
 for (i = 0; i < smoke_buff_bullets; i++){
+	if (i < 3){
 	draw_set_color(c_red);
-	draw_rectangle(x - smoke_buff_offsetx + 10*i, y - 20, x - smoke_buff_offsetx + 10*i + 4, y - 28, false);
+	draw_rectangle(x - smoke_buff_offsetx + 8*i, y - smoke_buff_offsety, x - smoke_buff_offsetx + 8*i + 4, y - 28, false);
+
 	draw_set_color(c_yellow);
-	draw_rectangle(x - smoke_buff_offsetx + 10*i, y - 20, x - smoke_buff_offsetx + 10*i + 4, y - 22, false);
+	draw_rectangle(x - smoke_buff_offsetx + 8*i, y - smoke_buff_offsety, x - smoke_buff_offsetx + 8*i + 4, y - 22, false);
+	} else {
+		draw_set_color(c_red);
+		draw_rectangle(x - smoke_buff_offsetx + 8*i - 20, y - smoke_buff_offsety - 12, x - smoke_buff_offsetx + 8*i - 20 + 4, y - 28 - 12, false);
+
+		draw_set_color(c_yellow);
+		draw_rectangle(x - smoke_buff_offsetx + 8*i - 20, y - smoke_buff_offsety - 12, x - smoke_buff_offsetx + 8*i - 20 + 4, y - 22 - 12, false);
+	}
 }
 
 draw_set_alpha(origalpha);
