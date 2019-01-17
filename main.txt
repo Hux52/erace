@@ -3,7 +3,6 @@ weps
 /loadwep bandit
 /loadwep bandit_popgun
 /loadwep gator_shotgun
-/loadwep gator_autoshotgun
 /loadwep gator_flakcannon
 /loadwep raven
 /loadwep guardian
@@ -48,6 +47,5 @@ palace
 /loadrace goldscorpion
 /loadrace fastrat
 /loadrace superfrog
-/loadrace buffgator
 
 /loadmod erace
