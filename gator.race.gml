@@ -2,14 +2,16 @@
 // character select button
 global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACOSURBVDhPYwCC/9jw231BRGGgWgoNmNua9B8bJtYgyg24cHTLf3yYkEGUG4DN+dgwLoMoNwCbs5Ex7Q2ASaDjPxaoGCZOPwNIwFgFice2GvL/QTjfw5IkTD0DsEkSgzFcgAtj0wzC1DMAmyQ+DDOYegbA0jxMApsmEEbXCE+JFBsAy23oGKYBl0YIDvoPABoXHHo1+L+9AAAAAElFTkSuQmCCAAAAAAAAAA==", 1, 0, 0);
 
-global.sprPortrait = sprite_add("sprites/sprPortraitGator.png", 1, 20, 205);
-
+global.sprPortrait_normal = sprite_add("sprites/sprPortraitGator.png", 1, 20, 205);
+global.sprPortrait_buff = sprite_add("sprites/sprPortraitBuffGator.png", 1, 15, 200);
+global.sprBuffGatorSmoke = sprite_add("sprites/sprBuffGatorSmoke.png", 8, 16, 16);
+global.sprPortrait = global.sprPortrait_normal;
 #define create
 // player instance creation of this race
 // https://bitbucket.org/YellowAfterlife/nuclearthronetogether/wiki/Scripting/Objects/Player
 
 // sprites
-spr_idle = sprGatorIdleSmoke;
+spr_idle = sprGatorIdle;
 spr_walk = sprGatorWalk;
 spr_hurt = sprGatorHurt;
 spr_dead = sprGatorDead;
@@ -26,7 +28,17 @@ team = 2;
 maxhealth = 12;
 melee = 0;	// can melee or not
 weapon_custom_delay = -1; //for shotgun delay
-s = 45; //smoking
+spr_smoke_current = sprGatorSmoke;
+spr_idle_current = sprGatorIdle;
+
+maxspeed_buff = 3;
+maxhealth_buff = 30;
+
+//active ability stuff
+smoke_buff = 0; 
+smoke_buff_bullets = 0;
+smoke_buff_max_bullets = 3;
+smoke_buff_threshold = 60;
 
 #define game_start
 // executed after picking race and starting for each player picking this race
@@ -38,32 +50,98 @@ s = 45; //smoking
 // most actives and passives handled here
 canswap = 0;
 canpick = 0;
-
-// smoking at the start of the level
-s--;
-if(sprite_index = sprGatorIdleSmoke){
-	if(s <= 0){
-		spr_idle = sprGatorSmoke;
-	}
-}
-
-if(sprite_index = sprGatorWalk){
-	spr_idle = sprGatorIdle;
-}
+u1 = ultra_get("gator",1);
+u2 = ultra_get("gator",2);
 
 // ULTRA A: EVOLUTION - BUFF GATOR
-if (ultra_get("gator",1) = 1){
-	if (player_get_race(index) == "gator"){
-		player_set_race(index, "buffgator");
-		race = "buffgator";
-		wep = "gator_flakcannon"
+if (u1 = 1){
+	wep = "gator_flakcannon";
+	maxspeed = maxspeed_buff;
+	maxhealth = maxhealth_buff;
+	spr_smoke_current = global.sprBuffGatorSmoke;
+	spr_idle_current = sprBuffGatorIdle;
+	global.sprPortrait = global.sprPortrait_buff;
+	
+	// sprites
+	spr_idle = sprBuffGatorIdle;
+	spr_walk = sprBuffGatorWalk;
+	spr_hurt = sprBuffGatorHurt;
+	spr_dead = sprBuffGatorDead;
+	spr_sit1 = sprMutant15GoSit;
+	spr_sit2 = sprMutant15Sit;
+
+	// sounds
+	snd_hurt = sndBuffGatorHit;
+	snd_dead = sndBuffGatorDie;
+}
+
+
+// ULTRA B: Blaze & Blast
+if (u2 = 1){
+	smoke_buff_threshold = 40;
+	smoke_buff_max_bullets = 5;
+}
+if(reload>0)trace(reload)
+if(button_check(index, "spec")){
+	canwalk = false;
+	spr_idle = spr_smoke_current;
+	if(smoke_buff_bullets < smoke_buff_max_bullets && speed < 1){
+		smoke_buff += smoke_buff_bullets + 1;
+		if (smoke_buff >= smoke_buff_threshold){	
+			smoke_buff = 0;
+			smoke_buff_bullets += 1;
+			sound_play_pitchvol(sndSlider, 0.9 + (smoke_buff_bullets*0.1), 1)
+			sound_play_pitchvol(sndSliderLetGo, 0.9 + (smoke_buff_bullets*0.1), 1)
+		}
+	}
+} else {
+	canwalk = true;
+	spr_idle = spr_idle_current;
+		if(smoke_buff > 0){
+		smoke_buff -= 0.5;
+		}
+	}
+
+if(reload > weapon_get_load(wep)-2 && has_reloaded = true){
+	if(smoke_buff_bullets > 0){
+		reload = reload / (smoke_buff_bullets+1);
+		smoke_buff_bullets -= 1;
 	}
 }
 
-// ULTRA B: SHOOTIER SHOTGUN
-if (ultra_get("gator",2) = 1){
-	wep = "gator_autoshotgun";
+has_reloaded = reload > 0 ? false : true
+
+	
+#define draw
+origalpha = draw_get_alpha();
+smoke_buff_offsetx = 13;
+draw_set_color(c_red);
+draw_set_alpha(0.4);
+if(smoke_buff_bullets = 0 && smoke_buff > 0){
+	draw_rectangle(x - smoke_buff_offsetx, y - 20, x - smoke_buff_offsetx + 4, y - 20 - ((smoke_buff/smoke_buff_threshold)*8), false);
+	}
+if(smoke_buff_bullets = 1 && smoke_buff > 0){
+	draw_rectangle(x - smoke_buff_offsetx + 10, y - 20, x - smoke_buff_offsetx +  10 + 4, y - 20 - ((smoke_buff/smoke_buff_threshold)*8), false);
+	}
+if(smoke_buff_bullets = 2 && smoke_buff > 0){
+	draw_rectangle(x - smoke_buff_offsetx + 20, y - 20, x - smoke_buff_offsetx +  20 + 4, y - 20 - ((smoke_buff/smoke_buff_threshold)*8), false);
+	}
+if(smoke_buff_bullets = 3 && smoke_buff > 0){
+	draw_rectangle(x - smoke_buff_offsetx + 30, y - 20, x - smoke_buff_offsetx +  30 + 4, y - 20 - ((smoke_buff/smoke_buff_threshold)*8), false);
+	}
+if(smoke_buff_bullets = 4 && smoke_buff > 0){
+	draw_rectangle(x - smoke_buff_offsetx + 40, y - 20, x - smoke_buff_offsetx +  40 + 4, y - 20 - ((smoke_buff/smoke_buff_threshold)*8), false);
+	}
+
+draw_set_alpha(1);
+for (i = 0; i < smoke_buff_bullets; i++){
+	draw_set_color(c_red);
+	draw_rectangle(x - smoke_buff_offsetx + 10*i, y - 20, x - smoke_buff_offsetx + 10*i + 4, y - 28, false);
+	draw_set_color(c_yellow);
+	draw_rectangle(x - smoke_buff_offsetx + 10*i, y - 20, x - smoke_buff_offsetx + 10*i + 4, y - 22, false);
 }
+
+draw_set_alpha(origalpha);
 
 #define race_name
 // return race name for character select and various menus
@@ -72,7 +150,7 @@ return "Gator";
 
 #define race_text
 // return passive and active for character selection screen
-return "GREEN AND MEAN";
+return "CAN SMOKE";
 
 
 #define race_portrait
