@@ -5,7 +5,7 @@ global.hasGenCont = false;
 
 // character select button
 global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAIAAAB8wupbAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuNWRHWFIAAAC1SURBVDhPpZKxDcIwEEU9QxqmCDUU2QBRsEHYhYYB6MgUrJCegSj48KzjckSKYn+94u7ffcmynVC73YvcfHU49hTX2+DBXBNomo3QWFBDyKOiAIcJqzgs0VIXBfwqWAA4bXXgfjkbz/HhIV8R+F8yx4+qA69dMvpTJ2RSYP5UGPBwhlk0nQTCeJb1gcV3CJQGgEe12pv5iiRcP7Pam3lbwuVLUpsT2vxnfW9jnNBOAot8VqWU3n9mcdgsNO/xAAAAAElFTkSuQmCC", 1, 0, 0);
-
+global.sprPortrait = sprite_add("/sprites/sprPortraitRaven.png", 1, 0, 190); 
 
 // level start init- MUST GO AT END OF INIT
 while(true){
@@ -382,7 +382,7 @@ return "TOMMY GUN#CAN FLY";
 
 #define race_portrait
 // return portrait for character selection screen and pause menu
-return sprBigPortraitChickenHeadless;
+return global.sprPortrait;
 
 
 #define race_mapicon
