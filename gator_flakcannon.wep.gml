@@ -77,5 +77,5 @@ return "Blam";
 // effect
 instance_create(x, y - 8, AssassinNotice);
 // delay to shoot
-weapon_custom_delay = 5 - smoke_buff_bullets;
+weapon_custom_delay = ceil(5 / (smoke_buff_bullets+1));
 boom = blts;
