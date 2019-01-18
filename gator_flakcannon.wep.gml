@@ -30,11 +30,14 @@ if(weapon_custom_delay = 0){
 }
 
 with(Bullet2){
-    if("boosted" not in self){
-        speed = random_range(6 + other.boom,12 + other.boom);
-		friction = 0.85;
-        boosted = true;
-    }
+	if(player_get_race(creator.index) == "gator"){
+		if("boosted" not in self){
+			speed = random_range(6 + other.boom,12 + other.boom);
+			friction = 0.85;
+			boosted = true;
+			wallbounce = other.boom;
+		}
+	}
 }
 
 #define weapon_name

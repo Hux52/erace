@@ -81,7 +81,7 @@ if (u2 = 1){
 	smoke_buff_threshold = 30;
 	smoke_buff_max_bullets = 5;
 }
-if(reload>0)trace(reload)
+
 if(button_check(index, "spec")){
 	canwalk = false;
 	spr_idle = spr_smoke_current;

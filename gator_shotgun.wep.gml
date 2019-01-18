@@ -26,9 +26,9 @@ if(weapon_custom_delay = 0){
 	weapon_post(6, 10, 10);	// weapon kick and screen shake
 	sound_play_pitch(sndShotgun, random_range(0.85,1.15));
 	if(boom = true){
-		sound_play_pitch(sndFireballerFire, 1 + 0.2*smoke_buff_bullets);
+		sound_play_pitch(sndFireballerFire, 1.2 + 0.2*smoke_buff_bullets);
 		if(ultra_get("gator", 2) == 1){
-			sound_play_pitch(sndSuperFireballerFire, 1 + 0.2*smoke_buff_bullets);
+			sound_play_pitch(sndSuperFireballerHurt, 1 + 0.2*smoke_buff_bullets);
 		}
 	}
 	for (i = 0; i < 7 + blts; i++){
@@ -40,10 +40,13 @@ if(weapon_custom_delay = 0){
 			friction = random_range(0.8,1.2);
 			speed = 15 + other.blts;
 			damage = 1 + ultra_get("gator", 2);
+			wallbounce = other.blts;
 		}
 	}
 	motion_add(gunangle+180, blts)
 }
+
+
 #define weapon_name
 return "GATOR SHOTGUN";
 
