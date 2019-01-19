@@ -2,6 +2,11 @@
 global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACiSURBVDhPvZIxEkAwEEVzLJ3CFRiF1hE0zqDQuIzGXdzDTIjxM/FtNBvMPJPJ/v8K1lRFbjWY43EvcRiCHOePs1KwLpN1cICZx+aGnyUXDH0ngnl6gRR+A0X/EaXQGw9BW5c2RCqFpBdgsGXmhIUMchClEzAISDPH9wLggxe8eHoBVpOLuH8UGLUAARbgHr8PBSyQXyS1gIsxYqL/BOAuyO0ODw4D6C6rLowAAAAASUVORK5CYII=", 1, 0, 0);
 global.sprPortrait = sprite_add("sprites/sprPortraitRat.png",1 , 15, 185); //weird lookin spider
 
+global.sprLightningSpiderIdle = sprite_add("/sprites/sprLightningSpiderIdle.png", 8, 12, 12);
+global.sprLightningSpiderWalk = sprite_add("/sprites/sprLightningSpiderWalk.png", 6, 12, 12);
+global.sprLightningSpiderHurt = sprite_add("/sprites/sprLightningSpiderHurt.png", 3, 12, 12);
+global.sprLightningSpiderDead = sprite_add("/sprites/sprLightningSpiderDead.png", 6, 12, 12);
+
 global.debug_haHAA = true; //for debugging. duh
 
 global.snd_hurt_current = sndSpiderHurt;
@@ -76,7 +81,11 @@ team = 2;
 maxhealth = 18;
 spr_shadow_y = 0;
 
+//ultra a
 has_spawned = false;
+
+//ultra b
+lightning_timer = 0;
 
 // vars
 melee = 1;	// can melee or not
@@ -117,6 +126,35 @@ if (u1 == 1){
 	snd_dead = global.snd_dead_current;
 }
 
+if(u2 == 1){
+	// sprites
+	spr_idle = global.sprLightningSpiderIdle;
+	spr_walk = global.sprLightningSpiderWalk;
+	spr_hurt = global.sprLightningSpiderHurt;
+	spr_dead = global.sprLightningSpiderDead;
+
+	if(lightning_timer > 0){
+		lightning_timer -= 1;
+	} else {
+		lightning_timer = irandom_range(5,25);
+		
+		sound_play_pitchvol(sndLightningHit,random_range(0.6,0.8), 0.5);
+		with(instance_create(x,y,LaserBrain)){
+			image_angle = random(360);
+		}
+		num_lightning = irandom_range(3,5);
+		for (i = 0; i < num_lightning; i++){
+			with(instance_create(x + hspeed*2,y + vspeed*2,Lightning)){
+				creator = other;
+				image_angle = (360/creator.num_lightning)*creator.i;
+				team = creator.team;
+				ammo = 6;
+				alarm_set(0,1);
+			}
+		}
+	}
+}
+
 // no weps
 canswap = 0;
 canpick = 0;
@@ -131,12 +169,28 @@ else{
 
 // outgoing contact damage
 with(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
+	_p = other;
 	if(sprite_index != spr_hurt){
 		sprite_index = spr_hurt;
 		my_health -= 3;
 		sound_play(snd_hurt);
 		sound_play_pitchvol(other.snd_melee, random_range(0.9, 1.1), 0.6);
 		direction = other.direction;
+
+		//ultra B:
+		if(_p.u2 == 1){
+			with(instance_create(x, y, Lightning)){
+				creator = other._p;
+				image_angle = other._p.direction;
+				team = other._p.team;
+				ammo = 15;
+				alarm_set(0, 5);
+				sound_play_pitchvol(sndLightningPistol,random_range(0.9,1.1),0.75);
+				with(instance_create(x,y,LightningSpawn)){
+					image_angle = other.image_angle;
+				}
+			}
+		}
 	}
 }
 
@@ -200,7 +254,7 @@ return "Crystal Spider";
 
 #define race_text
 // return passive and active for character selection screen
-return "CONTACT DAMAGE";
+return "CONTACT DAMAGE#@sNORMAL MOVEMENT #ON @wALL TERRAIN";
 
 
 #define race_portrait
