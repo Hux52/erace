@@ -543,9 +543,6 @@ if(my_health > 0){
 	else{
 		image_xscale = -1;
 	}
-	if(place_meeting(x,y,TrapFire)){
-		sprite_index = spr_hurt;
-	}
 }
 else{
 	instance_destroy();
@@ -589,11 +586,11 @@ if(sprite_index != spr_hurt){
 d3d_set_fog(1,playerColor,0,0);
 if(instance_exists(toDraw)){
     with(toDraw){
-        draw_sprite_ext(sprite_index, -1, x - 1, y, 1 * right, 1, sprite_angle, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x + 1, y, 1 * right, 1, sprite_angle, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x, y - 1, 1 * right, 1, sprite_angle, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x, y + 1, 1 * right, 1, sprite_angle, playerColor, 1);
-    }
+		draw_sprite_ext(sprite_index, -1, x - 1, y, 1 * right, 1, sprite_angle, playerColor, 1);
+		draw_sprite_ext(sprite_index, -1, x + 1, y, 1 * right, 1, sprite_angle, playerColor, 1);
+		draw_sprite_ext(sprite_index, -1, x, y - 1, 1 * right, 1, sprite_angle, playerColor, 1);
+		draw_sprite_ext(sprite_index, -1, x, y + 1, 1 * right, 1, sprite_angle, playerColor, 1);
+	}
 }
 d3d_set_fog(0,c_lime,0,0);
 
@@ -1227,3 +1224,7 @@ if(abs(number_of_spoods)>0){
 	}
 }
 >>>>>>> Stashed changes
+
+	if(place_meeting(x,y,TrapFire)){
+		sprite_index = spr_hurt;
+	}
