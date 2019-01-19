@@ -1,5 +1,5 @@
 #define init
-global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACiSURBVDhPvZIxEkAwEEVzLJ3CFRiF1hE0zqDQuIzGXdzDTIjxM/FtNBvMPJPJ/v8K1lRFbjWY43EvcRiCHOePs1KwLpN1cICZx+aGnyUXDH0ngnl6gRR+A0X/EaXQGw9BW5c2RCqFpBdgsGXmhIUMchClEzAISDPH9wLggxe8eHoBVpOLuH8UGLUAARbgHr8PBSyQXyS1gIsxYqL/BOAuyO0ODw4D6C6rLowAAAAASUVORK5CYII=", 1, 0, 0);
+global.sprMenuButton = sprite_add("sprites/sprSpiderSelect.png", 1, 0,0);
 global.sprPortrait = sprite_add("sprites/sprPortraitRat.png",1 , 15, 185); //weird lookin spider
 
 global.sprLightningSpiderIdle = sprite_add("/sprites/sprLightningSpiderIdle.png", 8, 12, 12);
@@ -8,6 +8,7 @@ global.sprLightningSpiderHurt = sprite_add("/sprites/sprLightningSpiderHurt.png"
 global.sprLightningSpiderDead = sprite_add("/sprites/sprLightningSpiderDead.png", 6, 12, 12);
 
 global.debug_haHAA = false; //for debugging. duh
+if(global.debug_haHAA = true){trace("debug on");}
 
 global.snd_hurt_current = sndSpiderHurt;
 global.snd_dead_current = sndSpiderDead;
@@ -34,6 +35,9 @@ global.a_wide_variety_of_death_sounds_to_choose_f_r_o_m = [
 	sndSalamanderDead
 ]
 
+global.newLevel = instance_exists(GenCont);
+global.hasGenCont = false;
+
 // character select sounds
 // global.sndSelect = sound_add("sounds/sndRatSelect.ogg");
 // var _race = [];
@@ -49,6 +53,22 @@ global.a_wide_variety_of_death_sounds_to_choose_f_r_o_m = [
 // 	}
 // 	wait 1;
 // }
+
+// level start init- MUST GO AT END OF INIT
+while(true){
+	// first chunk here happens at the start of the level, second happens in portal
+	if(instance_exists(GenCont)) global.newLevel = 1;
+	else if(global.newLevel){
+		global.newLevel = 0;
+		level_start();
+	}
+	var hadGenCont = global.hasGenCont;
+	global.hasGenCont = instance_exists(GenCont);
+	if (!hadGenCont && global.hasGenCont) {
+		// nothing yet
+	}
+	wait 1;
+}
 
 #define create
 // player instance creation of this race
@@ -83,6 +103,7 @@ spr_shadow_y = 0;
 
 //ultra a
 has_spawned = false;
+spooder_health = array_create(0);
 
 //ultra b
 lightning_timer = 0;
@@ -90,7 +111,13 @@ lightning_timer = 0;
 // vars
 melee = 1;	// can melee or not
 
-spoods_to_spawn = 0;
+#define level_start
+with(instances_matching(Player, "race", "spider")){
+	for(i = 0; i < array_length(spooder_health); i++){
+		spawn_spood(1,spooder_health[i]);
+	}
+	spooder_health = [];
+}
 
 #define game_start
 // executed after picking race and starting for each player picking this race
@@ -224,16 +251,16 @@ maxspeed /= 10;
 //ultra A: splitting
 if(u1 == 1){
 	if(my_health < 1){ //cheat death
-		if(random(100) <= 25 + (global.debug_haHAA*75)){
-			my_health = 17 - (global.debug_haHAA * 16);
-			spawn_spood(1,17);
+		split_chance_death = random(100);
+		if(split_chance_death <= 25 + (global.debug_haHAA*75)){
+			my_health = maxhealth - 1 - (global.debug_haHAA * 16);
+			spawn_spood(1,maxhealth-1);
 		}
 	}
 	if(sprite_index == spr_hurt and image_index == 2){
-		//split on hit
-		hit_split_chance = random(100);
-		if(hit_split_chance <= 5 + (95*global.debug_haHAA)){
-			spawn_spood(1,7);
+		hit_split_chance = random(power(my_health/maxhealth, 2) * 100);
+		if(hit_split_chance <= 10 + (90*global.debug_haHAA)){
+			spawn_spood(1,ceil(maxhealth/3)+1);
 		}
 	}
 	if(canspirit = 1){
@@ -241,7 +268,7 @@ if(u1 == 1){
 	} else {
 		if (has_spawned = false){
 			has_spawned = true;
-			spawn_spood(1,17)
+			spawn_spood(1,maxhealth-1)
 		}
 	}
 }
@@ -413,7 +440,7 @@ if(my_health > 0){
 			with(instance_create(x,y,CaveSparkle)){
 				image_xscale = 2;
 				image_yscale = 2;
-				image_angle = 45;
+				image_angle = 135;
 				depth = -4;
 			}
 			instance_delete(self);
@@ -453,6 +480,7 @@ if(my_health > 0){
 					if("spoods_to_spawn" in creator){
 						creator.spoods_to_spawn += 1;
 					}
+					array_push(creator.spooder_health, my_health);
 					touched_portal = true;
 				}
 				sprite_angle += 35;
@@ -514,6 +542,9 @@ if(my_health > 0){
 	else{
 		image_xscale = -1;
 	}
+	if(place_meeting(x,y,TrapFire)){
+		sprite_index = spr_hurt;
+	}
 }
 else{
 	instance_destroy();
@@ -535,8 +566,11 @@ with(instance_create(x, y, Corpse)){
 
 //splitting
 if(random(100) < 25 + (75*global.debug_haHAA)){
-	with(spawn_spood(2,17)){
-		creator = other.creator;
+	oldmaxhealth = spood_maxhealth;
+	if(oldmaxhealth > 1){
+		with(spawn_spood(2, oldmaxhealth-1)){
+			creator = other.creator;
+		}
 	}
 }
 
@@ -586,7 +620,8 @@ if(abs(number_of_spoods)>0){
 			snd_hurt = global.a_wide_variety_of_hit_sounds_to_choose_f_r_o_m[irandom_range(0,array_length_1d(global.a_wide_variety_of_hit_sounds_to_choose_f_r_o_m)-1)];
 			snd_dead = global.a_wide_variety_of_death_sounds_to_choose_f_r_o_m[irandom_range(0,array_length_1d(global.a_wide_variety_of_death_sounds_to_choose_f_r_o_m)-1)];
 			
-			my_health = spood_health;
+			spood_maxhealth = spood_health;
+			my_health = spood_maxhealth;
 			maxspeed = 2.6;
 			mask_index = mskSpider;
 			size = 1;
@@ -615,4 +650,4 @@ if(abs(number_of_spoods)>0){
 			wall_stuck = 0;
 		}
 	}
-}
+} return _sp;
