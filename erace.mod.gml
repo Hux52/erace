@@ -297,6 +297,8 @@ switch(command){
 			default:
 			if (real(parameter) < 0){
 				trace("Enter a non-negative number, please.");
+			} else if (real(parameter) > 200) {
+				trace("That number's too high even for me.");
 			} else if (real(parameter) > 0) {
 				global.erace_raddrop = real(parameter);
 				trace("Enemies now drop " + string(global.erace_raddrop) + " more rads on death.");
