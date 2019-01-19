@@ -43,7 +43,7 @@ if!(collision_point(mouse_x[index], mouse_y[index] - 8, Wall, false, true)){
 	if(collision_point(mouse_x[index], mouse_y[index] - 8, Floor, false, true)){
 		weapon_post(5, 0, 0);
 		// create revive area
-		with(instance_create(mouse_x, mouse_y, CustomProjectile)){
+		with(instance_create(mouse_x[index], mouse_y[index], CustomProjectile)){
 			name = "revarea";
 			creator = other;
 			team = creator.team;
@@ -102,7 +102,7 @@ if(alarm[0] = 1){
 					spr_shadow = shd24;
 					direction = random(360);
 					move_bounce_solid(true);
-					friction = 0.4;
+					friction = 0.05;
 					my_damage = 3;
 					right = choose(-1, 1);
 					alarm = [0];	// movement/targeting alarm
@@ -110,7 +110,9 @@ if(alarm[0] = 1){
 					on_hurt = script_ref_create(freak_hurt);
 					on_destroy = script_ref_create(freak_destroy);
 					// friendly outline
-					playerColor = player_get_color(grandcreator.index);
+					if(instance_exists(grandcreator)){
+						playerColor = player_get_color(grandcreator.index);
+					}
 					toDraw = self;
 					script_bind_draw(draw_outline, depth, playerColor, toDraw);
 					wall_stuck = 0;
