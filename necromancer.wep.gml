@@ -102,6 +102,7 @@ if(alarm[0] = 1){
 					spr_shadow = shd24;
 					direction = random(360);
 					move_bounce_solid(true);
+					friction = 0.4;
 					my_damage = 3;
 					right = choose(-1, 1);
 					alarm = [0];	// movement/targeting alarm
@@ -112,6 +113,7 @@ if(alarm[0] = 1){
 					playerColor = player_get_color(grandcreator.index);
 					toDraw = self;
 					script_bind_draw(draw_outline, depth, playerColor, toDraw);
+					wall_stuck = 0;
 				}
 				// effects and corpse destruction
 				instance_create(x, y, ReviveFX);
@@ -194,16 +196,22 @@ if(my_health > 0){
 			alarm[0] = irandom_range(30, 40);
 		}
 	}
-
-
-	var _w = instance_nearest(x, y, Wall);
-	// OLD WALL DEBUG
-	/*if(collision_rectangle(_w.x, _w.y + 15, _w.x + 15, _w.y, self, false, false)){
-		//trace("hit wall");		// debug
-		var _f = instance_nearest(x, y, Floor);
-		x = _f.x + 8;
-		y = _f.y + 8;
-	}*/
+	
+	//getting unstuck from walls
+	_wStuck = instance_place(x,y,Wall);
+	if(instance_exists(_wStuck)){
+		if(place_meeting(x,y,_wStuck)){
+			wall_stuck += 1;
+			if(wall_stuck >= 15){
+				with(_wStuck){
+					instance_create(x,y,FloorExplo);
+					instance_destroy();
+				}
+			}
+		}
+	} else {
+			wall_stuck = 0;
+		}
 
 	// stop hit sprite
 	if(sprite_index = spr_hurt and image_index >= 2){
