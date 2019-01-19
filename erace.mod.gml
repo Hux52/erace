@@ -1,6 +1,19 @@
 #define init
-global.healthChance = 30; //percent chance of transforming an ammo pickup into a health pickup
-global.erace_raddrop = 1; //extra rads to drop
+global.healthChance = 30;	//percent chance of transforming an ammo pickup into a health pickup
+global.erace_raddrop = 1;	//extra rads to drop
+global.select_exists = false;	// checks for character select
+global.sprAreaSelect = sprite_add("/sprites/sprAreaSelect.png", 8, 8, 12);	// area buttons sprite strip
+global.races = [
+					["maggotspawn", "bigmaggot", "bandit", "scorpion"],
+					["rat", "ratking", "exploder", "gator", "assassin"],
+					["raven", "salamander", "sniper"],
+					["spider"],
+					["snowbot"],
+					["necromancer"],
+					["guardian"],
+					["fish"]
+				];	// please add races in the order and area you want them to be displayed
+global.deselect_color = make_color_hsv(0, 0, 90);	// dimmnessss :)
 
 // disable default races
 for(i = 1; i < 16; i++){
@@ -97,6 +110,120 @@ with(enemy){
 			}
         }
     }
+}
+
+// Attempt to move loadout
+/*
+with(Loadout){
+	if("moved" not in self){
+		ystart += 100;
+		y -= 100;
+		moved = true;
+	}
+}
+*/
+
+// move loadout as to not interfere with race buttons
+with(Loadout){
+	ystart -= 30;
+	y -= 30;
+}
+
+// berid of locked race buttons
+with(instances_matching(CharSelect, "sprite_index", sprCharSelectLocked)){
+	instance_delete(self);
+}
+
+// assign race buttons an area and index in said area
+with(CharSelect){
+	if("area" not in self and sprite_index != sprCharSelect){
+		xstart = -999;
+		ystart = -999;
+		for(i = 0; i < array_length(global.races); i++){
+			for(k = 0; k < array_length(global.races[i]); k++){
+				if(race = global.races[i][k]){
+					index = k;
+					area = i;
+					break;
+				}
+			}
+		}
+	}
+}
+
+// character selects just appeared
+if(global.select_exists != instance_number(CharSelect) and instance_number(CharSelect) > 0){
+	// get rid of old custom buttons, if any
+	with(instances_matching(CustomObject, "name", "AreaSelect")){
+		instance_destroy();
+	}
+	// make custom buttons
+	for(i = 0; i < 8; i++){	// 8 buttons
+		with(instance_create(-80 + (35 * (i + 1)), 165, CustomObject)){	// 35 * (i + 1)      optimal spacing
+			name = "AreaSelect";	// object name
+			area = other.i;	// area
+			selected = false;	// button selected bool
+			view_offset = 0;	// offset for if child icons go out of view
+			sprite_index = global.sprAreaSelect;	// all in one sprite
+			image_index = area;	// specific frame of sprite
+			image_speed = 0;	// no anim
+			depth = -9999;	// draw on top of ui
+			on_step = script_ref_create(area_select_step);	// custom step
+		}
+	}
+}
+// character selects just disappeared
+else if(global.select_exists != instance_number(CharSelect) and instance_number(CharSelect) = 0){
+	with(instances_matching(CustomObject, "name", "AreaSelect")){
+		instance_destroy();
+	}
+}
+// manage check
+global.select_exists = instance_number(CharSelect);
+
+#define area_select_step
+// check for player click
+for(i = 0; i < maxp; i++){
+	if(abs(mouse_x[i] - x) < 8 and abs(mouse_y[i] - y) < 16){	// if mouse over button
+		if(button_released(i, "fire")){	// if clicked
+			// deselect all custom buttons
+			with(instances_matching(CustomObject, "name", "AreaSelect")){
+				selected = 0;
+			}
+			sound_play(sndSlider);	// play sound (sndMenuOptions might be better)
+			selected = 1;	// select button
+		}
+	}
+}
+
+// brightness and child button positioning
+if(selected = 1){
+	image_blend = c_white;	// max brightness
+	// move buttons relative to parent of same area
+	with(instances_matching(CharSelect, "area", area)){
+		xstart = other.x + 88 + (20 * (index + 1)) - (((array_length(global.races[area]) + 1) * 20) / 2) + other.view_offset;	// :twitchSmile:
+		ystart = other.y + 21;
+		// if first button out of view, change offset
+		if(index = 0){
+			if(xstart < 0){
+				other.view_offset = xstart * -1;
+			}
+		}
+		// if last button out of view, change offset
+		else if(index = (array_length(global.races[area]) - 1)){
+			if(xstart > (game_width - 16)){
+				other.view_offset = xstart - (game_width - 16);
+			}
+		}
+	}
+}
+else{
+	image_blend = global.deselect_color;	// dimmed brightness
+	// out of my sight
+	with(instances_matching(CharSelect, "area", area)){
+		xstart = -999;
+		ystart = -999;
+	}
 }
 
 #define chat_command
