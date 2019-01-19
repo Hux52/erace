@@ -180,6 +180,7 @@ if(u1 == 1){
 	if(sprite_index == spr_hurt and image_index == 1){
 		if(random(100) <= 5 + (95*global.debug_haHAA)){
 			spawn_spood(1);
+			trace("spawned hit")
 		}
 	}
 	if(canspirit = 1){
@@ -351,7 +352,19 @@ if(my_health > 0){
 		if(portal_cd < 30){
 			portal_cd += 1;
 		} else {
-			instance_change(Deflect, true);
+			with(instance_create(x,y,CaveSparkle)){
+				image_xscale = 2;
+				image_yscale = 2;
+				depth = -4;
+			}
+			with(instance_create(x,y,CaveSparkle)){
+				image_xscale = 2;
+				image_yscale = 2;
+				image_angle = 45;
+				depth = -4;
+			}
+			instance_delete(self);
+			exit;
 		}
 	}
 	
@@ -380,8 +393,7 @@ if(my_health > 0){
 		}
 
 		if(point_distance(x,y,_port.x,_port.y) < 50){
-			trace(point_distance(x,y,_port.x,_port.y))
-			motion_add(point_direction(x,y,_port.x,_port.y), (distance_to_object(_port)/5));
+			motion_add(point_direction(x,y,_port.x,_port.y), 2);
 			canTarget = false;
 			if(distance_to_object(_port) < 10){
 				if(touched_portal = false){
@@ -498,7 +510,6 @@ if(instance_exists(toDraw)){
 d3d_set_fog(0,c_lime,0,0);
 
 #define spawn_spood(number_of_spoods)
-trace(number_of_spoods);
 if(abs(number_of_spoods)>0){
 	repeat(number_of_spoods){
 		_sp = (instance_create(x, y, CustomHitme));
