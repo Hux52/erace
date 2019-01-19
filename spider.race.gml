@@ -137,7 +137,6 @@ if(u2 == 1){
 		lightning_timer -= 1;
 	} else {
 		lightning_timer = irandom_range(5,25);
-		
 		sound_play_pitchvol(sndLightningHit,random_range(0.6,0.8), 0.5);
 		with(instance_create(x,y,LaserBrain)){
 			image_angle = random(360);
@@ -181,7 +180,7 @@ with(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 		if(_p.u2 == 1){
 			with(instance_create(x, y, Lightning)){
 				creator = other._p;
-				image_angle = other._p.direction;
+				image_angle = point_direction(other._p.x,other._p.y,other.x,other.y);
 				team = other._p.team;
 				ammo = 15;
 				alarm_set(0, 5);
@@ -195,7 +194,6 @@ with(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 }
 
 with(collision_rectangle(x + 12, y + 10, x - 12, y - 10, prop, 0, 1)){
-
 	if(sprite_index != spr_hurt){
 		sprite_index = spr_hurt;
 		my_health -= 6;
@@ -208,7 +206,7 @@ with(collision_rectangle(x + 12, y + 10, x - 12, y - 10, prop, 0, 1)){
 //speed changes
 e = instance_nearest(x,y,enemy);
 if(instance_exists(e)){
-	if (point_distance(x,y,e.x,e.y) < 100){
+	if (point_distance(x,y,e.x,e.y) < 125){
 		//line of sight to enemy
 		if(collision_line(x,y,e.x,e.y,Wall,false, true) == noone){
 			maxspeed = lerp(maxspeed, maxspeed_close, 0.25);
