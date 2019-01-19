@@ -2,6 +2,10 @@
 global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACiSURBVDhPvZIxEkAwEEVzLJ3CFRiF1hE0zqDQuIzGXdzDTIjxM/FtNBvMPJPJ/v8K1lRFbjWY43EvcRiCHOePs1KwLpN1cICZx+aGnyUXDH0ngnl6gRR+A0X/EaXQGw9BW5c2RCqFpBdgsGXmhIUMchClEzAISDPH9wLggxe8eHoBVpOLuH8UGLUAARbgHr8PBSyQXyS1gIsxYqL/BOAuyO0ODw4D6C6rLowAAAAASUVORK5CYII=", 1, 0, 0);
 global.sprPortrait = sprite_add("sprites/sprPortraitRat.png",1 , 15, 185); //weird lookin spider
 
+global.debug_haHAA = true; //for debugging. duh
+
+global.snd_hurt_current = sndSpiderHurt;
+global.snd_dead_current = sndSpiderDead;
 global.a_wide_variety_of_hit_sounds_to_choose_f_r_o_m = [
 	sndBanditHit,
 	sndSniperHit,
@@ -57,30 +61,42 @@ spr_sit2 = sprMutant15Sit;
 snd_hurt = sndSpiderHurt;
 snd_dead = sndSpiderDead;
 
+global.snd_hurt_current = snd_hurt;
+global.snd_dead_current = snd_dead;
+
+
 //for ultra
 snd_melee = sndSpiderMelee;
 
 // stats
-maxspeed_base = 2.6; //original wandering speed
-maxspeed_close = 4.6;
+maxspeed_base = 2.6 + (skill_get(mut_extra_feet) * 0.5); //original wandering speed
+maxspeed_close = 4.6 + (skill_get(mut_extra_feet));
 maxspeed = 2.6;
 team = 2;
 maxhealth = 18;
 spr_shadow_y = 0;
-mask_index = mskCrownPed;
+
+has_spawned = false;
 
 // vars
 melee = 1;	// can melee or not
 
+spoods_to_spawn = 0;
 
 #define game_start
 // executed after picking race and starting for each player picking this race
 // player-specific global variable init
 
-
 #define step
 // executed within each player instance of this race after step
 // most actives and passives handled here
+
+//update stats for muts
+maxspeed_base = 2.6 + (skill_get(mut_extra_feet) * 0.5); //original wandering speed
+maxspeed_close = 4.9 + (skill_get(mut_extra_feet));
+
+//passive - normal movement on all terrain
+friction = 0.45
 
 u1 = ultra_get("spider", 1);
 u2 = ultra_get("spider", 2);
@@ -95,6 +111,10 @@ if (u1 == 1){
 
 	//melee sound
 	snd_melee = sndMaggotBite;
+
+	//sounds
+	snd_hurt = global.snd_hurt_current;
+	snd_dead = global.snd_dead_current;
 }
 
 // no weps
@@ -120,58 +140,54 @@ with(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 	}
 }
 
+with(collision_rectangle(x + 12, y + 10, x - 12, y - 10, prop, 0, 1)){
+
+	if(sprite_index != spr_hurt){
+		sprite_index = spr_hurt;
+		my_health -= 6;
+		sound_play(snd_hurt);
+		sound_play_pitchvol(other.snd_melee, random_range(0.9, 1.1), 0.6);
+		direction = other.direction;
+	}
+}
+
 //speed changes
 e = instance_nearest(x,y,enemy);
 if(instance_exists(e)){
 	if (point_distance(x,y,e.x,e.y) < 100){
-		maxspeed = lerp(maxspeed, maxspeed_close, 0.25);
+		//line of sight to enemy
+		if(collision_line(x,y,e.x,e.y,Wall,false, true) == noone){
+			maxspeed = lerp(maxspeed, maxspeed_close, 0.25);
+		}
 	} else {
 		maxspeed = lerp(maxspeed, maxspeed_base, 0.05);
 		}
 } else {
 	maxspeed = lerp(maxspeed, maxspeed_base, 0.05);
 }
+maxspeed *= 10;
+maxspeed = floor(maxspeed);
+maxspeed /= 10;
 
 //ultra A:
 if(u1 == 1){
 	if(my_health < 1){
-		if(random(100) < 25){
-			//hydra-like splitting event; split into two spiders with 17 health
-			my_health = 17;
-			with(instance_create(x, y, CustomHitme)){
-					name = "CursedSpiderFriendly";
-					creator = other;
-					team = creator.team;
-					//sprites
-					spr_idle = sprInvSpiderIdle;
-					spr_walk = sprInvSpiderWalk;
-					spr_hurt = sprInvSpiderHurt;
-					spr_dead = sprInvSpiderDead;
-
-					sprite_index = spr_idle;
-					
-					//sounds
-					
-
-					my_health = 17;
-					maxspeed = 2.6;
-					mask_index = mskSpider;
-					size = 1;
-					image_speed = 0.3;
-					spr_shadow = shd24;
-					direction = random(360);
-					move_bounce_solid(true);
-					my_damage = 3;
-					right = choose(-1, 1);
-					alarm = [0];	// movement/targeting alarm
-					on_step = script_ref_create(spood_step);
-					on_hurt = script_ref_create(spood_hurt);
-					on_destroy = script_ref_create(spood_destroy);
-					// friendly outline
-					playerColor = player_get_color(creator.index);
-					toDraw = self;
-					script_bind_draw(draw_outline, depth, playerColor, toDraw);
-				}
+		if(random(100) <= 25 + (global.debug_haHAA*75)){
+			my_health = 17 - (global.debug_haHAA * 16);
+			spawn_spood(1);
+		}
+	}
+	if(sprite_index == spr_hurt and image_index == 1){
+		if(random(100) <= 5 + (95*global.debug_haHAA)){
+			spawn_spood(1);
+		}
+	}
+	if(canspirit = 1){
+		has_spawned = false;
+	} else {
+		if (has_spawned = false){
+			has_spawned = true;
+			spawn_spood(1)
 		}
 	}
 }
@@ -243,7 +259,7 @@ return "DOES NOTHING";
 // determines how many ultras are shown
 switch(argument0){
 	case 1: return "Cursed Carapace";
-	case 2: return "Lightning Style";
+	case 2: return "Beacon of Lightning";
 	default: return "";
 }
 
@@ -272,9 +288,8 @@ switch(argument0){
 switch(argument0){
 	case 1: 
 	// sounds
-		snd_hurt = global.a_wide_variety_of_hit_sounds_to_choose_f_r_o_m[irandom_range(0,array_length_1d(global.a_wide_variety_of_hit_sounds_to_choose_f_r_o_m)-1)];
-		snd_dead = global.a_wide_variety_of_death_sounds_to_choose_f_r_o_m[irandom_range(0,array_length_1d(global.a_wide_variety_of_death_sounds_to_choose_f_r_o_m)-1)];
-		
+		global.snd_dead_current = global.a_wide_variety_of_death_sounds_to_choose_f_r_o_m[irandom_range(0,array_length_1d(global.a_wide_variety_of_death_sounds_to_choose_f_r_o_m)-1)];
+		global.snd_hurt_current = global.a_wide_variety_of_hit_sounds_to_choose_f_r_o_m[irandom_range(0,array_length_1d(global.a_wide_variety_of_hit_sounds_to_choose_f_r_o_m)-1)];
 	break;
 }
 
@@ -287,13 +302,132 @@ return choose("So smooth", "Shot web", "So shiny", "Many legs", "Many eyes");
 #define spood_step
 if(my_health > 0){
 	// speed management
-	if(speed > maxspeed){
-		speed = maxspeed;
-	}
-	
+	speed = clamp(speed, 0, maxspeed);
 	// collision
 	move_bounce_solid(true);
+
+	// targeting
+	var _e = instance_nearest(x, y, enemy);
+	var _p = instance_nearest(x, y, Player);
+	if(instance_exists(_e) and distance_to_object(_e) < 100 and !collision_line(x, y, _e.x, _e.y, Wall, true, true)){
+		if(target == _p or target == noone){instance_create(x,y-8,AssassinNotice)}
+		maxspeed = 4.6;
+		target = _e;
+	} else if(instance_exists(_p) and player_get_race(_p.index) == "spider" and distance_to_object(_p) < 100 and !collision_line(x, y, _p.x, _p.y, Wall, true, true)){
+		maxspeed = 4.6;
+		target = _p;
+	} else {
+		maxspeed = 2.6;
+		target = noone;
+	}
 	
+	// movement
+	if(canTarget = true){
+		if(target = noone){	// no target, random movement
+			if(alarm[0] = 0){
+				if(random(100) < 45){
+					friction = 0.2;
+					direction = random(360);
+					move_bounce_solid(true);
+					motion_set(direction, maxspeed);
+				}
+
+				alarm[0] = irandom_range(10, 30);
+			}
+		}
+		else{
+			if(alarm[0] = 0){	// target, pursue
+				direction = point_direction(x, y, target.x, target.y) + random_range(-25, 25);
+				move_bounce_solid(true);
+				motion_set(direction, maxspeed);
+				friction = 0.1;
+				alarm[0] = irandom_range(10, 15);
+			}
+		}
+	}
+
+	//dealing with portals and walls
+	if(touched_portal == true){
+		if(portal_cd < 30){
+			portal_cd += 1;
+		} else {
+			instance_change(Deflect, true);
+		}
+	}
+	
+	_wStuck = instance_place(x,y,Wall);
+	if(instance_exists(_wStuck)){
+		if(place_meeting(x,y,_wStuck)){
+			wall_stuck += 1;
+			if(wall_stuck >= 15){
+				with(_wStuck){
+					instance_create(x,y,FloorExplo);
+					instance_destroy();
+				}
+			}
+		}
+	} else {
+			wall_stuck = 0;
+		}
+	_w = instance_nearest(x, y, Wall);
+	_port = instance_nearest(x,y,Portal);
+	if(instance_exists(_port)){
+		if(instance_place(x + hspeed*3,y + vspeed*3,_w)){
+			with(_w){
+				instance_create(x,y,FloorExplo);
+				instance_destroy();
+			}
+		}
+
+		if(point_distance(x,y,_port.x,_port.y) < 50){
+			trace(point_distance(x,y,_port.x,_port.y))
+			motion_add(point_direction(x,y,_port.x,_port.y), (distance_to_object(_port)/5));
+			canTarget = false;
+			if(distance_to_object(_port) < 10){
+				if(touched_portal = false){
+					if("spoods_to_spawn" in creator){
+						creator.spoods_to_spawn += 1;
+					}
+					touched_portal = true;
+				}
+				sprite_angle += 35;
+				sprite_index = spr_hurt;
+				image_index = 2;
+				depth = -4;
+			} 
+		} else {
+			sprite_angle = 0;
+			canTarget = true;
+			depth = -1.9;
+		}
+	}
+
+	// stop hit sprite
+	if(sprite_index = spr_hurt and image_index >= 2){
+		sprite_index = spr_idle;
+	}
+	
+	// alarm management
+	for(i = 0; i < array_length_1d(alarm); i++){
+		if(alarm[i] > 0){
+			alarm[i]--;
+		}
+	}
+	
+	// incoming/outgoing contact damage
+	with(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
+		if(sprite_index != spr_hurt){
+			my_health -= other.my_damage;
+			sound_play(snd_hurt);
+			sound_play(sndMaggotBite);
+			sprite_index = spr_hurt;
+			motion_add(other.direction, 2);
+			if(meleedamage > 0){
+				other.my_health -= meleedamage;
+			}
+		}
+	}
+		
 	// sprite facing based on direction
 	if(speed > 0 and sprite_index != spr_hurt){
 		sprite_index = spr_walk;
@@ -315,86 +449,34 @@ if(my_health > 0){
 	else{
 		image_xscale = -1;
 	}
-
-	// targeting
-	if(instance_exists(enemy)){
-		var _e = instance_nearest(x, y, enemy);
-		if(distance_to_object(_e) < 200 and !collision_line(x, y, _e.x, _e.y, Wall, true, true)){
-			target = _e;
-		}
-		else{
-			target = noone;
-		}
-	}
-	else{
-		target = noone;
-	}
-
-	// movement
-	if(target = noone){	// no target, random movement
-		if(alarm[0] = 0){
-			direction = random(360);
-			move_bounce_solid(true);
-			motion_add(direction, maxspeed);
-			alarm[0] = irandom_range(10, 30);
-		}
-	}
-	else{
-		if(alarm[0] = 0){	// target, persue
-			direction = point_direction(x, y, target.x, target.y) + random_range(-50, 50);
-			move_bounce_solid(true);
-			motion_add(direction, maxspeed);
-			alarm[0] = irandom_range(30, 40);
-		}
-	}
-
-
-	var _w = instance_nearest(x, y, Wall);
-	// OLD WALL DEBUG
-	/*if(collision_rectangle(_w.x, _w.y + 15, _w.x + 15, _w.y, self, false, false)){
-		//trace("hit wall");		// debug
-		var _f = instance_nearest(x, y, Floor);
-		x = _f.x + 8;
-		y = _f.y + 8;
-	}*/
-
-	// stop hit sprite
-	if(sprite_index = spr_hurt and image_index >= 2){
-		sprite_index = spr_idle;
-	}
-	
-	// alarm management
-	for(i = 0; i < array_length_1d(alarm); i++){
-		if(alarm[i] > 0){
-			alarm[i]--;
-		}
-	}
-	
-	// incoming/outgoing contact damage
-	with(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
-		if(sprite_index != spr_hurt){
-			my_health -= other.my_damage;
-			sound_play(snd_hurt);
-			sound_play(sndMaggotBite);
-			sprite_index = spr_hurt;
-			if(meleedamage > 0){
-				other.my_health -= meleedamage;
-			}
-		}
-	}
 }
 else{
 	instance_destroy();
 }
 
+#define spood_draw
+draw_sprite_ext(sprite_index, image_index, x, y, image_xscale, image_yscale, sprite_angle, c_white, 1);
+
 #define spood_destroy
+sound_play(snd_dead);
 // make corpse
 with(instance_create(x, y, Corpse)){
-	sprite_index = sprFreak1Dead;
+	sprite_index = sprInvSpiderDead;
 	size = 1;
+	direction = other.direction;
+	speed = other.speed;
+	friction = 0.3;
+}
+
+//splitting
+if(random(100) < 25 + (75*global.debug_haHAA)){
+	with(spawn_spood(2)){
+		creator = other.creator;
+	}
 }
 
 #define spood_hurt(damage, kb_vel, kb_dir)
+sound_play(snd_hurt);
 // incoming damage
 if(sprite_index != spr_hurt){
 	my_health -= argument0;
@@ -407,10 +489,66 @@ if(sprite_index != spr_hurt){
 d3d_set_fog(1,playerColor,0,0);
 if(instance_exists(toDraw)){
     with(toDraw){
-        draw_sprite_ext(sprite_index, -1, x - 1, y, 1 * right, 1, 0, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x + 1, y, 1 * right, 1, 0, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x, y - 1, 1 * right, 1, 0, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x, y + 1, 1 * right, 1, 0, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x - 1, y, 1 * right, 1, sprite_angle, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x + 1, y, 1 * right, 1, sprite_angle, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x, y - 1, 1 * right, 1, sprite_angle, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x, y + 1, 1 * right, 1, sprite_angle, playerColor, 1);
     }
 }
 d3d_set_fog(0,c_lime,0,0);
+
+#define spawn_spood(number_of_spoods)
+trace(number_of_spoods);
+if(abs(number_of_spoods)>0){
+	repeat(number_of_spoods){
+		_sp = (instance_create(x, y, CustomHitme));
+		with(_sp){
+			name = "CursedSpiderFriendly";
+			if(object_get_name(other.object_index) == "Player"){
+				creator = other;
+			} else {
+				creator = other.creator;
+			}
+			team = creator.team;
+			//sprites
+			spr_idle = sprInvSpiderIdle;
+			spr_walk = sprInvSpiderWalk;
+			spr_hurt = sprInvSpiderHurt;
+			spr_dead = sprInvSpiderDead;
+
+			sprite_index = spr_idle;
+			
+			// sounds
+			snd_hurt = global.a_wide_variety_of_hit_sounds_to_choose_f_r_o_m[irandom_range(0,array_length_1d(global.a_wide_variety_of_hit_sounds_to_choose_f_r_o_m)-1)];
+			snd_dead = global.a_wide_variety_of_death_sounds_to_choose_f_r_o_m[irandom_range(0,array_length_1d(global.a_wide_variety_of_death_sounds_to_choose_f_r_o_m)-1)];
+			
+			my_health = 17;
+			maxspeed = 2.6;
+			mask_index = mskSpider;
+			size = 1;
+			image_speed = 0.4;
+			sprite_angle = 0; //for portal animation
+			depth = -1.9;
+			spr_shadow = shd24;
+			direction = random(360);
+			move_bounce_solid(true);
+			friction = 1;
+			my_damage = 3 - (global.debug_haHAA * 2);
+			right = choose(-1, 1);
+			alarm = [0,0];	// alarm[0] = waiting, alarm[1] = how long to move for
+			target = noone;
+			canTarget = true;
+			touched_portal = false;
+			portal_cd = 0;
+			on_step = script_ref_create(spood_step);
+			on_hurt = script_ref_create(spood_hurt);
+			on_destroy = script_ref_create(spood_destroy);
+			on_draw = script_ref_create(spood_draw);
+			// friendly outline
+			playerColor = player_get_color(creator.index);
+			toDraw = self;
+			script_bind_draw(draw_outline, depth, playerColor, toDraw);
+			wall_stuck = 0;
+		}
+	}
+}
