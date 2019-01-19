@@ -7,7 +7,7 @@ global.sprLightningSpiderWalk = sprite_add("/sprites/sprLightningSpiderWalk.png"
 global.sprLightningSpiderHurt = sprite_add("/sprites/sprLightningSpiderHurt.png", 3, 12, 12);
 global.sprLightningSpiderDead = sprite_add("/sprites/sprLightningSpiderDead.png", 6, 12, 12);
 
-global.debug_haHAA = true; //for debugging. duh
+global.debug_haHAA = false; //for debugging. duh
 
 global.snd_hurt_current = sndSpiderHurt;
 global.snd_dead_current = sndSpiderDead;
@@ -221,18 +221,19 @@ maxspeed *= 10;
 maxspeed = floor(maxspeed);
 maxspeed /= 10;
 
-//ultra A:
+//ultra A: splitting
 if(u1 == 1){
-	if(my_health < 1){
+	if(my_health < 1){ //cheat death
 		if(random(100) <= 25 + (global.debug_haHAA*75)){
 			my_health = 17 - (global.debug_haHAA * 16);
-			spawn_spood(1);
+			spawn_spood(1,17);
 		}
 	}
-	if(sprite_index == spr_hurt and image_index == 1){
-		if(random(100) <= 5 + (95*global.debug_haHAA)){
-			spawn_spood(1);
-			trace("spawned hit")
+	if(sprite_index == spr_hurt and image_index == 2){
+		//split on hit
+		hit_split_chance = random(100);
+		if(hit_split_chance <= 5 + (95*global.debug_haHAA)){
+			spawn_spood(1,7);
 		}
 	}
 	if(canspirit = 1){
@@ -240,7 +241,7 @@ if(u1 == 1){
 	} else {
 		if (has_spawned = false){
 			has_spawned = true;
-			spawn_spood(1)
+			spawn_spood(1,17)
 		}
 	}
 }
@@ -534,7 +535,7 @@ with(instance_create(x, y, Corpse)){
 
 //splitting
 if(random(100) < 25 + (75*global.debug_haHAA)){
-	with(spawn_spood(2)){
+	with(spawn_spood(2,17)){
 		creator = other.creator;
 	}
 }
@@ -561,7 +562,7 @@ if(instance_exists(toDraw)){
 }
 d3d_set_fog(0,c_lime,0,0);
 
-#define spawn_spood(number_of_spoods)
+#define spawn_spood(number_of_spoods, spood_health)
 if(abs(number_of_spoods)>0){
 	repeat(number_of_spoods){
 		_sp = (instance_create(x, y, CustomHitme));
@@ -585,7 +586,7 @@ if(abs(number_of_spoods)>0){
 			snd_hurt = global.a_wide_variety_of_hit_sounds_to_choose_f_r_o_m[irandom_range(0,array_length_1d(global.a_wide_variety_of_hit_sounds_to_choose_f_r_o_m)-1)];
 			snd_dead = global.a_wide_variety_of_death_sounds_to_choose_f_r_o_m[irandom_range(0,array_length_1d(global.a_wide_variety_of_death_sounds_to_choose_f_r_o_m)-1)];
 			
-			my_health = 17;
+			my_health = spood_health;
 			maxspeed = 2.6;
 			mask_index = mskSpider;
 			size = 1;
