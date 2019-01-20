@@ -77,7 +77,7 @@ with(instances_matching(Player, "race", "assassin")){
 	y = -99999999;
 	fake = instances_matching(CustomHitme, "index", index);
 	light = instances_matching(Tangle, "index", index);
-	view_object = fake[0];
+	view_object[index] = fake[0];
 	mask_index = mskNone;
 }
 
@@ -124,7 +124,7 @@ if(getup > 0){
 			wkick = 0;
 			other.getup = 0;
 			reload = 0;
-			view_object = self;
+			view_object[index] = self;
 			instance_delete(fake[0]);
 			instance_delete(light[0]);
 		}

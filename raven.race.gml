@@ -87,7 +87,7 @@ with(instances_matching(Player, "race", "raven")){
 		y = tempView.y;
 		instance_delete(tempView);
 	}
-	view_object = self;
+	view_object[index] = self;
 	canfly = 0;
 }
 
@@ -104,6 +104,9 @@ with(instances_matching(Player, "race", "raven")){
 // no weps
 canswap = 0;
 canpick = 0;
+if(wep != "raven"){
+	wep = "raven";
+}
 
 // special - flight
 if(button_pressed(index, "spec")){
@@ -237,7 +240,7 @@ if(button_pressed(index, "spec")){
 						}
 						tempView_array = instances_matching(Tangle, "creator", self);
 						tempView = tempView_array[0];
-						view_object = tempView;
+						view_object[index] = tempView;
 						x = -9999;
 						y = -9999;
 					}
@@ -272,7 +275,7 @@ if(instance_number(enemy) = 0 and instance_exists(Portal) and fly_alarm > 0){
 		y = tempView.y;
 		instance_delete(tempView);
 	}
-	view_object = self;
+	view_object[index] = self;
 	canfly = 0;
 }
 
@@ -322,7 +325,7 @@ if(fly_alarm > 0){
 				speed = random_range(0.5, 1.5);
 			}
 		}
-		view_object = self;
+		view_object[index] = self;
 		instance_delete(tempView);
 		canfly = 0;
 	}

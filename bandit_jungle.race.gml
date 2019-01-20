@@ -36,6 +36,9 @@ melee = 0;	// can melee or not
 // most actives and passives handled here
 canswap = 0;
 canpick = 0;
+if(wep != "bandit_popgun"){
+	wep = "bandit_popgun";
+}
 
 
 #define race_name

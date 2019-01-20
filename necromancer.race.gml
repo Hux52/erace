@@ -42,6 +42,9 @@ melee = 0;	// can melee or not
 // no weps
 canswap = 0;
 canpick = 0;
+if(wep != "necromancer"){
+	wep = "necromancer";
+}
 
 #define race_name
 // return race name for character select and various menus
