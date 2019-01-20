@@ -78,7 +78,7 @@ if(button_pressed(index, 'spec') && canspec = true){
 		sound_play(sndSalamanderCharge);
 
 	loop = sound_loop(sndSalamanderFireLoop);
-	fire_angle = point_direction(x,y,mouse_x,mouse_y);
+	fire_angle = point_direction(x,y,mouse_x[index],mouse_y[index]);
 }
 
 //currently gushing flames
@@ -86,7 +86,7 @@ if(is_spewing_fire){
 	canwalk = false;
 	spr_idle = sprSalamanderFire;
 	spr_walk = sprSalamanderFire;
-	correction = sign(angle_difference(fire_angle,point_direction(x,y,mouse_x,mouse_y))) * 2;
+	correction = sign(angle_difference(fire_angle,point_direction(x,y,mouse_x[index],mouse_y[index]))) * 2;
 	fire_angle_increase = lerp(fire_angle_increase, correction, 0.1);
 	fire_angle -= fire_angle_increase;
 	fire_remaining--;

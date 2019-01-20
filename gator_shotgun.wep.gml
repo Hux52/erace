@@ -85,7 +85,7 @@ return "Kablam";
 instance_create(x, y - 8, AssassinNotice);
 // delay to shoot
 weapon_custom_delay = ceil(5 / (smoke_buff_bullets+1));
-trace(weapon_custom_delay)
+//trace(weapon_custom_delay)
 boom = smoke_buff_bullets > 0 ? true : false;
 
 if(ultra_get("gator", 2) == 1 && boom = true){

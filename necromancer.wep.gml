@@ -112,6 +112,8 @@ if(alarm[0] = 1){
 					// friendly outline
 					if(instance_exists(grandcreator)){
 						playerColor = player_get_color(grandcreator.index);
+					} else {
+						playerColor = c_black;
 					}
 					toDraw = self;
 					script_bind_draw(draw_outline, depth, playerColor, toDraw);
