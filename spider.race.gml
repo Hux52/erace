@@ -575,13 +575,15 @@ if(random(100) < 25 + (75*global.debug_haHAA)){
 }
 
 #define spood_hurt(damage, kb_vel, kb_dir)
-sound_play(snd_hurt);
 // incoming damage
 if(sprite_index != spr_hurt){
-	my_health -= argument0;
-	motion_add(argument2, argument1);
-	nexthurt = 3;
-	sprite_index = spr_hurt;
+	if(nexthurt <= current_frame){		
+		sound_play_pitchvol(snd_hurt,1,0.6);
+		my_health -= argument0;
+		motion_add(argument2, argument1);
+		nexthurt = current_frame + 3;
+		sprite_index = spr_hurt;
+	}
 }
 
 #define draw_outline(playerColor, toDraw)

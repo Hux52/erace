@@ -49,7 +49,7 @@ if!(collision_point(mouse_x[index], mouse_y[index] - 8, Wall, false, true)){
 			team = creator.team;
 			sprite_index = sprReviveArea;
 			mask_index = mskReviveArea;
-			image_speed = 0.5;
+			image_speed = 0.4;
 			alarm = [50];	// time til revive occurs
 			rev = false;	// noise prompt
 			on_wall = script_ref_create(revarea_wall);
@@ -77,54 +77,7 @@ else{
 alarm[0]--;
 // right before destruction
 if(alarm[0] = 1){
-	if(instance_exists(enemy) or instance_exists(Portal)){	// no softlock
-		with(Corpse){
-			// if corpse in range
-			if(place_meeting(x, y, other)){
-				o = other;	// other is revive circle
-				o.rev = true;	// prompt to make noise
-				// make freak from corpse
-				with(instance_create(x, y, CustomHitme)){
-					name = "freak";
-					creator = other.o;	// revive circle
-					grandcreator = creator.creator;	// player
-					team = creator.team;
-					spr_idle = sprFreak1Idle;
-					spr_walk = sprFreak1Walk;
-					spr_hurt = sprFreak1Hurt;
-					spr_dead = sprFreak1Dead;
-					sprite_index = spr_idle;
-					my_health = 7;
-					maxspeed = 3.6;
-					mask_index = mskFreak;
-					size = 1;
-					image_speed = 0.3;
-					spr_shadow = shd24;
-					direction = random(360);
-					move_bounce_solid(true);
-					friction = 0.05;
-					my_damage = 3;
-					right = choose(-1, 1);
-					alarm = [0];	// movement/targeting alarm
-					on_step = script_ref_create(freak_step);
-					on_hurt = script_ref_create(freak_hurt);
-					on_destroy = script_ref_create(freak_destroy);
-					// friendly outline
-					if(instance_exists(grandcreator)){
-						playerColor = player_get_color(grandcreator.index);
-					} else {
-						playerColor = c_black;
-					}
-					toDraw = self;
-					script_bind_draw(draw_outline, depth, playerColor, toDraw);
-					wall_stuck = 0;
-				}
-				// effects and corpse destruction
-				instance_create(x, y, ReviveFX);
-				instance_destroy();
-			}
-		}
-	}
+	SpawnFreak();
 }
 // destroy circle
 if(alarm[0] <= 0){
@@ -250,6 +203,7 @@ else{
 
 #define freak_destroy
 // make corpse
+sound_play_pitchvol(snd_dead, random_range(0.9,1.1), 0.6);
 with(instance_create(x, y, Corpse)){
 	sprite_index = sprFreak1Dead;
 	size = 1;
@@ -258,10 +212,13 @@ with(instance_create(x, y, Corpse)){
 #define freak_hurt(damage, kb_vel, kb_dir)
 // incoming damage
 if(sprite_index != spr_hurt){
-	my_health -= argument0;
-	motion_add(argument2, argument1);
-	nexthurt = 3;
-	sprite_index = spr_hurt;
+	if(nexthurt <= current_frame){
+		sound_play_pitchvol(snd_hurt,1,0.6);
+		my_health -= argument0;
+		motion_add(argument2, argument1);
+		nexthurt = current_frame + 3;
+		sprite_index = spr_hurt;
+	}
 }
 
 #define draw_outline(playerColor, toDraw)
@@ -275,3 +232,61 @@ if(instance_exists(toDraw)){
     }
 }
 d3d_set_fog(0,c_lime,0,0);
+
+#define SpawnFreak()
+	if(instance_exists(enemy) or instance_exists(Portal)){	// no softlock
+		with(Corpse){
+			// if corpse in range
+			if(place_meeting(x, y, other)){
+				o = other;	// other is revive circle
+				o.rev = true;	// prompt to make noise
+				// make freak from corpse
+				with(instance_create(x, y, CustomHitme)){
+					name = "freak";
+					creator = other.o;	// revive circle
+					grandcreator = creator.creator;	// player
+					team = creator.team;
+
+					//sprites
+					spr_idle = sprFreak1Idle;
+					spr_walk = sprFreak1Walk;
+					spr_hurt = sprFreak1Hurt;
+					spr_dead = sprFreak1Dead;
+
+					//sounds
+					snd_hurt = sndFreakHurt;
+					snd_dead = sndFreakDead;
+
+
+					sprite_index = spr_idle;
+					my_health = 7;
+					maxspeed = 3.6;
+					mask_index = mskFreak;
+					size = 1;
+					image_speed = 0.4;
+					spr_shadow = shd24;
+					direction = random(360);
+					move_bounce_solid(true);
+					friction = 0.05;
+					my_damage = 3;
+					right = choose(-1, 1);
+					alarm = [0];	// movement/targeting alarm
+					on_step = script_ref_create(freak_step);
+					on_hurt = script_ref_create(freak_hurt);
+					on_destroy = script_ref_create(freak_destroy);
+					// friendly outline
+					if(instance_exists(grandcreator)){
+						playerColor = player_get_color(grandcreator.index);
+					} else {
+						playerColor = c_black;
+					}
+					toDraw = self;
+					script_bind_draw(draw_outline, depth, playerColor, toDraw);
+					wall_stuck = 0;
+				}
+				// effects and corpse destruction
+				instance_create(x, y, ReviveFX);
+				instance_destroy();
+			}
+		}
+	}
