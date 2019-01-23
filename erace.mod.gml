@@ -44,9 +44,32 @@ sprite_replace_base64(sprSkillIconHUD, "iVBORw0KGgoAAAANSUhEUgAAAeAAAAAQCAMAAAD5
 trace ("Welcome to Hell.");
 trace ("Type '/ehelp list' for a list of commands.");
 
+oldPick = array_create(4, 0);
+charEnemies = array_create(4," ");
+charSpawned = array_create(4, false);
+
 #define step
 
-//if (Player.reload>0)trace(Player.reload) //for testing reloads
+for (i = 0; i < array_length(oldPick); i++){
+	oldPick[i] = player_get_race(i);
+	wait(1);
+}
+
+if(player_get_race(0) != oldPick[0]){
+	trace("lol");
+}
+
+for(i = 0; i < 4; i++){
+	if(player_get_race(i) != 0){
+		if(charSpawned[i] = false){
+			charSpawned[i] = true;
+			with(Floor){
+				
+			}
+		}
+	}
+}
+
 // replace big chests with health chests
 
 if (instance_exists(GenCont) == false){
@@ -124,11 +147,6 @@ with(Loadout){
 }
 */
 
-// move loadout as to not interfere with race buttons
-with(Loadout){
-	ystart -= 30;
-	y -= 30;
-}
 
 // berid of locked race buttons
 with(instances_matching(CharSelect, "sprite_index", sprCharSelectLocked)){
@@ -156,7 +174,7 @@ with(CharSelect){
 if(global.select_exists != instance_number(CharSelect) and instance_number(CharSelect) > 0){
 	// campfire and fix view
 	with(Campfire){
-		spr_idle = sprCampfireOff;
+		//spr_idle = sprCampfireOff;
 		for(i = 0; i < maxp; i++){
 			view_object[i] = self;
 		}
@@ -174,7 +192,8 @@ if(global.select_exists != instance_number(CharSelect) and instance_number(CharS
 	}
 	// make custom buttons
 	for(i = 0; i < 8; i++){	// 8 buttons
-		with(instance_create(-80 + (35 * (i + 1)), 165, CustomObject)){	// 35 * (i + 1)      optimal spacing
+		//with(instance_create(-80 + (35 * (i + 1)), 165, CustomObject)){	// 35 * (i + 1)      optimal spacing
+		with(instance_create(view_xview + 16 + (35 * (i + 1)), 165, CustomObject)){	// 35 * (i + 1)      optimal spacing
 			name = "AreaSelect";	// object name
 			area = other.i;	// area
 			selected = false;	// button selected bool
@@ -204,13 +223,38 @@ for(i = 0; i < maxp; i++){
 		if(selected = false){
 			image_blend = global.hover_color;	// dim
 		}
-		if(button_released(i, "fire")){	// if clicked
-			// deselect all custom buttons
-			with(instances_matching(CustomObject, "name", "AreaSelect")){
-				selected = 0;
-			}
-			sound_play(sndSlider);	// play sound (sndMenuOptions might be better)
+		if(button_pressed(i, "fire")){	// if clicked
+			if(selected = 0){
+			sound_play_pitchvol(sndSlider,1.5,1);
+			sound_play_pitchvol(sndMenuOptions,2.5,0.2);
+				
+				// deselect all custom buttons
+				with(instances_matching(CustomObject, "name", "AreaSelect")){
+					selected = 0;
+				}
 			selected = 1;	// select button
+			} else if (selected = 1){
+				selected = 0;
+				sound_play_pitchvol(sndSlider,2.5,1);
+			}
+		}
+	}
+}
+
+with(instances_matching(CustomObject, "name", "AreaSelect")){
+	if("selected" in self){
+		if (selected == 1){
+			// move loadout as to not interfere with race buttons
+			with(Loadout){
+				ystart -= 50;
+				y -= 50;
+				visible = false;
+			}
+	break;
+		} else {
+			with(Loadout){
+				visible = true;
+			}
 		}
 	}
 }
@@ -221,7 +265,12 @@ if(selected = 1){
 	// move buttons relative to parent of same area
 	with(instances_matching(CharSelect, "area", area)){
 		xstart = other.x + 88 + (20 * (index + 1)) - (((array_length(global.races[area]) + 1) * 20) / 2) + other.view_offset;	// :twitchSmile:
-		ystart = other.y + 21;
+		ystart = lerp(ystart, other.y + 16, 0.75);
+		if(ystart > 200){
+			visible = false;
+		} else {
+			visible = true;
+		}
 		// if first button out of view, change offset
 		if(index = 0){
 			if(xstart < 0){
@@ -239,8 +288,8 @@ if(selected = 1){
 else{
 	// out of my sight
 	with(instances_matching(CharSelect, "area", area)){
-		xstart = -999;
-		ystart = -999;
+		xstart = 999;
+		ystart = 999;
 	}
 }
 
