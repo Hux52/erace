@@ -12,7 +12,7 @@ while(true){
 	//character selection sound
 	for(var i = 0; i < maxp; i++){
 		var r = player_get_race(i);
-		if(_race[i] != r && r = "rat"){
+		if(_race[i] != r && r = "dogguardian"){
 			sound_play(global.sndSelect);
 		}
 		_race[i] = r;
