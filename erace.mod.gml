@@ -13,6 +13,17 @@ global.races = [
 					["guardian", "dogguardian"],
 					["fish"]
 				];	// please add races in the order and area you want them to be displayed
+
+global.enemies = [
+					[MaggotSpawn, BigMaggot, Bandit, Scorpion],
+					[Rat, Ratking, Exploder, Gator, MeleeBandit],
+					[Raven, Salamander, Sniper],
+					[Spider],
+					[SnowBot],
+					[Necromancer],
+					[Guardian, DogGuardian],
+					[Bandit] //idk
+				];	// please add races in the order and area you want them to be displayed
 global.deselect_color = make_color_hsv(0, 0, 50);	// dimmnessss :)
 global.hover_color = make_color_hsv(0, 0, 80);	// same
 
@@ -46,9 +57,11 @@ trace ("Type '/ehelp list' for a list of commands.");
 
 oldPick = array_create(4, 0);
 charEnemies = array_create(4," ");
-charSpawned = array_create(4, false);
+global.e = array_create(4, 0);
 
 #define step
+
+global.pNum = 0;
 
 for (i = 0; i < array_length(oldPick); i++){
 	oldPick[i] = player_get_race(i);
@@ -56,16 +69,51 @@ for (i = 0; i < array_length(oldPick); i++){
 }
 
 if(player_get_race(0) != oldPick[0]){
-	trace("lol");
-}
+	//first get rid of existing enemies
+	with(enemy){
+		instance_delete(self);
+	}
+	
+	//next, spawn in all the selected enemies
+	for (i = 0; i < 4; i++){
+		if((player_get_uid(i)) > 0){
+			global.pNum += 1;
+		}
+	}
 
-for(i = 0; i < 4; i++){
-	if(player_get_race(i) != 0){
-		if(charSpawned[i] = false){
-			charSpawned[i] = true;
-			with(Floor){
-				
+	for (i = 0; i < global.pNum; i++){
+		for (j = 0; j < array_length(global.races); j++){			
+			if(array_find_index(global.races[j],player_get_race(i)) >= 0){
+				global.e[i] = global.enemies[j][array_find_index(global.races[j],player_get_race(i))];
 			}
+		}
+		
+		with(Floor){
+			chance = floor(random(global.pNum));
+			//trace(chance)
+			for(i = 0; i < global.pNum; i++){
+				if(player_get_race(i) != "unknown"){
+					with(instance_create(x+16, y+16, global.e[chance])){
+						direction = random(360);
+						speed = random(10);
+					}
+				} else {
+					a = irandom(array_length(global.enemies)-1);
+					b = irandom(array_length(global.enemies[a])-1);
+					global.e[i] = global.enemies[a][b];
+					with(instance_create(x+16, y+16, global.enemies[a][b])){
+						direction = random(360);
+						speed = 10;
+					}
+				}
+			}
+		}
+	}
+	
+	//get rid of the ones that spawned inside of walls
+	with(enemy){
+		if(place_meeting(x,y,Wall)){
+				instance_delete(self);
 		}
 	}
 }
@@ -265,7 +313,7 @@ if(selected = 1){
 	// move buttons relative to parent of same area
 	with(instances_matching(CharSelect, "area", area)){
 		xstart = other.x + 88 + (20 * (index + 1)) - (((array_length(global.races[area]) + 1) * 20) / 2) + other.view_offset;	// :twitchSmile:
-		ystart = lerp(ystart, other.y + 16, 0.75);
+		ystart = lerp(ystart, other.y + 16, 0.35);
 		if(ystart > 200){
 			visible = false;
 		} else {
@@ -289,7 +337,7 @@ else{
 	// out of my sight
 	with(instances_matching(CharSelect, "area", area)){
 		xstart = 999;
-		ystart = 999;
+		ystart = 300;
 	}
 }
 
