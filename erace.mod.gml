@@ -13,7 +13,8 @@ global.races = [
 					["guardian"],
 					["fish"]
 				];	// please add races in the order and area you want them to be displayed
-global.deselect_color = make_color_hsv(0, 0, 90);	// dimmnessss :)
+global.deselect_color = make_color_hsv(0, 0, 50);	// dimmnessss :)
+global.hover_color = make_color_hsv(0, 0, 80);	// same
 
 // disable default races
 for(i = 1; i < 16; i++){
@@ -197,8 +198,12 @@ global.select_exists = instance_number(CharSelect);
 
 #define area_select_step
 // check for player click
+image_blend = global.deselect_color;	// dimmest
 for(i = 0; i < maxp; i++){
 	if(abs(mouse_x[i] - x) < 8 and abs(mouse_y[i] - y) < 16){	// if mouse over button
+		if(selected = false){
+			image_blend = global.hover_color;	// dim
+		}
 		if(button_released(i, "fire")){	// if clicked
 			// deselect all custom buttons
 			with(instances_matching(CustomObject, "name", "AreaSelect")){
@@ -212,7 +217,7 @@ for(i = 0; i < maxp; i++){
 
 // brightness and child button positioning
 if(selected = 1){
-	image_blend = c_white;	// max brightness
+	image_blend = c_white;	// bright
 	// move buttons relative to parent of same area
 	with(instances_matching(CharSelect, "area", area)){
 		xstart = other.x + 88 + (20 * (index + 1)) - (((array_length(global.races[area]) + 1) * 20) / 2) + other.view_offset;	// :twitchSmile:
@@ -232,7 +237,6 @@ if(selected = 1){
 	}
 }
 else{
-	image_blend = global.deselect_color;	// dimmed brightness
 	// out of my sight
 	with(instances_matching(CharSelect, "area", area)){
 		xstart = -999;
