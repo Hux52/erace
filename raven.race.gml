@@ -377,11 +377,24 @@ if(my_health = 0 and died = 0){
 with(id){
 	if(instance_exists(tempView)){
 		if(fly_alarm >= 20){
+			d3d_set_fog(1,player_get_color(index),0,0);
+			draw_sprite_ext(spr_fly, fly_index, tempView.x - 1, tempView.y - (180 - ((fly_alarm - 20) * 8)), image_xscale * right, image_yscale, sprite_angle, player_get_color(index), 1);
+			draw_sprite_ext(spr_fly, fly_index, tempView.x + 1, tempView.y - (180 - ((fly_alarm - 20) * 8)), image_xscale * right, image_yscale, sprite_angle, player_get_color(index), 1);
+			draw_sprite_ext(spr_fly, fly_index, tempView.x, tempView.y - 1 - (180 - ((fly_alarm - 20) * 8)), image_xscale * right, image_yscale, sprite_angle, player_get_color(index), 1);
+			draw_sprite_ext(spr_fly, fly_index, tempView.x, tempView.y + 1 - (180 - ((fly_alarm - 20) * 8)), image_xscale * right, image_yscale, sprite_angle, player_get_color(index), 1);
+			d3d_set_fog(0,c_lime,0,0);
 			draw_sprite_ext(spr_fly, fly_index, tempView.x, tempView.y - (180 - ((fly_alarm - 20) * 8)), image_xscale * right, image_yscale, sprite_angle, c_white, 1);
 		}
 		else{
+		d3d_set_fog(1,player_get_color(index),0,0);
+			draw_sprite_ext(spr_fly, fly_index, tempView.x - 1, tempView.y - (fly_alarm * 8), image_xscale * right, image_yscale, sprite_angle, player_get_color(index), 1);
+			draw_sprite_ext(spr_fly, fly_index, tempView.x + 1, tempView.y - (fly_alarm * 8), image_xscale * right, image_yscale, sprite_angle, player_get_color(index), 1);
+			draw_sprite_ext(spr_fly, fly_index, tempView.x, tempView.y - 1 - (fly_alarm * 8), image_xscale * right, image_yscale, sprite_angle, player_get_color(index), 1);
+			draw_sprite_ext(spr_fly, fly_index, tempView.x, tempView.y + 1 - (fly_alarm * 8), image_xscale * right, image_yscale, sprite_angle, player_get_color(index), 1);
+			d3d_set_fog(0,c_lime,0,0);
 			draw_sprite_ext(spr_fly, fly_index, tempView.x, tempView.y - (fly_alarm * 8), image_xscale * right, image_yscale, sprite_angle, c_white, 1);
 		}
+		
 	}
 }
 instance_destroy();
