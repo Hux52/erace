@@ -55,7 +55,9 @@ u2 = ultra_get("gator",2);
 
 // ULTRA A: EVOLUTION - BUFF GATOR
 if (u1 = 1){
-	wep = "gator_flakcannon";
+	if(wep != "gator_flakcannon"){
+		wep = "gator_flakcannon";
+	}
 	maxspeed = maxspeed_buff;
 	maxhealth = maxhealth_buff;
 	spr_smoke_current = global.sprBuffGatorSmoke;
@@ -73,6 +75,11 @@ if (u1 = 1){
 	// sounds
 	snd_hurt = sndBuffGatorHit;
 	snd_dead = sndBuffGatorDie;
+}
+else{
+	if(wep != "gator_shotgun"){
+		wep = "gator_shotgun";
+	}
 }
 
 

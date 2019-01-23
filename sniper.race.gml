@@ -99,11 +99,19 @@ if (my_health == 0 && hasDied == false){
 }
 
 if (ultra_get("sniper", 1) == 1){
-	wep = "sniper_ultra";
+	if(wep != "sniper_ultra"){
+		wep = "sniper_ultra";
+	}
 }
-
-if (ultra_get("sniper", 2) == 1){
-	wep = "super_sniper_cannon";
+else if (ultra_get("sniper", 2) == 1){
+	if(wep != "super_sniper_cannon"){
+		wep = "super_sniper_cannon";
+	}
+}
+else{
+	if(wep != "sniper"){
+		wep = "sniper";
+	}
 }
 
 #define race_name

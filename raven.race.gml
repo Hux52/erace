@@ -64,7 +64,7 @@ melee = 0;	// can melee or not
 with(instances_matching(Player, "race", "raven")){
 	cooldown = 0;
 	fly_alarm = 0;
-	view_pan_factor = 4;
+	view_pan_factor[index] = 4;
 	// reset sprites
 	spr_idle = sprRavenIdle;
 	spr_walk = sprRavenWalk;
@@ -214,6 +214,29 @@ if(button_pressed(index, "spec")){
 					
 					if(canfly = 1){
 						// start flying
+						with(instance_create(x, y, Wall)){
+							creator = other;
+							mask_index = mskNone;
+							sprite_index = mskNone;
+							spr_shadow = shd24;
+							topspr = mskNone;
+							outspr = mskNone;
+							name = "ravenview";
+						}
+						tempView_array = instances_matching(Wall, "creator", self);
+						// if I can't make a wall
+						if(array_length(tempView_array) = 0){
+							with(instance_create(x, y, CustomObject)){
+								creator = other;
+								mask_index = mskNone;
+								sprite_index = mskNone;
+								spr_shadow = shd24;
+								name = "ravenview";
+							}
+							tempView_array = instances_matching(CustomObject, "creator", self);
+						}
+						tempView = tempView_array[0];
+						view_object[index] = tempView;
 						spr_idle = mskNone;	// no sprite
 						spr_walk = mskNone;
 						spr_fly = sprRavenLift;
@@ -232,18 +255,6 @@ if(button_pressed(index, "spec")){
 								speed = random_range(0.5, 1.5);
 							}
 						}
-						with(instance_create(x, y, Wall)){
-							creator = other;
-							mask_index = mskNone;
-							sprite_index = mskNone;
-							spr_shadow = shd24;
-							topspr = mskNone;
-							outspr = mskNone;
-							name = "ravenview";
-						}
-						tempView_array = instances_matching(Wall, "creator", self);
-						tempView = tempView_array[0];
-						view_object[index] = tempView;
 					}
 				}
 			}
@@ -253,7 +264,7 @@ if(button_pressed(index, "spec")){
 
 if(instance_number(enemy) = 0 and instance_exists(Portal) and fly_alarm > 0){
 	fly_alarm = 0;
-	view_pan_factor = 4;
+	view_pan_factor[index] = 4;
 	// reset sprites
 	spr_idle = sprRavenIdle;
 	spr_walk = sprRavenWalk;
@@ -283,7 +294,7 @@ if(instance_number(enemy) = 0 and instance_exists(Portal) and fly_alarm > 0){
 
 // flying!
 if(fly_alarm > 0){
-	view_pan_factor = 22;	// limit mouse pan
+	view_pan_factor[index] = 22;	// limit mouse pan
 	script_bind_draw(draw_flight, -999, id, fly_alarm, fly_index);
 	wkick = 99999;	// hide weapon
 	fly_alarm--;	// alarm management
@@ -292,25 +303,23 @@ if(fly_alarm > 0){
 	// sprite management
 	if(fly_alarm = 25){
 		spr_fly = sprRavenFly;
-		spr_fly = sprRavenFly;
 	}
 	else if(fly_alarm = 20){
 		// move view
 		with(tempView){
 			x = creator.coords[0];
 			y = creator.coords[1];
+			// move player
+			creator.x = creator.coords[0];
+			creator.y = creator.coords[1];
 		}
 	}
 	else if(fly_alarm = 15){
 		spr_fly = sprRavenLand;
-		spr_fly = sprRavenLand;
 	}
 	
 	if(fly_alarm = 0){
-		// move player
-		x = coords[0];
-		y = coords[1];
-		view_pan_factor = 4;
+		view_pan_factor[index] = 4;
 		// reset sprites
 		spr_idle = sprRavenIdle;
 		spr_walk = sprRavenWalk;
