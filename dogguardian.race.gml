@@ -12,7 +12,7 @@ while(true){
 	//character selection sound
 	for(var i = 0; i < maxp; i++){
 		var r = player_get_race(i);
-		if(_race[i] != r && r = "rat"){
+		if(_race[i] != r && r = "dogguardian"){
 			sound_play(global.sndSelect);
 		}
 		_race[i] = r;
@@ -98,6 +98,9 @@ if(jump > 0){
 		if(jump >= 14){
 			if(jump = 20){
 				sound_play(snd_jump);
+				if(ultra_get("dogguardian", 1)){
+					sound_play(sndFlameCannon);
+				}
 				with(instance_create(x, y, CustomObject)){
 					creator = other;
 					spr_nort = creator.spr_nort;
@@ -141,6 +144,30 @@ if(jump > 0){
 					}
 				}
 			}
+			if(ultra_get("dogguardian", 1)){
+				if(distance_to_object(Portal) > 60){
+					for(i = 0; i < 360; i += (360 / 20)){
+						with(instance_create(x + lengthdir_x(10, i), y + lengthdir_y(10, i), Flame)){
+							creator = other;
+							team = creator.team;
+							direction = other.i;
+							speed = 8;
+							swirl = 1;
+						}
+					}
+					for(i = 0; i < 360; i += (360 / 20)){
+						with(instance_create(x + lengthdir_x(5, i), y + lengthdir_y(5, i), Flame)){
+							creator = other;
+							team = creator.team;
+							direction = other.i;
+							speed = 8;
+							swirl = 2;
+						}
+					}
+					instance_create(x, y + 12, Scorch);
+					sound_play(sndFlameCannonEnd);
+				}
+			}
 		}
 		speed = 0;
 		sprite_index = spr_land;
@@ -148,6 +175,14 @@ if(jump > 0){
 	if(jump_dir != direction and bounce = 0){
 		bounce = 10;
 		sound_play(snd_bnce);
+	}
+	if(ultra_get("dogguardian", 1)){
+		with(instance_create(x + random_range(-20, 20), y + 6, Flame)){
+			creator = other;
+			team = creator.team;
+			direction = 90 + random_range(-20, 20);
+			speed = 3 + random_range(-0.5, 0.5);
+		}
 	}
 	jump_dir = direction;
 	jump--;
@@ -179,6 +214,15 @@ if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 			sprite_index = spr_hurt;
 			direction = other.direction;
 		}
+	}
+}
+
+with(instances_matching_ne(Flame, "swirl", null)){
+	if(swirl = 1){
+		direction += 15;
+	}
+	if(swirl = 2){
+		direction += 20;
 	}
 }
 
@@ -281,7 +325,7 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "NOTHING";
+	case 1: return "HOT DOG";
 	default: return "";
 }
 
@@ -289,7 +333,7 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "DOES NOTHING";
+	case 1: return "FASTER AND MORE FIRE";
 	default: return "";
 }
 
@@ -306,6 +350,11 @@ switch(argument0){
 // recieves ultra mutation index
 // called when ultra for race is picked
 // player of race may not be alive at the time
+switch(argument0){
+	case 1:
+		maxspeed = 4;
+	break;
+}
 
 
 #define race_ttip
