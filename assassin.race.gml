@@ -53,7 +53,7 @@ getup = 0;	// alarm to get up from faking
 #define level_start
 with(instances_matching(Player, "race", "assassin")){
 	// fake player
-	with(instance_create(x, y, CustomHitme)){
+	with(instance_create(x, y, CustomObject)){
 		creator = other;
 		index = creator.index;
 		sprite_index = sprMeleeFake;
@@ -67,18 +67,19 @@ with(instances_matching(Player, "race", "assassin")){
 		script_bind_draw(draw_outline, depth, playerColor, toDraw);
 	}
 	// temp lighting fix
-	with(instance_create(x, y, Tangle)){
+	with(instance_create(x, y, Wall)){
 		creator = other;
 		index = creator.index;
+		topspr = mskNone;
+		outspr = mskNone;
 		sprite_index = mskNone;
 		mask_index = mskNone;
 	}
-	x = -99999999;
-	y = -99999999;
-	fake = instances_matching(CustomHitme, "index", index);
-	light = instances_matching(Tangle, "index", index);
+	fake = instances_matching(CustomObject, "index", index);
+	light = instances_matching(Wall, "index", index);
 	view_object[index] = fake[0];
 	mask_index = mskNone;
+	spr_idle = mskNone;
 }
 
 
@@ -114,12 +115,16 @@ if(getup > 0){
 	// alarm management
 	getup--;
 	
+	// hide wep
+	creator.wkick = 999;
+	
 	// cancel hiding
 	with(creator){
 		if(button_check(index, "nort") or button_check(index, "sout") or button_check(index, "east") or button_check(index, "west") or button_pressed(index, "fire") or other.getup = 1){
 			x = other.x;
 			y = other.y;
 			mask_index = mskPlayer;
+			spr_idle = sprMeleeIdle;
 			sound_play(sndAssassinGetUp);
 			wkick = 0;
 			other.getup = 0;
