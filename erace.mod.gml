@@ -10,7 +10,7 @@ global.races = [
 					["spider"],
 					["snowbot"],
 					["necromancer"],
-					["guardian"],
+					["guardian", "dogguardian"],
 					["fish"]
 				];	// please add races in the order and area you want them to be displayed
 global.deselect_color = make_color_hsv(0, 0, 50);	// dimmnessss :)
