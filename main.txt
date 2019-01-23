@@ -40,6 +40,7 @@ labs
 
 palace
 /loadrace guardian
+/loadrace dogguardian
 
 /loadrace maggot
 /loadrace bandit_snow
