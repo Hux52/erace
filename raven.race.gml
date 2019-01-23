@@ -74,7 +74,8 @@ with(instances_matching(Player, "race", "raven")){
 	canwalk = 1;	// walk again
 	cooldown = 10;	// cooldown init
 	wkick = 0;	// show weapon
-	reload = 1; // can shoot
+	can_shoot = 1; // can shoot
+	reload = 1;	// fix for stacking shots
 	// dust effect
 	repeat(5){
 		with(instance_create(x + irandom_range(-10, 10), y + irandom(4), Dust)){
@@ -87,7 +88,7 @@ with(instances_matching(Player, "race", "raven")){
 		y = tempView.y;
 		instance_delete(tempView);
 	}
-	view_object = self;
+	view_object[index] = self;
 	canfly = 0;
 }
 
@@ -104,6 +105,9 @@ with(instances_matching(Player, "race", "raven")){
 // no weps
 canswap = 0;
 canpick = 0;
+if(wep != "raven"){
+	wep = "raven";
+}
 
 // special - flight
 if(button_pressed(index, "spec")){
@@ -220,7 +224,7 @@ if(button_pressed(index, "spec")){
 						fly_alarm = 40;	// flight duration
 						speed = 0;	// no sliding
 						canwalk = 0;	// no walking
-						reload = 999; // no shooting
+						can_shoot = 0; // no shooting
 						// dust effect
 						repeat(5){
 							with(instance_create(x + irandom_range(-10, 10), y + irandom(4), Dust)){
@@ -228,18 +232,18 @@ if(button_pressed(index, "spec")){
 								speed = random_range(0.5, 1.5);
 							}
 						}
-						with(instance_create(x, y, Tangle)){
+						with(instance_create(x, y, Wall)){
 							creator = other;
 							mask_index = mskNone;
 							sprite_index = mskNone;
 							spr_shadow = shd24;
+							topspr = mskNone;
+							outspr = mskNone;
 							name = "ravenview";
 						}
-						tempView_array = instances_matching(Tangle, "creator", self);
+						tempView_array = instances_matching(Wall, "creator", self);
 						tempView = tempView_array[0];
-						view_object = tempView;
-						x = -9999;
-						y = -9999;
+						view_object[index] = tempView;
 					}
 				}
 			}
@@ -259,7 +263,8 @@ if(instance_number(enemy) = 0 and instance_exists(Portal) and fly_alarm > 0){
 	canwalk = 1;	// walk again
 	cooldown = 60;	// cooldown init
 	wkick = 0;	// show weapon
-	reload = 1; // can shoot
+	can_shoot = 1; // can shoot
+	reload = 1;	// fix for stacking shots
 	// dust effect
 	repeat(5){
 		with(instance_create(tempView.x + irandom_range(-10, 10), tempView.y + irandom(4), Dust)){
@@ -272,7 +277,7 @@ if(instance_number(enemy) = 0 and instance_exists(Portal) and fly_alarm > 0){
 		y = tempView.y;
 		instance_delete(tempView);
 	}
-	view_object = self;
+	view_object[index] = self;
 	canfly = 0;
 }
 
@@ -282,6 +287,7 @@ if(fly_alarm > 0){
 	script_bind_draw(draw_flight, -999, id, fly_alarm, fly_index);
 	wkick = 99999;	// hide weapon
 	fly_alarm--;	// alarm management
+	can_shoot = 0;
 	
 	// sprite management
 	if(fly_alarm = 25){
@@ -314,7 +320,8 @@ if(fly_alarm > 0){
 		canwalk = 1;	// walk again
 		cooldown = 60;	// cooldown init
 		wkick = 0;	// show weapon
-		reload = 1; // can shoot
+		can_shoot = 1; // can shoot
+		reload = 1;	// fix for stacking shots
 		// dust effect
 		repeat(5){
 			with(instance_create(tempView.x + irandom_range(-10, 10), tempView.y + irandom(4), Dust)){
@@ -322,7 +329,7 @@ if(fly_alarm > 0){
 				speed = random_range(0.5, 1.5);
 			}
 		}
-		view_object = self;
+		view_object[index] = self;
 		instance_delete(tempView);
 		canfly = 0;
 	}

@@ -54,6 +54,9 @@ melee = 0;	// can melee or not
 // most actives and passives handled here
 canswap = 0;
 canpick = 0;
+if(wep != "bandit"){
+	wep = "bandit";
+}
 
 // ULTRA A: SNOWY JABRONI
 if (ultra_get("bandit",1) = 1){

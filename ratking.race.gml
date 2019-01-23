@@ -141,7 +141,7 @@ if(spawn_cool > 0){
 }
 
 // special b- self destruct charge
-if(button_pressed(index, "spec") and spawn_cool <= 60){
+if(button_pressed(index, "spec") and spawn_cool <= 60 and charge_cool = 0){
 	sound_play(sndRatkingCharge);
 	charge_cool = 90;
 }
@@ -166,7 +166,7 @@ if(charge_cool > 0){
 	// change charge directions
 	if((charge_cool % 30) = 0 and charge_cool != 90 and canwalk = 0){
 		sound_play(sndRatkingCharge);
-		direction = random(360);
+		direction = gunangle;
 	}
 }
 
