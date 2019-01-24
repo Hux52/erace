@@ -87,34 +87,11 @@ if(player_get_race(0) != oldPick[0]){
 				global.e[i] = global.enemies[j][array_find_index(global.races[j],player_get_race(i))];
 			}
 		}
-		
-		with(Floor){
-			chance = floor(random(global.pNum));
-			//trace(chance)
-			for(i = 0; i < global.pNum; i++){
-				if(player_get_race(i) != "unknown"){
-					with(instance_create(x+16, y+16, global.e[chance])){
-						direction = random(360);
-						speed = random(10);
-					}
-				} else {
-					a = irandom(array_length(global.enemies)-1);
-					b = irandom(array_length(global.enemies[a])-1);
-					global.e[i] = global.enemies[a][b];
-					with(instance_create(x+16, y+16, global.enemies[a][b])){
-						direction = random(360);
-						speed = 10;
-					}
-				}
-			}
-		}
+	if(instance_exists(global.e[i])){
+		instance_delete(global.e[i]);
 	}
-	
-	//get rid of the ones that spawned inside of walls
-	with(enemy){
-		if(place_meeting(x,y,Wall)){
-				instance_delete(self);
-		}
+		r = random(360);
+		instance_create(Campfire.x + lengthdir_x(40,r),Campfire.y + lengthdir_y(40,r), global.e[i]);
 	}
 }
 
@@ -184,22 +161,10 @@ with(enemy){
     }
 }
 
-// Attempt to move loadout
-/*
-with(Loadout){
-	if("moved" not in self){
-		ystart += 100;
-		y -= 100;
-		moved = true;
-	}
-}
-*/
-
-
 // berid of locked race buttons
-with(instances_matching(CharSelect, "sprite_index", sprCharSelectLocked)){
-	instance_delete(self);
-}
+// with(instances_matching(CharSelect, "sprite_index", sprCharSelectLocked)){
+// 	instance_delete(self);
+// }
 
 // assign race buttons an area and index in said area
 with(CharSelect){
@@ -240,8 +205,8 @@ if(global.select_exists != instance_number(CharSelect) and instance_number(CharS
 	}
 	// make custom buttons
 	for(i = 0; i < 8; i++){	// 8 buttons
-		//with(instance_create(-80 + (35 * (i + 1)), 165, CustomObject)){	// 35 * (i + 1)      optimal spacing
-		with(instance_create(view_xview + 16 + (35 * (i + 1)), 165, CustomObject)){	// 35 * (i + 1)      optimal spacing
+		with(instance_create(-80 + (35 * (i + 1)), 165, CustomObject)){	// 35 * (i + 1)      optimal spacing
+		//with(instance_create(view_xview + 16 + (35 * (i + 1)), 165, CustomObject)){	// 35 * (i + 1)      optimal spacing
 			name = "AreaSelect";	// object name
 			area = other.i;	// area
 			selected = false;	// button selected bool
@@ -313,7 +278,7 @@ if(selected = 1){
 	// move buttons relative to parent of same area
 	with(instances_matching(CharSelect, "area", area)){
 		xstart = other.x + 88 + (20 * (index + 1)) - (((array_length(global.races[area]) + 1) * 20) / 2) + other.view_offset;	// :twitchSmile:
-		ystart = lerp(ystart, other.y + 16, 0.35);
+		ystart = lerp(ystart, other.y + 16, 0.5);
 		if(ystart > 200){
 			visible = false;
 		} else {
