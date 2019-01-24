@@ -114,7 +114,7 @@ melee = 1;	// can melee or not
 #define level_start
 with(instances_matching(Player, "race", "spider")){
 	for(i = 0; i < array_length(spooder_health); i++){
-		spawn_spood(1,spooder_health[i]);
+		spawn_spood(1,spooder_health[i], player_get_color(index));
 	}
 	spooder_health = [];
 }
@@ -250,17 +250,23 @@ maxspeed /= 10;
 
 //ultra A: splitting
 if(u1 == 1){
+	
+	//spawn smoke particles
+	if(random(100) < 10){
+		instance_create(x + random_range(-12,12),y-8  + random_range(-4,4),Curse);
+	}
+
 	if(my_health < 1){ //cheat death
 		split_chance_death = random(100);
 		if(split_chance_death <= 25 + (global.debug_haHAA*75)){
 			my_health = maxhealth - 1 - (global.debug_haHAA * 16);
-			spawn_spood(1,maxhealth-1);
+			spawn_spood(1,maxhealth-1, player_get_color(index));
 		}
 	}
 	if(sprite_index == spr_hurt and image_index == 2){
 		hit_split_chance = random(power(my_health/maxhealth, 2) * 100);
 		if(hit_split_chance <= 10 + (90*global.debug_haHAA)){
-			spawn_spood(1,ceil(maxhealth/3)+1);
+			spawn_spood(1,ceil(maxhealth/3)+1, player_get_color(index));
 		}
 	}
 	if(canspirit = 1){
@@ -268,7 +274,7 @@ if(u1 == 1){
 	} else {
 		if (has_spawned = false){
 			has_spawned = true;
-			spawn_spood(1,maxhealth-1)
+			spawn_spood(1,maxhealth-1, player_get_color(index));
 		}
 	}
 }
@@ -386,6 +392,11 @@ if(my_health > 0){
 	speed = clamp(speed, 0, maxspeed);
 	// collision
 	move_bounce_solid(true);
+
+	//spawn smoke particles
+	if(random(100) < 10){
+		instance_create(x + random_range(-12,12),y-8  + random_range(-4,4),Curse);
+	}
 
 	// targeting
 	var _e = instance_nearest(x, y, enemy);
@@ -551,12 +562,12 @@ else{
 }
 
 #define spood_draw
-draw_sprite_ext(sprite_index, image_index, x, y, image_xscale, image_yscale, sprite_angle, c_white, 1);
+draw_sprite_ext(sprite_index, image_index, x, y, image_xscale, image_yscale, sprite_angle, image_blend, 1);
 
 #define spood_destroy
 sound_play(snd_dead);
 // make corpse
-with(instance_create(x, y, Corpse)){
+with (instance_create(x, y, Corpse)){
 	sprite_index = sprInvSpiderDead;
 	size = 1;
 	direction = other.direction;
@@ -567,9 +578,10 @@ with(instance_create(x, y, Corpse)){
 //splitting
 if(random(100) < 25 + (75*global.debug_haHAA)){
 	oldmaxhealth = spood_maxhealth;
+	oldColor = playerColor;
 	if(oldmaxhealth > 1){
-		with(spawn_spood(2, oldmaxhealth-1)){
-			creator = other.creator;
+		with(spawn_spood(2, oldmaxhealth-1, oldColor)){
+			team = other.team;
 		}
 	}
 }
@@ -590,15 +602,15 @@ if(sprite_index != spr_hurt){
 d3d_set_fog(1,playerColor,0,0);
 if(instance_exists(toDraw)){
     with(toDraw){
-        draw_sprite_ext(sprite_index, -1, x - 1, y, 1 * right, 1, sprite_angle, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x + 1, y, 1 * right, 1, sprite_angle, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x, y - 1, 1 * right, 1, sprite_angle, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x, y + 1, 1 * right, 1, sprite_angle, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x - 2, y, 1 * right, 1, sprite_angle, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x + 2, y, 1 * right, 1, sprite_angle, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x, y - 2, 1 * right, 1, sprite_angle, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x, y + 2, 1 * right, 1, sprite_angle, playerColor, 1);
     }
 }
 d3d_set_fog(0,c_lime,0,0);
 
-#define spawn_spood(number_of_spoods, spood_health)
+#define spawn_spood(number_of_spoods, spood_health, pCol)
 if(abs(number_of_spoods)>0){
 	repeat(number_of_spoods){
 		_sp = (instance_create(x, y, CustomHitme));
@@ -609,7 +621,13 @@ if(abs(number_of_spoods)>0){
 			} else {
 				creator = other.creator;
 			}
-			team = creator.team;
+			// friendly outline
+			if(instance_exists(creator)){
+				team = creator.team;
+			}
+			playerColor = pCol;
+			
+			
 			//sprites
 			spr_idle = sprInvSpiderIdle;
 			spr_walk = sprInvSpiderWalk;
@@ -629,6 +647,7 @@ if(abs(number_of_spoods)>0){
 			size = 1;
 			image_speed = 0.4;
 			sprite_angle = 0; //for portal animation
+			image_blend = make_color_hsv(0, 0, 200);
 			depth = -1.9;
 			spr_shadow = shd24;
 			direction = random(360);
@@ -645,9 +664,7 @@ if(abs(number_of_spoods)>0){
 			on_hurt = script_ref_create(spood_hurt);
 			on_destroy = script_ref_create(spood_destroy);
 			on_draw = script_ref_create(spood_draw);
-			// friendly outline
-			playerColor = player_get_color(creator.index);
-			toDraw = self;
+			toDraw = self;			
 			script_bind_draw(draw_outline, depth, playerColor, toDraw);
 			wall_stuck = 0;
 		}
