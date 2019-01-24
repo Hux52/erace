@@ -160,7 +160,7 @@ with(enemy){
 	if(meleedamage > 0){
         var _p = instance_nearest(x, y, Player);
 		if(instance_exists(_p)){
-			if(Player.melee = true){
+			if(_p.melee = true){
 				if(point_distance(x, y, _p.x, _p.y) < 80){
 					canmelee = 0;
 				}
