@@ -61,39 +61,50 @@ global.e = array_create(4, 0);
 
 #define step
 
-global.pNum = 0;
+// global.pNum = 0;
 
-for (i = 0; i < array_length(oldPick); i++){
-	oldPick[i] = player_get_race(i);
-	wait(1);
-}
+// for (i = 0; i < array_length(oldPick); i++){
+// 	oldPick[i] = player_get_race(i);
+// 	wait(1);	
+// }
 
-if(player_get_race(0) != oldPick[0]){
-	//first get rid of existing enemies
-	with(enemy){
-		instance_delete(self);
-	}
+// for (i = 0; i < array_length(oldPick); i ++ ){
+// 	if(player_get_race(i) != oldPick[i]){
+// 		trace(string(player_get_race(i)) + ":" + string(oldPick[i]));
+		
+// 	}
+// }
+
+
+// if(player_get_race(0) != oldPick[0]){
+// 	//first get rid of existing enemies
+// 	with(enemy){
+// 		instance_delete(self);
+// 	}
 	
-	//next, spawn in all the selected enemies
-	for (i = 0; i < 4; i++){
-		if((player_get_uid(i)) > 0){
-			global.pNum += 1;
-		}
-	}
+// 	//next, spawn in all the selected enemies
+// 	for (i = 0; i < 4; i++){
+// 		if((player_get_uid(i)) > 0){
+// 			global.pNum += 1;
+// 		}
+// 	}
 
-	for (i = 0; i < global.pNum; i++){
-		for (j = 0; j < array_length(global.races); j++){			
-			if(array_find_index(global.races[j],player_get_race(i)) >= 0){
-				global.e[i] = global.enemies[j][array_find_index(global.races[j],player_get_race(i))];
-			}
-		}
-	if(instance_exists(global.e[i])){
-		instance_delete(global.e[i]);
-	}
-		r = random(360);
-		instance_create(Campfire.x + lengthdir_x(40,r),Campfire.y + lengthdir_y(40,r), global.e[i]);
-	}
-}
+// 	if(GameCont.area == 0){
+// 		for (i = 0; i < global.pNum; i++){
+// 			for (j = 0; j < array_length(global.races); j++){			
+// 				if(array_find_index(global.races[j],player_get_race(i)) >= 0){
+// 					global.e[i] = global.enemies[j][array_find_index(global.races[j],player_get_race(i))];
+// 				}
+// 			}
+// 		if(instance_exists(global.e[i])){
+// 			instance_delete(global.e[i]);
+// 		}
+// 			r = random(360);
+// 			//trace(global.e[i]);
+// 			instance_create(Campfire.x + lengthdir_x(40,r),Campfire.y + lengthdir_y(40,r), global.e[i]);
+// 		}
+// 	}
+// }
 
 // replace big chests with health chests
 
