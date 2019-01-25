@@ -36,6 +36,9 @@ frozen city
 /loadrace snowbot
 
 labs
+/loadrace freak
+/loadrace explofreak
+/loadrace rhinofreak
 /loadrace necromancer
 
 palace

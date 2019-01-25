@@ -9,7 +9,7 @@ global.races = [
 					["raven", "salamander", "sniper"],
 					["spider"],
 					["snowbot"],
-					["necromancer"],
+					["freak","explofreak","rhinofreak","necromancer"],
 					["guardian", "dogguardian"],
 					["fish"]
 				];	// please add races in the order and area you want them to be displayed
@@ -20,7 +20,7 @@ global.enemies = [
 					[Raven, Salamander, Sniper],
 					[Spider],
 					[SnowBot],
-					[Necromancer],
+					[Freak, ExploFreak, RhinoFreak, Necromancer],
 					[Guardian, DogGuardian],
 					[Bandit] //idk
 				];	// please add races in the order and area you want them to be displayed
