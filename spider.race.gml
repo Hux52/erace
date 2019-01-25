@@ -398,6 +398,21 @@ if(my_health > 0){
 		instance_create(x + random_range(-12,12),y-8  + random_range(-4,4),Curse);
 	}
 
+	if(instance_exists(creator)){
+		//trace(object_get_name(creator));
+		if(instance_is(creator, Player)){
+			if(creator.race != "spider"){
+				trace("isn't spider")
+				with(instance_create(x,y,InvSpider)){
+					my_health = other.my_health;
+					canmelee = 1;
+				}
+				instance_delete(self);
+				exit
+			}
+		}
+	}
+
 	// targeting
 	var _e = instance_nearest(x, y, enemy);
 	var _p = instance_nearest(x, y, Player);
@@ -602,10 +617,10 @@ if(sprite_index != spr_hurt){
 d3d_set_fog(1,playerColor,0,0);
 if(instance_exists(toDraw)){
     with(toDraw){
-        draw_sprite_ext(sprite_index, -1, x - 2, y, 1 * right, 1, sprite_angle, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x + 2, y, 1 * right, 1, sprite_angle, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x, y - 2, 1 * right, 1, sprite_angle, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x, y + 2, 1 * right, 1, sprite_angle, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x - 1, y, 1 * right, 1, sprite_angle, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x + 1, y, 1 * right, 1, sprite_angle, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x, y - 1, 1 * right, 1, sprite_angle, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x, y + 1, 1 * right, 1, sprite_angle, playerColor, 1);
     }
 }
 d3d_set_fog(0,c_lime,0,0);
@@ -626,7 +641,6 @@ if(abs(number_of_spoods)>0){
 				team = creator.team;
 			}
 			playerColor = pCol;
-			
 			
 			//sprites
 			spr_idle = sprInvSpiderIdle;
