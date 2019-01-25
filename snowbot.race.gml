@@ -267,7 +267,7 @@ return "SNOWBOT";
 
 #define race_text
 // return passive and active for character selection screen
-return "CONTACT DAMAGE#CHARGE#THROW CARS";
+return "CONTACT DAMAGE#@sCAN @wCHARGE#THROW @yCARS";
 
 
 #define race_portrait

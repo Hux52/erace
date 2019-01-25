@@ -317,7 +317,7 @@ return "BIG MAGGOT";
 
 #define race_text
 // return passive and active for character selection screen
-return "CONTACT DAMAGE#CAN'T STAND STILL#CAN BURROW";
+return "CONTACT DAMAGE#CAN'T STAND STILL#@sCAN @yBURROW";
 
 
 #define race_portrait

@@ -167,7 +167,7 @@ return "GUARDIAN";
 
 #define race_text
 // return passive and active for character selection screen
-return "FIRE RAD BALLS#CAN TELEPORT";
+return "@sFIRE @gRAD BALLS#@sCAN @wTELEPORT";
 
 
 #define race_portrait

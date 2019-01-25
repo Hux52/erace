@@ -266,7 +266,7 @@ return "DOG GUARDIAN";
 
 #define race_text
 // return passive and active for character selection screen
-return "CAN JUMP#CONTACT DAMAGE";
+return "@sCAN @wJUMP#CONTACT DAMAGE";
 
 
 #define race_portrait

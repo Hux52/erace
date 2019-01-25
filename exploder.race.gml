@@ -161,7 +161,7 @@ return "BALLGUY";
 
 #define race_text
 // return passive and active for character selection screen
-return "CAN'T STAND STILL#EXPLODE ON CONTACT";
+return "CAN'T STAND STILL#@gEXPLODE @wON CONTACT";
 
 
 #define race_portrait

@@ -143,7 +143,7 @@ return "ASSASSIN";
 
 #define race_text
 // return passive and active for character selection screen
-return "CAN HIDE#HAS PIPE";
+return "@sBE @wHIDDEN#@sHAS @wPIPE";
 
 
 #define race_portrait

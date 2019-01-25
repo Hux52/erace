@@ -53,7 +53,7 @@ return "NECROMANCER";
 
 #define race_text
 // return passive and active for character selection screen
-return "CAN REVIVE CORPSES";
+return "REVIVES @rCORPSES";
 
 
 #define race_portrait

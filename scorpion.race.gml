@@ -162,7 +162,7 @@ return "SCORPION";
 
 #define race_text
 // return passive and active for character selection screen
-return "CONTACT DAMAGE#CAN SPRAY VENOM";
+return "CONTACT DAMAGE#@wSPRAY @gVENOM";
 
 
 #define race_portrait

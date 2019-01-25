@@ -121,7 +121,7 @@ return "Sniper";
 
 #define race_text
 // return passive and active for character selection screen
-return "LONG RANGED#EXPLODES ON DEATH#CAN DASH";
+return "LONG RANGED#@yEXPLODES @wON DEATH#@sCAN @wDASH";
 
 
 #define race_portrait

@@ -262,7 +262,7 @@ return "CORPSE";
 
 #define race_text
 // return passive and active for character selection screen
-return "CAN'T MOVE#SELF DESCTRUCT";
+return "CAN'T MOVE#@rSELF DESCTRUCT";
 
 
 #define race_portrait

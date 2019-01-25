@@ -406,7 +406,7 @@ return "RAVEN";
 
 #define race_text
 // return passive and active for character selection screen
-return "TOMMY GUN#CAN FLY";
+return "TOMMY GUN#@sCAN @wFLY";
 
 
 #define race_portrait

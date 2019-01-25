@@ -396,7 +396,7 @@ return "RAT KING";
 
 #define race_text
 // return passive and active for character selection screen
-return "CONTACT DAMAGE#SPAWN RATS";
+return "CONTACT DAMAGE#SPAWN @gRATS";
 
 
 #define race_portrait

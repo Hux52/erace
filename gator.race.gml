@@ -166,7 +166,7 @@ return "Gator";
 
 #define race_text
 // return passive and active for character selection screen
-return "CAN SMOKE";
+return "@sCAN @ySMOKE";
 
 
 #define race_portrait
