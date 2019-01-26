@@ -4,7 +4,7 @@ global.newLevel = instance_exists(GenCont);
 global.hasGenCont = false;
 
 // character select button
-global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACESURBVDhPYwCC/+g41NmeaAxUT6EBETph/9ExKQbRxgAYJsYgyg3QFNX4TwjDDMJm2CAwAJvf0TFtDUCWhOE/FqgYWY4+BpCIsQoSj0sTnP/PbU0iGVPPAGySxGDqGQDyAi6MTSMMU88AbJL4MMxw6hkAyiwwQWwaQBgmj6wRkpTt/wMAPXKuCw+8+LAAAAAASUVORK5CYIIAAAAAAAAAAAAAAAAAAAAAAA==", 1, 0, 0);
+global.sprMenuButton = sprite_add("sprites/sprAssassinSelect.png", 1, 0, 0);
 
 global.sprPortrait = sprite_add("sprites/sprPortraitAssassin.png", 1, 15, 205);
 

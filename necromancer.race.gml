@@ -1,5 +1,5 @@
 #define init
-global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACvSURBVDhPtZNBCoNADEVzhuLGS7gpFLEnsGtv0qMUuu2xBNceQ5iSwchPGEc0ungLJ/8/MuDQ5/sL/TAq+AwpiyrSPNoIEYXb/RkhW0Ze3VvBRSxfJ5CCPZcrbV7hsEAC9tuenytYC+RQGbdASqniVGtwtnTcAl49F0yhsm6BHe7G2BQ4Q3DmF2DhIMnDPej15rWycAb+HadA3j6D72KLRegW8BooYWQ9C2ZOElD4A9SnH6pljqYYAAAAAElFTkSuQmCC", 1, 0, 0);
+global.sprMenuButton = sprite_add("sprites/sprNecromancerSelect.png", 1, 0, 0);
 
 
 #define create

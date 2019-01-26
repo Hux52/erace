@@ -1,6 +1,6 @@
 #define init
 // character select button
-global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACgSURBVDhPvZJBDkAwEEW7cQlHdARLibWVc3RrIy7hMlZl8Jtv0iakrZ+8hMz8J4U54jR2aF5z7CcKprF1mi8ysy7WxWBZqCzkFfAxNDHJ4x2wTAOJFqULQssx8CCW/CsAyQJ+H2UEOKsEixLeCQoQP1Qg5QTdXJ0g/VbfV5cUKS/AvQhi86BACrrE8DyfAN+c0UWB51L0v7I3fQDlDILG7f/o4UKsTVyRAAAAAElFTkSuQmCC", 1, 0, 0);
+global.sprMenuButton = sprite_add("sprites/sprBigMaggotSelect.png", 1, 0, 0);
 // character select portrait
 global.sprPortrait = sprite_add("/sprites/sprPortraitBigMaggot.png", 1, 10, 230);
 

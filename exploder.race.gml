@@ -1,5 +1,5 @@
 #define init
-global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACXSURBVDhPzZMxDoAgDEU7s3IOFyc3BwcvoKNHcfXUJpiSlFTzURAGhpcQ+vsoIdA6ja6ERgRElEx9AW8u+3ajm3oP2nvKSAp/8CJUSCUIzoECzxBC58ME+r45lAtkIaLZGHdYm0wQaBEKxqgjkPEFFIzRiECTLZBTtYCfUoMahXKBbkTNX/gJRMKg0BvlAt3M8B9HQYxxF3SMiB75OeSoAAAAAElFTkSuQmCC", 1, 0, 0);
+global.sprMenuButton = sprite_add("sprites/sprExploderSelect.png", 1, 0, 0);
 global.sprPortrait = sprite_add("sprites/sprPortraitExploder.png", 1, 10, 205);
 
 // character select sounds

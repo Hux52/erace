@@ -4,7 +4,7 @@ global.newLevel = instance_exists(GenCont);
 global.hasGenCont = false;
 
 // charselect sprite
-global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADMSURBVDhPzZG9DcIwEIXdsgELUMEGCDECOyCKtBkkTXZAoqJHjOMhSHfkWXrWCxgbEYIovii5u/fFP26/mpvinDPv/QDUtK8z4wUs5NAfqOg7gqpuTDlfrhHWVNIeFoEngQZvXRfgd0rAVUwjeAT9MNxDQZT8n6CfsuNsGSgJwHjBerszQJGdNlHAGvpFQW4F0wq4TA6nSAXB29eYFeABUkGCfkoAHF8oSqEBnQ9no4VXaFDnB4JPwNn9XsBtYflBUNon4XUjyHBVN3YHHHs+RZb9XysAAAAASUVORK5CYII=", 1, 0, 0);
+global.sprMenuButton = sprite_add("sprites/sprSnowBotSelect.png", 1, 0, 0);
 
 // level start init- MUST GO AT END OF INIT
 while(true){

@@ -1,5 +1,5 @@
 #define init
-global.sprMenuButton = sprite_add("sprites/sprDogSelect.png", 1, 0, 0);
+global.sprMenuButton = sprite_add("sprites/sprDogGuardianSelect.png", 1, 0, 0);
 global.sprPortrait = mskNone; //sprite_add("sprites/sprPortraitRat.png", 1 , 15, 185);
 
 global.sprDogHit = sprite_add("sprites/sprDogHit.png", 3, 0, 0);
