@@ -15,16 +15,14 @@ global.races = [
 					["fish"]
 				];	// please add races in the order and area you want them to be displayed
 
-global.enemies = [
-					[MaggotSpawn, BigMaggot, Bandit, Scorpion],
-					[Rat, Ratking, Exploder, Gator, MeleeBandit],
-					[Raven, Salamander, Sniper],
-					[Spider],
-					[SnowBot],
-					[Freak, ExploFreak, RhinoFreak, Necromancer],
-					[Guardian, DogGuardian],
-					[Bandit] //idk
-				];	// please add races in the order and area you want them to be displayed
+global.player_races = ["unknown", "unknown", "unknown", "unknown"];
+
+global.race_names = ["maggotspawn", MaggotSpawn, "bigmaggot", BigMaggot, "bandit", Bandit, "scorpion", Scorpion, "rat",
+					Rat, "ratking", Ratking, "exploder", Exploder, "gator", Gator, "assassin", MeleeBandit, "raven", Raven,
+					"salamander", Salamander, "sniper", Sniper, "spider", Spider, "snowbot", SnowBot, "freak", Freak,
+					"explofreak", ExploFreak, "rhinofreak", RhinoFreak, "necromancer", Necromancer, "guardian", Guardian,
+					"dogguardian", DogGuardian];	// piss off
+
 global.deselect_color = make_color_hsv(0, 0, 50);	// dimmnessss :)
 global.hover_color = make_color_hsv(0, 0, 80);	// same
 
@@ -197,6 +195,37 @@ with(CharSelect){
 		}
 	}
 }
+
+// spawn enemies
+if(instance_exists(CharSelect)){
+	for(i = 0; i < 4; i++){
+		if(global.player_races[i] != player_get_race(i)){
+			if(player_get_race(i) != "unknown" and player_get_race(i) != ""){
+				for(m = 0; m < array_length(global.race_names); m += 2){
+					if(global.race_names[m] = player_get_race(m)){
+						var _e = instances_matching(enemy, "index", i);
+						if(array_length(_e) > 0){
+							instance_delete(_e[0]);
+						}
+						with(instance_create(64 + random_range(-60, 60), 64 + random_range(-60, 60), global.race_names[m + 1])){
+							index = other.i;
+						}
+						break;
+					}
+				}
+			}
+		}
+		else{
+			view_object[i] = instance_nearest(64, 64, Campfire);
+		}
+		var _view = instances_matching(enemy, "index", i);
+		if(array_length(_view) > 0){
+			view_object[i] = _view[0];
+		}
+		global.player_races[i] = player_get_race(i);
+	}
+}
+
 
 // character selects just appeared
 if(global.select_exists != instance_number(CharSelect) and instance_number(CharSelect) > 0){
