@@ -80,6 +80,8 @@ else{
 	if(wep != "gator_shotgun"){
 		wep = "gator_shotgun";
 	}
+	
+	global.sprPortrait = global.sprPortrait_normal;
 }
 
 
