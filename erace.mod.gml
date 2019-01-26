@@ -66,8 +66,16 @@ oldPick = array_create(4, 0);
 charEnemies = array_create(4," ");
 global.e = array_create(4, 0);
 
+global.t = 0;
+global.flip = false;
+
 #define step
 
+global.t += 1;
+
+if(global.t mod 15 == 1){
+	global.flip = !global.flip;
+}
 // global.pNum = 0;
 
 // for (i = 0; i < array_length(oldPick); i++){
@@ -271,7 +279,15 @@ if(global.select_exists != instance_number(CharSelect) and instance_number(CharS
 			image_speed = 0;	// no anim
 			depth = -9999;	// draw on top of ui
 			my_bg = array_create(9, noone);
+			
+			//draw stuff
+			t = 0;
+			_x1 = xstart - 8;
+			_y1 = ystart - 12;
+			_x2 = xstart + 7;
+			_y2 = ystart + 11;
 			on_step = script_ref_create(area_select_step);	// custom step
+			on_draw = script_ref_create(area_select_draw);	// custom step
 			
 			for(j = 0; j <= 9; j++){
 				with(instance_create(-96 + (j*32),999,CustomObject)){
@@ -299,14 +315,17 @@ else if(global.select_exists != instance_number(CharSelect) and instance_number(
 global.select_exists = instance_number(CharSelect);
 
 #define area_select_step
+t += 1/room_speed;
 // check for player click
 image_blend = global.deselect_color;	// dimmest
+
+		mouse_over = false;
 sprite_index = global.sprAreaSelect;
 for(i = 0; i < maxp; i++){
 	if(abs(mouse_x[i] - x) < 8 and abs(mouse_y[i] - y) < 16){	// if mouse over button
 		if(selected = false){
 			image_blend = global.hover_color;	// dim
-			sprite_index = global.sprAreaSelected;
+			mouse_over = true;
 		}
 		if(button_pressed(i, "fire")){	// if clicked
 			if(selected = 0){
@@ -386,6 +405,22 @@ if(selected = 1){
 		my_bg[i].y = 999;
 	}
 }
+
+#define area_select_draw
+
+_c = draw_get_color();
+_a = draw_get_alpha();
+draw_set_color(c_white);
+if(t < pi){
+	draw_set_alpha(abs(sin(t*3)));
+	draw_rectangle(_x1, _y1, _x2, _y2,true);
+}
+if(mouse_over){
+	draw_set_alpha(1);
+	draw_rectangle(_x1, _y1, _x2, _y2,true);
+}
+draw_set_alpha(_a);
+draw_set_color(_c);
 
 #define chat_command
 // chat commands
