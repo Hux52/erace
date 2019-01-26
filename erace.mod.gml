@@ -260,7 +260,7 @@ if(global.select_exists != instance_number(CharSelect) and instance_number(CharS
 	}
 	// make custom buttons
 	for(i = 0; i < 8; i++){	// 8 buttons
-		with(instance_create(-80 + (35 * (i + 1)), 165, CustomObject)){	// 35 * (i + 1)      optimal spacing
+		with(instance_create(view_xview + 16 + (35 * (i + 1)), view_yview + 221, CustomObject)){	// 35 * (i + 1)      optimal spacing
 		//with(instance_create(view_xview + 16 + (35 * (i + 1)), 165, CustomObject)){	// 35 * (i + 1)      optimal spacing
 			name = "AreaSelect";	// object name
 			area = other.i;	// area
@@ -274,7 +274,7 @@ if(global.select_exists != instance_number(CharSelect) and instance_number(CharS
 			on_step = script_ref_create(area_select_step);	// custom step
 			
 			for(j = 0; j <= 9; j++){
-				with(instance_create(-96 + (j*32),999,CustomObject)){
+				with(instance_create(view_xview + (j*32),999,CustomObject)){
 					name = "AreaBackgr";	// object name
 					area = other.area;	// area
 					sprite_index = global.background_indices[area];	// all in one sprite
@@ -287,7 +287,6 @@ if(global.select_exists != instance_number(CharSelect) and instance_number(CharS
 			}
 		}
 	}
-	
 }
 // character selects just disappeared
 else if(global.select_exists != instance_number(CharSelect) and instance_number(CharSelect) = 0){
@@ -295,6 +294,23 @@ else if(global.select_exists != instance_number(CharSelect) and instance_number(
 		instance_destroy();
 	}
 }
+
+// keep custom buttons oriented
+for(i = 0; i < 8; i++){
+	with(instances_matching(CustomObject, "name", "AreaSelect")){
+		if(area = other.i){
+			x = view_xview + 16 + (35 * (other.i + 1));
+			y = view_yview + 221;
+			for(j = 0; j <= 9; j++){
+				with(my_bg[j]){
+					x = view_xview + (other.j * 32);
+					y = 999;
+				}
+			}
+		}
+	}
+}
+
 // manage check
 global.select_exists = instance_number(CharSelect);
 
