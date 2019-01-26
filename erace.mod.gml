@@ -213,8 +213,10 @@ if(instance_exists(CharSelect)){
 						if(array_length(_e) > 0){
 							instance_delete(_e[0]);
 						}
-						with(instance_create(64 + random_range(-60, 60), 64 + random_range(-60, 60), global.race_names[m + 1])){
+						with(instance_create(64 + lengthdir_x(50, 90 * i), 64 + lengthdir_y(50, 90 * i), global.race_names[m + 1])){
 							index = other.i;
+							mask_index = mskNone;
+							friction = 999;
 						}
 						break;
 					}
@@ -222,11 +224,14 @@ if(instance_exists(CharSelect)){
 			}
 		}
 		else{
-			view_object[i] = instance_nearest(64, 64, Campfire);
+			// view_object[i] = instance_nearest(64, 64, Campfire);
 		}
 		var _view = instances_matching(enemy, "index", i);
 		if(array_length(_view) > 0){
-			view_object[i] = _view[0];
+			// view_object[i] = _view[0];
+			for(i = 0; i < 8; i++){
+				alarm_set(i, 999);
+			}
 		}
 		global.player_races[i] = player_get_race(i);
 	}
