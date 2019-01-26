@@ -8,8 +8,8 @@ if(instance_exists(CustomObject)){
 global.healthChance = 30;	//percent chance of transforming an ammo pickup into a health pickup
 global.erace_raddrop = 1;	//extra rads to drop
 global.select_exists = false;	// checks for character select
-global.sprAreaSelect = sprite_add("/sprites/sprAreaSelect3.png", 8, 8, 12);	// area buttons sprite strip
-global.sprAreaSelected = sprite_add("/sprites/sprAreaSelected3.png", 8, 8, 12);	// area buttons sprite strip
+global.sprAreaSelect = sprite_add("/sprites/sprAreaSelect.png", 8, 8, 12);	// area buttons sprite strip
+global.sprAreaSelected = sprite_add("/sprites/sprAreaSelected.png", 8, 8, 12);	// area buttons sprite strip
 global.races = [
 					["maggotspawn", "bigmaggot", "bandit", "scorpion"],
 					["rat", "ratking", "exploder", "gator", "assassin"],
@@ -216,7 +216,7 @@ if(instance_exists(CharSelect)){
 						with(instance_create(64 + lengthdir_x(50, 90 * i), 64 + lengthdir_y(50, 90 * i), global.race_names[m + 1])){
 							index = other.i;
 							mask_index = mskNone;
-							friction = 999;
+							friction = 10;
 						}
 						break;
 					}
@@ -229,8 +229,8 @@ if(instance_exists(CharSelect)){
 		var _view = instances_matching(enemy, "index", i);
 		if(array_length(_view) > 0){
 			// view_object[i] = _view[0];
-			for(i = 0; i < 8; i++){
-				alarm_set(i, 999);
+			for(j = 0; j < 8; j++){
+				alarm_set(i, 1);
 			}
 		}
 		global.player_races[i] = player_get_race(i);
@@ -452,7 +452,13 @@ switch(command){
 	case "ERADS":
 		switch(parameter){
 			case "":
-				trace("Enemies now drop " + string(global.erace_raddrop) + " more rads on death.");
+				if(global.erace_raddrop == 1){
+					trace("Enemies now drop " + string(global.erace_raddrop) + " more rad on death.");
+				}else if (global.erace_raddrop == 0){
+					trace("Enemies drop their normal amount of rads on death.");
+				}else{
+					trace("Enemies now drop " + string(global.erace_raddrop) + " more rads on death.");
+				}
 			break;
 			
 			default:
@@ -462,10 +468,15 @@ switch(command){
 				trace("That number's too high even for me.");
 			} else if (real(parameter) > 0) {
 				global.erace_raddrop = real(parameter);
-				trace("Enemies now drop " + string(global.erace_raddrop) + " more rads on death.");
+				
+				if(real(parameter) == 1){
+					trace("Enemies now drop " + string(global.erace_raddrop) + " more rad on death.");
+				} else {
+					trace("Enemies now drop " + string(global.erace_raddrop) + " more rads on death.");
+				}
 			} else {
 				global.erace_raddrop = 0;
-				trace("Enemies drop the regular number of rads on death.");
+				trace("Enemies drop their normal amount of rads on death.");
 			}
 		}
 	return true;
