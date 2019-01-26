@@ -3,6 +3,7 @@ global.healthChance = 30;	//percent chance of transforming an ammo pickup into a
 global.erace_raddrop = 1;	//extra rads to drop
 global.select_exists = false;	// checks for character select
 global.sprAreaSelect = sprite_add("/sprites/sprAreaSelect.png", 8, 8, 12);	// area buttons sprite strip
+global.sprAreaBackgr = sprite_add("/sprites/bg.png",8,32,32);
 global.races = [
 					["maggotspawn", "bigmaggot", "bandit", "scorpion"],
 					["rat", "ratking", "exploder", "gator", "assassin"],
@@ -26,6 +27,8 @@ global.enemies = [
 				];	// please add races in the order and area you want them to be displayed
 global.deselect_color = make_color_hsv(0, 0, 50);	// dimmnessss :)
 global.hover_color = make_color_hsv(0, 0, 80);	// same
+
+global.background_indices = [sprFloor1,sprFloor2,sprFloor3,sprFloor4,sprFloor5,sprFloor6,sprFloor7,sprFloor100]
 
 // disable default races
 for(i = 1; i < 16; i++){
@@ -227,9 +230,24 @@ if(global.select_exists != instance_number(CharSelect) and instance_number(CharS
 			image_index = area;	// specific frame of sprite
 			image_speed = 0;	// no anim
 			depth = -9999;	// draw on top of ui
+			my_bg = array_create(9, noone);
 			on_step = script_ref_create(area_select_step);	// custom step
+			
+			for(j = 0; j <= 9; j++){
+				with(instance_create(-96 + (j*32),999,CustomObject)){
+					name = "AreaBackgr";	// object name
+					area = other.area;	// area
+					sprite_index = global.background_indices[area];	// all in one sprite
+					image_index = irandom(sprite_get_number(sprite_index));	// specific frame of sprite
+					image_speed = 0;	// no anim
+					image_blend = global.deselect_color;
+					depth = -1003;	// draw on top of ui
+					other.my_bg[other.j] = self;
+				}
+			}
 		}
 	}
+	
 }
 // character selects just disappeared
 else if(global.select_exists != instance_number(CharSelect) and instance_number(CharSelect) = 0){
@@ -309,12 +327,20 @@ if(selected = 1){
 			}
 		}
 	}
-}
-else{
+
+	for(i = 0; i < array_length(my_bg); i++){
+		my_bg[i].y = ystart-15;
+	}
+
+}else{
 	// out of my sight
 	with(instances_matching(CharSelect, "area", area)){
 		xstart = 999;
 		ystart = 300;
+	}
+	
+	for(i = 0; i < array_length(my_bg); i++){
+		my_bg[i].y = 999;
 	}
 }
 
