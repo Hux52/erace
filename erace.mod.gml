@@ -202,7 +202,7 @@ if(instance_exists(CharSelect)){
 		if(global.player_races[i] != player_get_race(i)){
 			if(player_get_race(i) != "unknown" and player_get_race(i) != ""){
 				for(m = 0; m < array_length(global.race_names); m += 2){
-					if(global.race_names[m] = player_get_race(m)){
+					if(global.race_names[m] = player_get_race(i)){
 						var _e = instances_matching(enemy, "index", i);
 						if(array_length(_e) > 0){
 							instance_delete(_e[0]);
