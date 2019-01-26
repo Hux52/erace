@@ -1,9 +1,15 @@
 #define init
+if(instance_exists(CustomObject)){
+	with(instances_matching(CustomObject,"name", "AreaBackgr")){
+		instance_delete(self);
+	}
+}
+
 global.healthChance = 30;	//percent chance of transforming an ammo pickup into a health pickup
 global.erace_raddrop = 1;	//extra rads to drop
 global.select_exists = false;	// checks for character select
-global.sprAreaSelect = sprite_add("/sprites/sprAreaSelect.png", 8, 8, 12);	// area buttons sprite strip
-global.sprAreaBackgr = sprite_add("/sprites/bg.png",8,32,32);
+global.sprAreaSelect = sprite_add("/sprites/sprAreaSelect3.png", 8, 8, 12);	// area buttons sprite strip
+global.sprAreaSelected = sprite_add("/sprites/sprAreaSelected.png", 8, 8, 12);	// area buttons mouse over
 global.races = [
 					["maggotspawn", "bigmaggot", "bandit", "scorpion"],
 					["rat", "ratking", "exploder", "gator", "assassin"],
@@ -261,10 +267,12 @@ global.select_exists = instance_number(CharSelect);
 #define area_select_step
 // check for player click
 image_blend = global.deselect_color;	// dimmest
+sprite_index = global.sprAreaSelect;
 for(i = 0; i < maxp; i++){
 	if(abs(mouse_x[i] - x) < 8 and abs(mouse_y[i] - y) < 16){	// if mouse over button
 		if(selected = false){
 			image_blend = global.hover_color;	// dim
+			sprite_index = global.sprAreaSelected;
 		}
 		if(button_pressed(i, "fire")){	// if clicked
 			if(selected = 0){
