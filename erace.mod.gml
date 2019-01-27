@@ -311,21 +311,21 @@ else if(global.select_exists != instance_number(CharSelect) and instance_number(
 	}
 }
 
-// keep custom buttons oriented
-for(i = 0; i < 8; i++){
-	with(instances_matching(CustomObject, "name", "AreaSelect")){
-		if(area = other.i){
-			x = view_xview + 16 + (35 * (other.i + 1));
-			y = view_yview + 221;
-			for(j = 0; j <= 9; j++){
-				with(my_bg[j]){
-					x = view_xview + (other.j * 32);
-					y = 999;
-				}
-			}
-		}
-	}
-}
+// // keep custom buttons oriented
+// for(i = 0; i < 8; i++){
+// 	with(instances_matching(CustomObject, "name", "AreaSelect")){
+// 		if(area = other.i){
+// 			x = view_xview + 16 + (35 * (other.i + 1));
+// 			y = view_yview + 221;
+// 			for(j = 0; j <= 9; j++){
+// 				with(my_bg[j]){
+// 					x = view_xview + (other.j * 32);
+// 					y = 999;
+// 				}
+// 			}
+// 		}
+// 	}
+// }
 
 // manage check
 global.select_exists = instance_number(CharSelect);
@@ -334,14 +334,13 @@ global.select_exists = instance_number(CharSelect);
 t += 1/room_speed;
 // check for player click
 image_blend = global.deselect_color;	// dimmest
-
-		mouse_over = false;
+	mouse_over = false; //is not being moused over
 sprite_index = global.sprAreaSelect;
 for(i = 0; i < maxp; i++){
 	if(abs(mouse_x[i] - x) < 8 and abs(mouse_y[i] - y) < 16){	// if mouse over button
 		if(selected = false){
 			image_blend = global.hover_color;	// dim
-			mouse_over = true;
+			mouse_over = true; //is being moused over
 		}
 		if(button_pressed(i, "fire")){	// if clicked
 			if(selected = 0){
