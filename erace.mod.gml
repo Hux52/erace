@@ -409,9 +409,15 @@ if(selected = 1){
 		}
 	}
 
-	for(i = 0; i < array_length(my_bg); i++){
-		my_bg[i].y = ystart-15;
-		my_bg[i].image_blend = make_color_hsv(0, 0, 100);
+	for(i = array_length(my_bg)-1; i >= 0; i--){
+		//version A:
+		// my_bg[i].y = lerp(my_bg[i].y, ystart-15, clamp(1/(i+1), 0, 1));
+		// my_bg[i].x = -96 + (i*32);
+		// my_bg[i].image_blend = make_color_hsv(0, 0, 100);
+		
+		//version B:
+		my_bg[i].y = ystart - 15;
+		my_bg[i].x = lerp(my_bg[i].x, -96 + (i*32), 0.1);
 	}
 
 }else{
@@ -422,7 +428,13 @@ if(selected = 1){
 	}
 	
 	for(i = 0; i < array_length(my_bg); i++){
-		my_bg[i].y = 999;
+		//version A:
+		// my_bg[i].x = -1000;
+		// my_bg[i].y = ystart + random_range(100,600)
+
+		//version B:
+		my_bg[i].x = other.xstart-20;
+		my_bg[i].y = -1000;		
 	}
 }
 
