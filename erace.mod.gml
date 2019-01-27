@@ -413,11 +413,12 @@ if(selected = 1){
 		//version A:
 		// my_bg[i].y = lerp(my_bg[i].y, ystart-15, clamp(1/(i+1), 0, 1));
 		// my_bg[i].x = -96 + (i*32);
-		// my_bg[i].image_blend = make_color_hsv(0, 0, 100);
 		
 		//version B:
 		my_bg[i].y = ystart - 15;
 		my_bg[i].x = lerp(my_bg[i].x, -96 + (i*32), 0.1);
+
+		my_bg[i].image_blend = make_color_hsv(0, 0, 64);
 	}
 
 }else{
