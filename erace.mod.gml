@@ -32,7 +32,8 @@ global.race_names = ["maggotspawn", MaggotSpawn, "bigmaggot", BigMaggot, "bandit
 global.deselect_color = make_color_hsv(0, 0, 80);	// dimmnessss :)
 global.hover_color = make_color_hsv(0, 0, 190);	// same
 
-global.background_indices = [sprFloor1,sprFloor2,sprFloor3,sprFloor4,sprFloor5,sprFloor6,sprFloor7,sprFloor100]
+global.backgrounds_A = [sprFloor1,sprFloor2,sprFloor3,sprFloor4,sprFloor5,sprFloor6,sprFloor7,sprFloor100];
+global.backgrounds_B = [sprFloor1B,sprFloor2B,sprFloor3B,sprFloor4B,sprFloor5B,sprFloor6B,sprFloor7B,sprFloor100B];
 
 // disable default races
 for(i = 1; i < 16; i++){
@@ -67,15 +68,11 @@ charEnemies = array_create(4," ");
 global.e = array_create(4, 0);
 
 global.t = 0;
-global.flip = false;
 
 #define step
 
 global.t += 1;
 
-if(global.t mod 15 == 1){
-	global.flip = !global.flip;
-}
 // global.pNum = 0;
 
 // for (i = 0; i < array_length(oldPick); i++){
@@ -238,7 +235,7 @@ if(instance_exists(CharSelect)){
 		if(array_length(_view) > 0){
 			// view_object[i] = _view[0];
 			for(j = 0; j < 8; j++){
-				alarm_set(i, 1);
+				alarm_set(j, 999);
 			}
 		}
 		global.player_races[i] = player_get_race(i);
@@ -260,7 +257,11 @@ if(global.select_exists != instance_number(CharSelect) and instance_number(CharS
 	}
 	// remove campfire characters
 	with(CampChar){
-		instance_destroy();
+		x = 64;
+		y = 64;
+		lastx = 64;
+		lasty = 64;
+		spr_to = mskNone; spr_slct = mskNone; spr_from = mskNone; spr_menu = mskNone; spr_shadow = mskNone;
 	}
 	// get rid of old custom buttons, if any
 	with(instances_matching(CustomObject, "name", "AreaSelect")){
@@ -268,7 +269,7 @@ if(global.select_exists != instance_number(CharSelect) and instance_number(CharS
 	}
 	// make custom buttons
 	for(i = 0; i < 8; i++){	// 8 buttons
-		with(instance_create(view_xview + 16 + (35 * (i + 1)), view_yview + 221, CustomObject)){	// 35 * (i + 1)      optimal spacing
+		with(instance_create(-80 + (35 * (i + 1)), 165, CustomObject)){	// 35 * (i + 1)      optimal spacing
 		//with(instance_create(view_xview + 16 + (35 * (i + 1)), 165, CustomObject)){	// 35 * (i + 1)      optimal spacing
 			name = "AreaSelect";	// object name
 			area = other.i;	// area
@@ -290,10 +291,14 @@ if(global.select_exists != instance_number(CharSelect) and instance_number(CharS
 			on_draw = script_ref_create(area_select_draw);	// custom step
 			
 			for(j = 0; j <= 9; j++){
-				with(instance_create(view_xview + (j*32),999,CustomObject)){
+				with(instance_create(-96 + (j*32),999,CustomObject)){
 					name = "AreaBackgr";	// object name
 					area = other.area;	// area
-					sprite_index = global.background_indices[area];	// all in one sprite
+					if(area == 4){
+						sprite_index = global.backgrounds_A[area];
+					} else {
+						sprite_index = choose(global.backgrounds_A[area], global.backgrounds_B[area]);
+					}					
 					image_index = irandom(sprite_get_number(sprite_index));	// specific frame of sprite
 					image_speed = 0;	// no anim
 					image_blend = global.deselect_color;
