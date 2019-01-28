@@ -67,11 +67,12 @@ oldPick = array_create(4, 0);
 charEnemies = array_create(4," ");
 global.e = array_create(4, 0);
 
-global.t = 0;
+global.t = -1;
 
 #define step
-
+if(global.t < 10){
 global.t += 1;
+}
 
 // global.pNum = 0;
 
@@ -282,7 +283,7 @@ if(global.select_exists != instance_number(CharSelect) and instance_number(CharS
 			my_bg = array_create(9, noone);
 			
 			//draw stuff
-			t = 0;
+			t = global.t;
 			_x1 = xstart - 8;
 			_y1 = ystart - 12;
 			_x2 = xstart + 7;
