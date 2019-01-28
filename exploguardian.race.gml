@@ -158,7 +158,7 @@ return true;
 
 #define race_menu_button
 // return race menu button icon
-return global.sprMenuButton;
+sprite_index = global.sprMenuButton;
 
 #define race_skins
 // return number of skins the race has
