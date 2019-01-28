@@ -102,6 +102,7 @@ if(button_pressed(index, "spec")){
 }
 
 if(explo > 1){
+	speed = 0;
 	explo--;
 }
 else if(explo = 1){
@@ -127,7 +128,7 @@ else if(explo = 1){
 	explo--;
 }
 
-if(distance_to_object(Portal) > 20){
+if(distance_to_object(Portal) < 20){
 	spr_idle = sprExploGuardianIdle;
 	spr_walk = sprExploGuardianWalk;
 	spr_hurt = sprExploGuardianHurt;
