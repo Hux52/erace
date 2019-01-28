@@ -49,6 +49,7 @@ canwalk = 1;
 // vars
 melee = 1;	// can melee or not
 explo = 0;
+died = 0;
 
 
 #define game_start
@@ -126,6 +127,34 @@ else if(explo = 1){
 	explo--;
 }
 
+if(distance_to_object(Portal) > 20){
+	spr_idle = sprExploGuardianIdle;
+	spr_walk = sprExploGuardianWalk;
+	spr_hurt = sprExploGuardianHurt;
+	sprite_index = spr_idle;
+	canwalk = 1;
+	explo = 0;
+}
+
+if(my_health <= 0){
+	if(died = 0 and explo > 1){
+		sound_dead = snd_cgdd;
+		for(i = 0 + _o; i < 360 + _o; i += 14){
+			with(instance_create(x, y, Bullet1)){
+				creator = other;
+				team = creator.team;
+				sprite_index = sprBullet2;
+				mask_index = mskBullet2;
+				speed = 12;
+				direction = other.i;
+				image_angle = direction;
+				damage = 3;
+			}
+		}
+		died = 1;
+	}
+}
+
 #define race_name
 // return race name for character select and various menus
 return "EXPLOGUARDIAN";
@@ -158,7 +187,7 @@ return true;
 
 #define race_menu_button
 // return race menu button icon
-return global.sprMenuButton;
+sprite_index = global.sprMenuButton;
 
 #define race_skins
 // return number of skins the race has
