@@ -117,6 +117,7 @@ else if(explo = 1){
 			speed = 12;
 			direction = other.i;
 			image_angle = direction;
+			image_blend = make_color_hsv(70,130,200);
 			damage = 3;	// damage is normally 2 for exploguardian, this is player bullet damage
 		}
 	}
