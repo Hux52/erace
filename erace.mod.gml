@@ -17,7 +17,7 @@ global.races = [
 					["spider"],
 					["snowbot"],
 					["freak","explofreak","rhinofreak","necromancer"],
-					["guardian", "dogguardian"],
+					["guardian", "exploguardian", "dogguardian"],
 					["fish"]
 				];	// please add races in the order and area you want them to be displayed
 
@@ -27,7 +27,7 @@ global.race_names = ["maggotspawn", MaggotSpawn, "bigmaggot", BigMaggot, "bandit
 					Rat, "ratking", Ratking, "exploder", Exploder, "gator", Gator, "assassin", MeleeBandit, "raven", Raven,
 					"salamander", Salamander, "sniper", Sniper, "spider", Spider, "snowbot", SnowBot, "freak", Freak,
 					"explofreak", ExploFreak, "rhinofreak", RhinoFreak, "necromancer", Necromancer, "guardian", Guardian,
-					"dogguardian", DogGuardian];	// piss off
+					"exploguardian", ExploGuardian, "dogguardian", DogGuardian];	// piss off
 
 global.deselect_color = make_color_hsv(0, 0, 80);	// dimmnessss :)
 global.hover_color = make_color_hsv(0, 0, 190);	// same

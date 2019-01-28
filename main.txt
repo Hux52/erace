@@ -43,6 +43,7 @@ labs
 
 palace
 /loadrace guardian
+/loadrace exploguardian
 /loadrace dogguardian
 
 /loadrace maggot
