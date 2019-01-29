@@ -195,6 +195,7 @@ if(charge > 0){
 		canwalk = 1;
 		spr_idle = sprSnowBotIdle;
 		spr_walk = sprSnowBotWalk;
+		spr_hurt = sprSnowBotHurt;
 		sound_stop(loop);
 	}
 	charge--;
@@ -219,6 +220,7 @@ if(distance_to_object(Car) < 20){
 	spr_idle = sprSnowBotIdle;
 	spr_walk = sprSnowBotWalk;
 	sound_stop(loop);
+	sound_play(sndSnowBotPickup);
 	// start lifting anim
 	lift = 6;
 }
@@ -255,8 +257,26 @@ if(button_pressed(index, "fire")){
 	}
 }
 
+if(car = 1 and spr_idle = sprSnowBotIdle){
+	if(GameCont.area != 5){
+		spr_walk = sprSnowBotRedCarWalk;
+		spr_hurt = sprSnowBotRedCarHurt;
+		spr_idle = sprSnowBotRedCarIdle;
+	}
+	else{
+		spr_walk = sprSnowBotCarWalk;
+		spr_hurt = sprSnowBotCarHurt;
+		spr_idle = sprSnowBotCarIdle;
+	}
+	sprite_index = spr_idle;
+}
+
 // stop that infernal racket
 if(my_health = 0){
+	sound_stop(loop);
+}
+
+if(instance_exists(GenCont)){
 	sound_stop(loop);
 }
 

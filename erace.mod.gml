@@ -71,7 +71,7 @@ global.t = -1;
 
 #define step
 if(global.t < 10){
-global.t += 1;
+	global.t += 1;
 }
 
 // global.pNum = 0;
@@ -241,6 +241,11 @@ if(instance_exists(CharSelect)){
 		}
 		global.player_races[i] = player_get_race(i);
 	}
+	with(instances_matching_ne(enemy, "index", null)){
+		for(i = 0; i < 8; i++){
+			alarm_set(i, 99);
+		}
+	}
 }
 
 
@@ -263,6 +268,7 @@ if(global.select_exists != instance_number(CharSelect) and instance_number(CharS
 		lastx = 64;
 		lasty = 64;
 		spr_to = mskNone; spr_slct = mskNone; spr_from = mskNone; spr_menu = mskNone; spr_shadow = mskNone;
+		sprite_index = mskNone;
 	}
 	// get rid of old custom buttons, if any
 	with(instances_matching(CustomObject, "name", "AreaSelect")){
