@@ -35,6 +35,7 @@ crystal caves
 
 frozen city
 /loadrace snowbot
+/loadrace wolf
 
 labs
 /loadrace freak
