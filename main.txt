@@ -31,6 +31,7 @@ scrapyards
 
 crystal caves
 /loadrace spider
+/loadrace lasercrystal
 
 frozen city
 /loadrace snowbot

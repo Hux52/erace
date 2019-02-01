@@ -14,7 +14,7 @@ global.races = [
 					["maggotspawn", "bigmaggot", "bandit", "scorpion"],
 					["rat", "ratking", "exploder", "gator", "assassin"],
 					["raven", "salamander", "sniper"],
-					["spider"],
+					["spider", "lasercrystal"],
 					["snowbot"],
 					["freak","explofreak","rhinofreak","necromancer"],
 					["guardian", "exploguardian", "dogguardian"],
@@ -25,7 +25,7 @@ global.player_races = ["unknown", "unknown", "unknown", "unknown"];
 
 global.race_names = ["maggotspawn", MaggotSpawn, "bigmaggot", BigMaggot, "bandit", Bandit, "scorpion", Scorpion, "rat",
 					Rat, "ratking", Ratking, "exploder", Exploder, "gator", Gator, "assassin", MeleeBandit, "raven", Raven,
-					"salamander", Salamander, "sniper", Sniper, "spider", Spider, "snowbot", SnowBot, "freak", Freak,
+					"salamander", Salamander, "sniper", Sniper, "spider", Spider, "lasercrystal", LaserCrystal, "snowbot", SnowBot, "freak", Freak,
 					"explofreak", ExploFreak, "rhinofreak", RhinoFreak, "necromancer", Necromancer, "guardian", Guardian,
 					"exploguardian", ExploGuardian, "dogguardian", DogGuardian];	// piss off
 
@@ -232,18 +232,18 @@ if(instance_exists(CharSelect)){
 		else{
 			// view_object[i] = instance_nearest(64, 64, Campfire);
 		}
-		var _view = instances_matching(enemy, "index", i);
-		if(array_length(_view) > 0){
-			// view_object[i] = _view[0];
-			for(j = 0; j < 8; j++){
-				alarm_set(j, 999);
-			}
-		}
+		// var _view = instances_matching(enemy, "index", i);
+		// if(array_length(_view) > 0){
+		// 	// view_object[i] = _view[0];
+		// 	for(j = 0; j < 8; j++){
+		// 		alarm_set(j, 999);
+		// 	}
+		// }
 		global.player_races[i] = player_get_race(i);
 	}
 	with(instances_matching_ne(enemy, "index", null)){
 		for(i = 0; i < 8; i++){
-			alarm_set(i, 99);
+			alarm_set(i, 0);
 		}
 	}
 }
