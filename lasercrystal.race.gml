@@ -1,5 +1,5 @@
 #define init
-global.sprMenuButton = sprite_add("sprites/sprRatSelect.png", 1, 0, 0);
+global.sprMenuButton = sprite_add("sprites/sprLaserCrystalSelect.png", 1, 0, 0);
 global.sprPortrait = sprite_add("sprites/sprPortraitRat.png",1 , 15, 185);
 
 // character select sounds
@@ -230,8 +230,8 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "LLOO";
-	case 2: return "LOL";
+	case 1: return "RAPID BURST";
+	case 2: return "RADIAL BURST";
 	default: return "";
 }
 
@@ -239,8 +239,8 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "DOES NOTHING";
-	case 2: return "agags";
+	case 1: return "FIRE LASERS RAPIDLY";
+	case 2: return "LASERS EVERYWHERE";
 	default: return "";
 }
 
@@ -261,4 +261,4 @@ switch(argument0){
 
 #define race_ttip
 // return character-specific tooltips
-return choose("WHISKERS", "RABID", "ITCHY", "RODENT");
+return false
