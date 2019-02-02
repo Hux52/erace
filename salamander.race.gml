@@ -2,7 +2,7 @@
 // character select button
 global.sprMenuButton = sprite_add("sprites/sprSalamanderSelect.png", 1, 0,0);
 // character select portrait
-global.sprPortrait = sprBigPortraitRebelBHooded; //temp
+global.sprPortrait = sprite_add("sprites/sprPortraitSalamander.png",1 , 15, 205);
 
 // character select sounds
 global.sndSelect = sndSalamanderFire;
@@ -71,7 +71,7 @@ if(cooldown > 0){
 	canspec = true;
 }
 
-if(button_pressed(index, 'spec') && canspec = true){
+if(button_pressed(index, 'fire') && canspec = true){
 	is_spewing_fire = true;
 
 		sound_play(sndSalamanderFire);
@@ -79,6 +79,9 @@ if(button_pressed(index, 'spec') && canspec = true){
 
 	loop = sound_loop(sndSalamanderFireLoop);
 	fire_angle = point_direction(x,y,mouse_x[index],mouse_y[index]);
+}
+if(button_released(index,"fire")){
+	is_spewing_fire = false;
 }
 
 //currently gushing flames
@@ -117,6 +120,10 @@ if(is_spewing_fire){
 
 if(fire_remaining <= 0){
 	is_spewing_fire = false;
+}
+
+if(my_health <= 0){
+	sound_stop(loop);
 }
 
 #define draw
