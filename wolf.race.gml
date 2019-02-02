@@ -64,15 +64,17 @@ melee = 1;	// can melee or not
 // executed within each player instance of this race after step
 // most actives and passives handled here
 if(button_pressed(index,"fire")){
+	trace(is_rolling)
 	if(speed <= 0){
 		d = point_direction(x,y,mouse_x[index],mouse_y[index]);
 	} else {
 		d = direction;
 	}
 	if(is_rolling = false){
+		has_rolled = false;
 		is_rolling = true;
-		sound_play(snd_roll)
 		sprite_index = spr_fire;
+		sound_play_pitchvol(snd_roll,random_range(0.9,1.1), 0.6);
 	}
 }
 
@@ -88,7 +90,7 @@ if(is_rolling){
 	sprite_index = spr_fire;
 
 	if(image_index >= 5 and image_index <= 6){
-		image_index = 1;
+		image_index = 2;
 	}
 
 	if(has_rolled = false){
@@ -98,9 +100,10 @@ if(is_rolling){
 	if(speed > maxspeed*0.8){
 		has_rolled = true;
 	}
+
 	if(fireDelay == 0) {
 		for(i = 0; i < 3; i++){
-			with(instance_create(x,y,Bullet1)){
+			with(instance_create(x,y,AllyBullet)){
 				creator = other;
 				team = creator.team;
 				direction = creator.direction - 10 + (other.i*10);
@@ -111,15 +114,14 @@ if(is_rolling){
 		}
 	}
 
-		if(has_rolled){
-			friction = 0.2;
-			if(speed <= 1){
-				is_rolling = false;
-			}
+	if(has_rolled){
+		friction = 0.2;
+		if(speed <= 1){
+			is_rolling = false;
 		}
+	}
 
 } else {
-	boost_time = 5;
 	canwalk = true;
 	friction = friction_base;
 	maxspeed = maxspeed_base;
