@@ -48,6 +48,9 @@ palace
 /loadrace exploguardian
 /loadrace dogguardian
 
+secret
+/loadrace jock
+
 /loadrace maggot
 /loadrace bandit_snow
 /loadrace bandit_jungle
