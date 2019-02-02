@@ -1,6 +1,6 @@
 #define init
 global.sprMenuButton = sprite_add("sprites/sprLaserCrystalSelect.png", 1, 0, 0);
-global.sprPortrait = sprite_add("sprites/sprPortraitRat.png",1 , 15, 185);
+global.sprPortrait = sprite_add("sprites/sprPortraitLaserCrystal.png",1 , 15, 185);
 
 // character select sounds
 // global.sndSelect = sound_add("sounds/sndRatSelect.ogg");
@@ -82,7 +82,6 @@ u2 = ultra_get(player_get_race(index), 2);
 if(u1 = 1){
 	laserCountBase = 16;
 	laserDelayBase = 2;
-	laserDamage = 3;
 	snd_laser = sndLaserUpg;
 }
 
@@ -127,7 +126,7 @@ if(laserFiring){
 				}
 				for (i = 0; i < 1 + (u2 * 7); i++){
 					with(instance_create(x,y,EnemyLaser)){
-						damage = other.laserDamage;
+						damage = 2 + other.u1 + other.u2;
 						team = other.team;
 						direction = other.d + random_range(-3,3) + ((360/8)*other.i) + (other.laserCount*11.25) * other.u2;
 
