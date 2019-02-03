@@ -18,16 +18,18 @@ global.races = [
 					["snowbot", "wolf"],
 					["freak","explofreak","rhinofreak","necromancer"],
 					["guardian", "exploguardian", "dogguardian"],
-					["jock"]
+					["molefish", "molesarge", "jock"]
 				];	// please add races in the order and area you want them to be displayed
 
 global.player_races = ["unknown", "unknown", "unknown", "unknown"];
 
-global.race_names = ["maggotspawn", MaggotSpawn, "bigmaggot", BigMaggot, "bandit", Bandit, "scorpion", Scorpion, "rat",
-					Rat, "ratking", Ratking, "exploder", Exploder, "gator", Gator, "assassin", MeleeBandit, "raven", Raven,
-					"salamander", Salamander, "sniper", Sniper, "spider", Spider, "lasercrystal", LaserCrystal, "snowbot", SnowBot, "wolf", Wolf, "freak", Freak,
-					"explofreak", ExploFreak, "rhinofreak", RhinoFreak, "necromancer", Necromancer, "guardian", Guardian,
-					"exploguardian", ExploGuardian, "dogguardian", DogGuardian, "jock", Jock];	// piss off
+global.race_names = ["maggotspawn", MaggotSpawn, "bigmaggot", BigMaggot, "bandit", Bandit, "scorpion", 
+					Scorpion, "rat", Rat, "ratking", Ratking, "exploder", Exploder, "gator", Gator, 
+					"assassin", MeleeBandit, "raven", Raven, "salamander", Salamander, "sniper", 
+					Sniper, "spider", Spider, "lasercrystal", LaserCrystal, "snowbot", SnowBot, "wolf", 
+					Wolf, "freak", Freak, "explofreak", ExploFreak, "rhinofreak", RhinoFreak, "necromancer", 
+					Necromancer, "guardian", Guardian, "exploguardian", ExploGuardian, "dogguardian", DogGuardian,
+					"molefish", Molefish, "molesarge", Molesarge, "jock", Jock];	// piss off
 
 global.deselect_color = make_color_hsv(0, 0, 80);	// dimmnessss :)
 global.hover_color = make_color_hsv(0, 0, 190);	// same

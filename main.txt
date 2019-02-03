@@ -10,6 +10,8 @@ weps
 /loadwep sniper
 /loadwep sniper_ultra
 /loadwep super_sniper_cannon
+/loadwep molefish
+/loadwep molesarge
 
 desert
 /loadrace maggotspawn
@@ -49,6 +51,8 @@ palace
 /loadrace dogguardian
 
 secret
+/loadrace molefish
+/loadrace molesarge
 /loadrace jock
 
 /loadrace maggot
