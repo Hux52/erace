@@ -40,7 +40,7 @@ snd_dead = sndJockDead;
 snd_fire = sndJockFire;
 
 // stats
-maxspeed = 3;
+maxspeed = 2.6;
 team = 2;
 maxhealth = 25;
 melee = 0;	// can melee or not
