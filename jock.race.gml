@@ -44,6 +44,8 @@ maxspeed = 2.6;
 team = 2;
 maxhealth = 25;
 melee = 0;	// can melee or not
+spr_shadow_y = 2;
+
 
 rocket_cooldown = 0;
 hasFired = false;
@@ -59,7 +61,17 @@ hasFired = false;
 canswap = 0;
 canpick = 0;
 
+//fixing shadow because he leans
+spr_shadow_x = -1*right;
+
 u1 = ultra_get(player_get_race(index),1);
+u2 = ultra_get(player_get_race(index),2);
+
+if(u2 = 1){
+	proj = Nuke;
+} else {
+	proj = JockRocket;
+}
 
 if(button_check(index,"fire")){
 	if(rocket_cooldown <= 0){
@@ -72,7 +84,7 @@ if(button_check(index,"fire")){
 		a = lengthdir_x(5,d);
 		b = lengthdir_y(5,d);
 		for (i = 0; i < 1 + (u1 * 4); i++){
-			with(instance_create(x+a,y+b,JockRocket)){
+			with(instance_create(x+a,y+b,proj)){
 				creator = other;
 				team = creator.team;
 
@@ -172,7 +184,8 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "lol";
+	case 1: return "SPREAD SHOT";
+	case 2: return "NUKE";
 	default: return "";
 }
 
@@ -180,7 +193,8 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "lol";
+	case 1: return "FIRES IN A WIDE SPREAD";
+	case 2: return "FIRE A @yNUKE @sINSTEAD";
 	default: return "";
 }
 
