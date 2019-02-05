@@ -1,7 +1,23 @@
 #define init
 // character select button
-//doesn't need one - not pickable
-//global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACOSURBVDhPYwCC/9jw231BRGGgWgoNmNua9B8bJtYgyg24cHTLf3yYkEGUG4DN+dgwLoMoNwCbs5Ex7Q2ASaDjPxaoGCZOPwNIwFgFice2GvL/QTjfw5IkTD0DsEkSgzFcgAtj0wzC1DMAmyQ+DDOYegbA0jxMApsmEEbXCE+JFBsAy23oGKYBl0YIDvoPABoXHHo1+L+9AAAAAElFTkSuQmCCAAAAAAAAAA==", 1, 0, 0);
+global.sprMenuButton = sprite_add("sprites/sprBanditSelect.png", 1, 0, 0);
+global.sprPortrait = sprite_add("/sprites/sprPortraitSnowBandit.png", 1, 22, 210);
+
+// character select sounds
+global.sndSelect = sound_add("sounds/sndSnowBanditSelect.ogg");
+var _race = [];
+for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
+while(true){
+	//character selection sound
+	for(var i = 0; i < maxp; i++){
+		var r = player_get_race(i);
+		if(_race[i] != r && r = "bandit"){
+			sound_play(global.sndSelect);
+		}
+		_race[i] = r;
+	}
+	wait 1;
+}
 
 #define create
 // player instance creation of this race
@@ -54,7 +70,7 @@ return "HAS BANDIT RIFLE";
 
 #define race_portrait
 // return portrait for character selection screen and pause menu
-return sprBigPortraitChickenHeadless;
+return global.sprPortrait;
 
 
 #define race_mapicon
@@ -69,11 +85,11 @@ return "bandit";
 
 #define race_avail
 // return if race is unlocked
-return false;
+return true;
 
 #define race_menu_button
 // return race menu button icon
-return mskNone;
+return global.sprMenuButton;
 
 #define race_skins
 // return number of skins the race has

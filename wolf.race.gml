@@ -1,22 +1,22 @@
 #define init
 global.sprMenuButton = sprite_add("sprites/sprWolfSelect.png", 1, 0, 0);
-global.sprPortrait = sprite_add("sprites/sprPortraitRat.png",1 , 15, 185);
+global.sprPortrait = sprite_add("sprites/sprPortraitWolf.png",1 , 5, 190);
 
 // character select sounds
-// global.sndSelect = sound_add("sounds/sndRatSelect.ogg");
-// var _race = [];
-// for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
-// while(true){
-// 	//character selection sound
-// 	for(var i = 0; i < maxp; i++){
-// 		var r = player_get_race(i);
-// 		if(_race[i] != r && r = "rat"){
-// 			sound_play(global.sndSelect);
-// 		}
-// 		_race[i] = r;
-// 	}
-// 	wait 1;
-// }
+global.sndSelect = sndHalloweenWolf;
+var _race = [];
+for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
+while(true){
+	//character selection sound
+	for(var i = 0; i < maxp; i++){
+		var r = player_get_race(i);
+		if(_race[i] != r && r = "wolf"){
+			sound_play_pitchvol(global.sndSelect,0.8,0.65);
+		}
+		_race[i] = r;
+	}
+	wait 1;
+}
 
 #define create
 // player instance creation of this race
