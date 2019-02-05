@@ -15,7 +15,7 @@ global.races = [
 					["rat", "ratking", "exploder", "gator", "assassin"],
 					["raven", "salamander", "sniper"],
 					["spider", "lasercrystal"],
-					["snowbot", "wolf"],
+					["snowbot", "wolf", "bandit_snow"],
 					["freak","explofreak","rhinofreak","necromancer"],
 					["guardian", "exploguardian", "dogguardian"],
 					["molefish", "molesarge", "jock"]
@@ -27,7 +27,7 @@ global.race_names = ["maggotspawn", MaggotSpawn, "bigmaggot", BigMaggot, "bandit
 					Scorpion, "rat", Rat, "ratking", Ratking, "exploder", Exploder, "gator", Gator, 
 					"assassin", MeleeBandit, "raven", Raven, "salamander", Salamander, "sniper", 
 					Sniper, "spider", Spider, "lasercrystal", LaserCrystal, "snowbot", SnowBot, "wolf", 
-					Wolf, "freak", Freak, "explofreak", ExploFreak, "rhinofreak", RhinoFreak, "necromancer", 
+					Wolf, "bandit_snow", Bandit, "freak", Freak, "explofreak", ExploFreak, "rhinofreak", RhinoFreak, "necromancer", 
 					Necromancer, "guardian", Guardian, "exploguardian", ExploGuardian, "dogguardian", DogGuardian,
 					"molefish", Molefish, "molesarge", Molesarge, "jock", Jock];	// piss off
 
@@ -224,6 +224,10 @@ if(instance_exists(CharSelect)){
 							index = other.i;
 							mask_index = mskNone;
 							friction = 10;
+							if(player_get_race(other.i) == "bandit_snow"){
+								spr_idle = sprSnowBanditIdle;
+								spr_walk = sprSnowBanditWalk;
+							}
 						}
 						break;
 					}
@@ -427,7 +431,7 @@ if(selected = 1){
 		my_bg[i].x = lerp(my_bg[i].x, -96 + (i*32), 0.1);
 
 		my_bg[i].d = abs(xstart - (my_bg[i].x+16));
-		my_bg[i].image_blend = make_color_hsv(0, 0, clamp(game_width/(my_bg[i].d+1)*8,0,255));
+		my_bg[i].image_blend = make_color_hsv(0, 0, clamp(game_width/(my_bg[i].d+1)*10,0,255));
 	}
 
 }else{

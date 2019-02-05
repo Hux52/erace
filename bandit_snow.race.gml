@@ -11,7 +11,7 @@ while(true){
 	//character selection sound
 	for(var i = 0; i < maxp; i++){
 		var r = player_get_race(i);
-		if(_race[i] != r && r = "bandit"){
+		if(_race[i] != r && r = "bandit_snow"){
 			sound_play(global.sndSelect);
 		}
 		_race[i] = r;
@@ -89,7 +89,7 @@ return true;
 
 #define race_menu_button
 // return race menu button icon
-return global.sprMenuButton;
+sprite_index = global.sprMenuButton;
 
 #define race_skins
 // return number of skins the race has
