@@ -7,6 +7,7 @@ if(instance_exists(CustomObject)){
 
 global.healthChance = 30;	//percent chance of transforming an ammo pickup into a health pickup
 global.erace_raddrop = 1;	//extra rads to drop
+global.erace_health_despawn = true;
 global.select_exists = false;	// checks for character select
 global.sprAreaSelect = sprite_add("/sprites/sprAreaSelect.png", 8, 8, 12);	// area buttons sprite strip
 global.sprAreaSelected = sprite_add("/sprites/sprAreaSelected.png", 8, 8, 12);	// area buttons sprite strip
@@ -163,6 +164,13 @@ with(WepPickup){
 	sound_play_pitchvol(sndSwapCursed,0.8,2);
 	
 	instance_destroy();
+}
+
+// health doesn't despawn
+if(global.erace_health_despawn = false){
+	with(HPPickup){
+		alarm0 = 300;
+	}
 }
 
 // no contact damage, rad bonus
@@ -565,6 +573,21 @@ switch(command){
 				global.erace_raddrop = 0;
 				trace("Enemies drop their normal amount of rads on death.");
 			}
+		}
+	return true;
+	break;
+
+	case "EHEALTH":
+		switch(parameter){
+			default:
+				global.erace_health_despawn = !global.erace_health_despawn;
+
+				if(global.erace_health_despawn == true){
+					trace("Health pickups will now despawn as normal.");
+				} else {
+					trace("Health pickups will no longer despawn.");
+				}
+			break;
 		}
 	return true;
 	break;
