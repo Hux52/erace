@@ -15,7 +15,7 @@ global.races = [
 					["rat", "ratking", "exploder", "gator", "assassin"],
 					["raven", "salamander", "sniper"],
 					["spider", "lasercrystal"],
-					["snowbot", "wolf", "bandit_snow"],
+					[ "bandit_snow", "snowbot", "wolf","snowtank"],
 					["freak","explofreak","rhinofreak","necromancer"],
 					["guardian", "exploguardian", "dogguardian"],
 					["molefish", "molesarge", "jock"]
@@ -27,7 +27,7 @@ global.race_names = ["maggotspawn", MaggotSpawn, "bigmaggot", BigMaggot, "bandit
 					Scorpion, "rat", Rat, "ratking", Ratking, "exploder", Exploder, "gator", Gator, 
 					"assassin", MeleeBandit, "raven", Raven, "salamander", Salamander, "sniper", 
 					Sniper, "spider", Spider, "lasercrystal", LaserCrystal, "snowbot", SnowBot, "wolf", 
-					Wolf, "bandit_snow", Bandit, "freak", Freak, "explofreak", ExploFreak, "rhinofreak", RhinoFreak, "necromancer", 
+					Wolf, "bandit_snow", Bandit, "snowtank", SnowTank, "freak", Freak, "explofreak", ExploFreak, "rhinofreak", RhinoFreak, "necromancer", 
 					Necromancer, "guardian", Guardian, "exploguardian", ExploGuardian, "dogguardian", DogGuardian,
 					"molefish", Molefish, "molesarge", Molesarge, "jock", Jock];	// piss off
 

@@ -36,8 +36,10 @@ crystal caves
 /loadrace lasercrystal
 
 frozen city
+/loadrace bandit_snow
 /loadrace snowbot
 /loadrace wolf
+/loadrace snowtank
 
 labs
 /loadrace freak
@@ -56,7 +58,6 @@ secret
 /loadrace jock
 
 /loadrace maggot
-/loadrace bandit_snow
 /loadrace bandit_jungle
 /loadrace goldscorpion
 /loadrace fastrat
