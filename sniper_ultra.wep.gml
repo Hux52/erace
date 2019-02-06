@@ -17,11 +17,16 @@ if(weapon_custom_delay = 0){
 // can walk again
 canwalk = 1;
 for (i = 0; i < 100; i++){
+	if(i > random(100)){
+		proj = FlameShell;
+	} else {
+		proj = Bullet2;
+	}
 		reload = 60;		
 		weapon_post(5, 20, 5);	// weapon kick and screen shake
 		sound_play_pitch(sndSnowTankShoot,1 + (i/200));
 				
-		if(i > random(100)){
+		if(i > random(200)){
 			with(instance_create(x,y,Smoke)){
 				direction = random(360);
 				friction = 0.3;
@@ -29,7 +34,8 @@ for (i = 0; i < 100; i++){
 			}
 		}
 		
-		with(instance_create(x + lengthdir_x(4, gunangle), y + lengthdir_y(4, gunangle), Bullet2)){
+		with(instance_create(x + lengthdir_x(4, gunangle), y + lengthdir_y(4, gunangle), proj)){
+			wallbounce = 1;
 			creator = other;
 			team = creator.team;
 			
@@ -77,7 +83,7 @@ return sndSwapHammer;
 return false;
 
 #define weapon_laser_sight
-return true;
+return firing;
 
 #define weapon_text
 return "IN MY SIGHTS";
