@@ -292,6 +292,7 @@ if(global.select_exists != instance_number(CharSelect) and instance_number(CharS
 			image_speed = 0;	// no anim
 			depth = -9999;	// draw on top of ui
 			my_bg = array_create(9, noone);
+			shine = 0;
 			
 			//draw stuff
 			t = global.t;
@@ -349,6 +350,7 @@ global.select_exists = instance_number(CharSelect);
 
 #define area_select_step
 t += 1/room_speed;
+shine -= 6/room_speed;
 // check for player click
 image_blend = global.deselect_color;	// dimmest
 	mouse_over = false; //is not being moused over
@@ -360,6 +362,7 @@ for(i = 0; i < maxp; i++){
 			mouse_over = true; //is being moused over
 		}
 		if(button_pressed(i, "fire")){	// if clicked
+			shine = 1;
 			if(selected = 0){
 			sound_play_pitchvol(sndSlider,1.5,1);
 			sound_play_pitchvol(sndMenuOptions,2.5,0.2);
@@ -465,6 +468,10 @@ if(mouse_over){
 	draw_set_alpha(1);
 	draw_rectangle(_x1, _y1, _x2, _y2,true);
 }
+
+draw_set_alpha(shine);
+draw_rectangle(_x1, _y1, _x2, _y2,false);
+
 draw_set_alpha(_a);
 draw_set_color(_c);
 
