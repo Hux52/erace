@@ -47,6 +47,7 @@ melee = 0;	// can melee or not
 spr_shadow = shd64;
 spr_shadow_y = 8;
 
+has_died = false;
 
 fire_cooldown = 0;
 fire_cooldown_base = 30;
@@ -113,35 +114,35 @@ if(is_charging){
 
 if(is_firing){
 	fire_cooldown = fire_cooldown_base;
-		if(bulletCount > 0){
-			if(fireDelay <= 0){
-				//spawn laser
-				sound_play_pitchvol(snd_fire, random_range(0.9,1.1), 0.6);
-				if(bulletCount = bulletCountBase){
-					sound_play_pitchvol(sndSnowTankPreShoot, random_range(0.9,1.1), 0.6);
-				}
-				for(i = 0; i < 2; i++){
-					if (i = 0){
-						r = -1;
-					} else {
-						r = 1;
-					}
-					q = d + ((spread-(bulletCount/bulletCountBase))*r * 20)
-					with(instance_create(x,y,Bullet1)){
-						damage = 3;
-						speed = 12;
-						team = other.team;
-						direction = other.q;
-						image_angle = direction;
-					}
-				}
-				bulletCount -= 1;
-				fireDelay = fireDelayBase;
+	if(bulletCount > 0){
+		if(fireDelay <= 0){
+			//spawn laser
+			sound_play_pitchvol(snd_fire, random_range(0.9,1.1), 0.6);
+			if(bulletCount = bulletCountBase){
+				sound_play_pitchvol(sndSnowTankPreShoot, random_range(0.9,1.1), 0.6);
 			}
-			fireDelay -= current_time_scale;
-		} else {
-			is_firing = false; //stop firing
+			for(i = 0; i < 2; i++){
+				if (i = 0){
+					r = -1;
+				} else {
+					r = 1;
+				}
+				q = d + ((spread-(bulletCount/bulletCountBase))*r * 20)
+				with(instance_create(x,y,Bullet1)){
+					damage = 3;
+					speed = 12;
+					team = other.team;
+					direction = other.q;
+					image_angle = direction;
+				}
+			}
+			bulletCount -= 1;
+			fireDelay = fireDelayBase;
 		}
+		fireDelay -= current_time_scale;
+	} else {
+		is_firing = false; //stop firing
+	}
 }
 
 if(is_charging = false and is_firing = false){
@@ -151,6 +152,13 @@ if(is_charging = false and is_firing = false){
 	bulletCount = bulletCountBase;
 } else {
 	d = point_direction(x,y,mouse_x[index],mouse_y[index]);
+}
+
+if(my_health < 1){
+	if(has_died = false){
+		instance_create(x,y,SnowTankExplode);
+		has_died = true;
+	}
 }
 
 
