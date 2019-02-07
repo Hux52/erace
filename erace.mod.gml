@@ -19,7 +19,7 @@ global.races = [
 					[ "bandit_snow", "snowbot", "wolf","snowtank"],
 					["freak","explofreak","rhinofreak","necromancer"],
 					["guardian", "exploguardian", "dogguardian"],
-					["molefish", "molesarge", "jock"]
+					["molefish", "molesarge", "fireballer", "jock"]
 				];	// please add races in the order and area you want them to be displayed
 
 global.player_races = ["unknown", "unknown", "unknown", "unknown"];
@@ -30,7 +30,7 @@ global.race_names = ["maggotspawn", MaggotSpawn, "bigmaggot", BigMaggot, "bandit
 					Sniper, "spider", Spider, "lasercrystal", LaserCrystal, "snowbot", SnowBot, "wolf", 
 					Wolf, "bandit_snow", Bandit, "snowtank", SnowTank, "freak", Freak, "explofreak", ExploFreak, "rhinofreak", RhinoFreak, "necromancer", 
 					Necromancer, "guardian", Guardian, "exploguardian", ExploGuardian, "dogguardian", DogGuardian,
-					"molefish", Molefish, "molesarge", Molesarge, "jock", Jock];	// piss off
+					"molefish", Molefish, "molesarge", Molesarge, "jock", Jock, "fireballer", FireBaller];	// piss off
 
 global.deselect_color = make_color_hsv(0, 0, 80);	// dimmnessss :)
 global.hover_color = make_color_hsv(0, 0, 190);	// same
@@ -427,7 +427,7 @@ if(selected = 1){
 		// if last button out of view, change offset
 		else if(index = (array_length(global.races[area]) - 1)){
 			if(xstart > (game_width - 16)){
-				other.view_offset = xstart - (game_width);
+				other.view_offset = xstart - game_width - 20;
 			}
 		}
 	}

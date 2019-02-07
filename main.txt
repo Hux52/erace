@@ -55,6 +55,7 @@ palace
 secret
 /loadrace molefish
 /loadrace molesarge
+/loadrace fireballer
 /loadrace jock
 
 /loadrace maggot
