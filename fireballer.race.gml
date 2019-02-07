@@ -64,11 +64,11 @@ canpick = 0;
 
 //he f l o a t
 if(image_index > 2 and image_index < 4){
-	spr_shadow = shd24;
-	spr_shadow_y = 2;
+	spr_shadow = shd32;
+	spr_shadow_y = 1;
 } else {
-	spr_shadow = shd16;
-	spr_shadow_y = 6;
+	spr_shadow = shd48;
+	spr_shadow_y = -4;
 }
 
 //passive: floats over terrain
