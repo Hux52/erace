@@ -125,7 +125,7 @@ return "JOCK";
 
 #define race_text
 // return passive and active for character selection screen
-return "FIRES MISSILES";
+return "@sFIRES @yMISSILES";
 
 
 #define race_portrait

@@ -164,7 +164,7 @@ return "EXPLOGUARDIAN";
 
 #define race_text
 // return passive and active for character selection screen
-return "CONTACT DAMAGE#CHARGE BURST";
+return "CONTACT DAMAGE#@sCHARGE @gBURST";
 
 
 #define race_portrait
