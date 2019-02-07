@@ -115,7 +115,6 @@ if(laserFiring){
 	sprite_index = spr_fire;
 	laserCooldown = laserCooldownBase;
 	if(laserCharge > 0){
-		m = 1;
 		rand = random(360);
 		with(instance_create(x + lengthdir_x(random_range(40,50),rand),y + lengthdir_y(random_range(40,50),rand),CustomObject)){
 			name = "CustomLaserCharge";
