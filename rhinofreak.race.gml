@@ -82,8 +82,8 @@ with(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 en = instance_nearest(x,y,enemy);
 if(instance_exists(en)){
 	if(collision_line(x,y,en.x,en.y,Wall,false,true) == noone){
-		x += lengthdir_x(1, point_direction(x,y,en.x,en.y));
-		y += lengthdir_y(1, point_direction(x,y,en.x,en.y));
+		x += lengthdir_x(1*current_time_scale, point_direction(x,y,en.x,en.y));
+		y += lengthdir_y(1*current_time_scale, point_direction(x,y,en.x,en.y));
 	}
 }
 
