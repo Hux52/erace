@@ -492,34 +492,42 @@ switch(command){
 		//help command for BABIES. go read a book
 		switch (parameter){
 			case "":
-				trace("Type '/ehelp list' to see a list of commands.");
+				trace_color("Type '/ehelp list' to see a list of commands.", c_orange);
 			break;
 			
 			case "LIST":
 				//list commands
-				trace("List of ERACE commands:");
-				trace("/ehelp [command] - only use this in case of severe confusion");
-				trace("/echance - chance for small ammo pickups to become health pickups");
-				trace("/erads - change how many rads the enemies drop for a less unpleasant experience");
+				trace_color("List of ERACE commands:", c_white);
+				trace_color("/ehelp [command] - only use this in case of severe confusion", c_gray);
+				trace_color("/echance [%] - chance for small ammo pickups to become health pickups", c_red);
+				trace_color("/erads [number] - change how many additional rads the enemies drop", c_green);
+				trace_color("/ehealth - toggle whether small health pickups should despawn or not", c_red);
 			break;
 			
 			case "EHELP":
-				trace("If you need help with getting help, you are truly lost.");
+				trace_color("If you need help with getting help, you are truly lost.", c_white);
 				//I mean, you can't argue there
 			break;
 			
 			case "ECHANCE":
-				trace("Sets the chance, in percent, to transform an ammo pickup into a health pickup.");
-				trace("/echance default to return to the industry standard of 30.78916478246%.")
+				trace_color("/echance:", c_white)
+				trace_color("Sets the chance, in percent, for an ammo pickup to transform into a health pickup. Otherwise, the ammo pickup despawns.", c_white);
+				trace_color("/echance default to return to the industry standard of 30.438164%.", c_gray)
 			break;
 			
 			case "ERADS":
-				trace("Sets how many additional rads the enemies drop on death. (Default - 1)");
-				trace("Use this if you just feel like the enemies don't drop enough rads for your liking.");
+				trace_color("/erads:", c_white)
+				trace_color("Sets how many additional rads the enemies drop on death. (Default: 1)", c_white);
+				trace_color("Use this if you just feel like the enemies don't drop enough rads to suit your liking.", c_gray);
 			break;
 			
+			case "EHEALTH":
+				trace_color("/erads:", c_white)
+				trace_color("Toggles whether or not health pickups despawn.", c_white)
+			break;
+
 			default:
-				trace(choose("Wrong.", "Incorrect.", "Are you sure about that?", "Think again.") + " Command not found.");
+				trace_color(choose("Wrong.", "Incorrect.", "Are you sure about that?", "Think again.") + " Command not found.", c_red);
 			break;
 		}
 	return true;
@@ -529,16 +537,16 @@ switch(command){
 		switch(parameter){
 		case "DEFAULT":
 			global.healthChance = 30;
-			trace("Health pickup transform reverted to normal. (" + string(global.healthChance) + "%)");
+			trace_color("Health pickup transform reverted to normal. (" + string(global.healthChance) + "%)", c_white);
 		break;
 		
 		case "":
-			trace("You forgot to type in a number.");
+			trace_color("You forgot to type in a number.", c_red);
 		break;
 		
 		default:
 			global.healthChance = real(parameter);
-			trace("Chance to transform into a health pickup now " + string(global.healthChance) + "%");
+			trace_color("Chance to transform into a health pickup now " + string(global.healthChance) + "%", c_white);
 		break;
 		}
 	return true;
@@ -548,30 +556,30 @@ switch(command){
 		switch(parameter){
 			case "":
 				if(global.erace_raddrop == 1){
-					trace("Enemies now drop " + string(global.erace_raddrop) + " more rad on death.");
+					trace_color("Enemies now drop " + string(global.erace_raddrop) + " more rad on death.", c_green);
 				}else if (global.erace_raddrop == 0){
-					trace("Enemies drop their normal amount of rads on death.");
+					trace_color("Enemies drop their normal amount of rads on death.", c_green);
 				}else{
-					trace("Enemies now drop " + string(global.erace_raddrop) + " more rads on death.");
+					trace_color("Enemies now drop " + string(global.erace_raddrop) + " more rads on death.", c_green);
 				}
 			break;
 			
 			default:
 			if (real(parameter) < 0){
-				trace("Enter a non-negative number, please.");
+				trace_color("Enter a non-negative number, please.", c_red);
 			} else if (real(parameter) > 200) {
-				trace("That number's too high even for me.");
+				trace_color("That number's too high even for me.", c_red);
 			} else if (real(parameter) > 0) {
 				global.erace_raddrop = real(parameter);
 				
 				if(real(parameter) == 1){
-					trace("Enemies now drop " + string(global.erace_raddrop) + " more rad on death.");
+					trace_color("Enemies now drop " + string(global.erace_raddrop) + " more rad on death.", c_green);
 				} else {
-					trace("Enemies now drop " + string(global.erace_raddrop) + " more rads on death.");
+					trace_color("Enemies now drop " + string(global.erace_raddrop) + " more rads on death.", c_green);
 				}
 			} else {
 				global.erace_raddrop = 0;
-				trace("Enemies drop their normal amount of rads on death.");
+				trace_color("Enemies drop their normal amount of rads on death.", c_green);
 			}
 		}
 	return true;
@@ -583,9 +591,9 @@ switch(command){
 				global.erace_health_despawn = !global.erace_health_despawn;
 
 				if(global.erace_health_despawn == true){
-					trace("Health pickups will now despawn as normal.");
+					trace_color("Health pickups will now despawn as normal.", c_dkgray);
 				} else {
-					trace("Health pickups will no longer despawn.");
+					trace_color("Health pickups will no longer despawn.", c_red);
 				}
 			break;
 		}
