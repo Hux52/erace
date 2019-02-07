@@ -125,6 +125,7 @@ if(global.t < 10){
 
 if (instance_exists(GenCont) == false){
 with(AmmoChest){
+		wait(1);
 		instance_create(x, y, HealthChest);
 		instance_create(x, y, HealFX);
 		instance_create(x, y, BloodLust);
