@@ -115,6 +115,19 @@ if(laserFiring){
 	sprite_index = spr_fire;
 	laserCooldown = laserCooldownBase;
 	if(laserCharge > 0){
+		m = 1;
+		rand = random(360);
+		with(instance_create(x + lengthdir_x(random_range(40,50),rand),y + lengthdir_y(random_range(40,50),rand),CustomObject)){
+			name = "CustomLaserCharge";
+			sprite_index = sprLaserCharge;
+			image_index = irandom(4);
+			image_speed = 0;
+			speed = random_range(2,3);
+			direction = point_direction(x,y,other.x,other.y);
+			on_step = script_ref_create(laser_charge_step);
+			destX = other.x;
+			destY = other.y;
+		}
 		laserCharge -= 1 * current_time_scale;
 	} else {
 		if(laserCount > 0){
@@ -161,6 +174,11 @@ if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 			direction = other.direction;
 		}
 	}
+}
+
+#define laser_charge_step
+if(point_distance(x,y,destX,destY) <= 5){
+	instance_destroy();
 }
 
 #define race_name
