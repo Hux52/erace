@@ -318,6 +318,34 @@ if(global.select_exists != instance_number(CharSelect) and instance_number(CharS
 			_y2 = ystart + 11;
 			on_step = script_ref_create(area_select_step);	// custom step
 			on_draw = script_ref_create(area_select_draw);	// custom step
+
+			//tooltip stuff
+			switch(area){
+				case 0:
+					ttip = "@yDESERT";
+				break;
+			 	case 1:
+				 	ttip = "@gSEWERS";
+				break;
+			 	case 2:
+				 	ttip = "@sSCRAPYARDS";
+				break;
+			 	case 3:
+				 	ttip = "@pCRYSTAL CAVES";
+				break;
+			 	case 4:
+				 	ttip = "@bFROZEN CITY";
+				break;
+			 	case 5:
+				 	ttip = "@wLABS";
+				break;
+			 	case 6:
+				 	ttip = "@rPALACE";
+				break;
+			 	case 7:
+				 	ttip = "@qOTHER";
+				break;
+			}
 			
 			for(j = 0; j <= 9; j++){
 				with(instance_create(-96 + (j*32),999,CustomObject)){
@@ -483,6 +511,10 @@ if(t < pi){
 if(mouse_over){
 	draw_set_alpha(1);
 	draw_rectangle(_x1, _y1, _x2, _y2,true);
+	draw_set_font(fntSmall);
+	draw_set_halign(fa_center);
+	draw_set_valign(fa_top);
+	draw_text_nt(x, y + 13, string(ttip));
 }
 
 draw_set_alpha(shine);
