@@ -6,6 +6,8 @@ global.hasGenCont = false;
 // charselect sprite
 global.sprMenuButton = sprite_add("sprites/sprSnowBotSelect.png", 1, 0, 0);
 
+global.sprPortrait = sprite_add("/sprites/sprPortraitSnowbot.png", 1, 22, 198);
+
 // level start init- MUST GO AT END OF INIT
 while(true){
 	// first chunk here happens at the start of the level, second happens in portal
@@ -292,7 +294,7 @@ return "CONTACT DAMAGE#@sCAN @wCHARGE#THROW @yCARS";
 
 #define race_portrait
 // return portrait for character selection screen and pause menu
-return sprBigPortraitChickenHeadless;
+return global.sprPortrait;
 
 
 #define race_mapicon
