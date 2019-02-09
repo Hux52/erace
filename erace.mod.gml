@@ -263,6 +263,7 @@ if(instance_exists(CharSelect)){
 }
 
 if(instance_exists(CampChar)){
+	instance_delete(TV);
 	with(CampChar){
 		x = 64;
 		y = 64;
