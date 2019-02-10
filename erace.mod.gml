@@ -1,4 +1,9 @@
 #define init
+
+// for level start
+global.newLevel = instance_exists(GenCont);
+global.hasGenCont = false;
+
 if(instance_exists(CustomObject)){
 	with(instances_matching(CustomObject,"name", "AreaBackgr")){
 		instance_delete(self);
@@ -75,6 +80,28 @@ sprite_replace(sprShield, "sprites/sprPopoShieldAppear.png", 4);
 sprite_replace(sprShieldDisappear, "sprites/sprPopoShieldDisappear.png", 6);
 sprite_replace(sprShieldB, "sprites/sprPopoShieldDisappear.png", 4);
 sprite_replace(sprShieldBDisappear, "sprites/sprPopoShieldDisappear.png", 6);
+
+// level start init- MUST GO AT END OF INIT
+while(true){
+	// first chunk here happens at the start of the level, second happens in portal
+	if(instance_exists(GenCont)) global.newLevel = 1;
+	else if(global.newLevel){
+		global.newLevel = 0;
+		level_start();
+	}
+	var hadGenCont = global.hasGenCont;
+	global.hasGenCont = instance_exists(GenCont);
+	if (!hadGenCont && global.hasGenCont) {
+		// nothing yet
+	}
+	wait 1;
+}
+
+#define level_start
+wait(2);
+with(ChestOpen){
+	instance_destroy();
+}
 
 #define step
 if(global.t < 10){
