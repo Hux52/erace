@@ -141,6 +141,7 @@ exploded = 30;
 	}
 	
 	// effect
+	instance_create(x,y,ExploderExplo);
 	for(i = 0; i < 360; i += 120){
 		with(instance_create(x, y, AcidStreak)){
 			speed = 8;

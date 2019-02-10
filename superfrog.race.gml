@@ -141,7 +141,7 @@ if(my_health = 0 && dead = false){
 }
 
 #define exploder_explode
-
+	instance_create(x,y,ExploderExplo);
 	exploded = 30;
 	// effect
 	for(i = 0; i < 360; i += 120){
