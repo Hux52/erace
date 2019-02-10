@@ -12,6 +12,9 @@ weps
 /loadwep super_sniper_cannon
 /loadwep molefish
 /loadwep molesarge
+/loadwep grunt
+/loadwep inspector
+/loadwep shielder
 
 desert
 /loadrace maggotspawn
@@ -63,5 +66,9 @@ secret
 /loadrace goldscorpion
 /loadrace fastrat
 /loadrace superfrog
+
+/loadrace grunt
+/loadrace inspector
+/loadrace shielder
 
 /loadmod erace

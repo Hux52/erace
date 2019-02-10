@@ -19,7 +19,7 @@ global.races = [
 					[ "bandit_snow", "snowbot", "wolf","snowtank"],
 					["freak","explofreak","rhinofreak","necromancer"],
 					["guardian", "exploguardian", "dogguardian"],
-					["molefish", "molesarge", "fireballer", "jock"]
+					["molefish", "molesarge", "fireballer", "jock", "grunt", "inspector", "shielder"]
 				];	// please add races in the order and area you want them to be displayed
 
 global.player_races = ["unknown", "unknown", "unknown", "unknown"];
@@ -30,7 +30,7 @@ global.race_names = ["maggotspawn", MaggotSpawn, "bigmaggot", BigMaggot, "bandit
 					Sniper, "spider", Spider, "lasercrystal", LaserCrystal, "snowbot", SnowBot, "wolf", 
 					Wolf, "bandit_snow", Bandit, "snowtank", SnowTank, "freak", Freak, "explofreak", ExploFreak, "rhinofreak", RhinoFreak, "necromancer", 
 					Necromancer, "guardian", Guardian, "exploguardian", ExploGuardian, "dogguardian", DogGuardian,
-					"molefish", Molefish, "molesarge", Molesarge, "jock", Jock, "fireballer", FireBaller];	// piss off
+					"molefish", Molefish, "molesarge", Molesarge, "jock", Jock, "fireballer", FireBaller, "grunt", Grunt, "inspector", Inspector, "shielder", Shielder];	// piss off
 
 global.deselect_color = make_color_hsv(0, 0, 80);	// dimmnessss :)
 global.hover_color = make_color_hsv(0, 0, 190);	// same
@@ -70,6 +70,11 @@ trace_color ("Type '/ehelp list' for a list of available commands!",c_white);
 //global.e = array_create(4, 0);
 
 global.t = -1;
+
+sprite_replace(sprShield, "sprites/sprPopoShieldAppear.png", 4);
+sprite_replace(sprShieldDisappear, "sprites/sprPopoShieldDisappear.png", 6);
+sprite_replace(sprShieldB, "sprites/sprPopoShieldDisappear.png", 4);
+sprite_replace(sprShieldBDisappear, "sprites/sprPopoShieldDisappear.png", 6);
 
 #define step
 if(global.t < 10){
