@@ -57,6 +57,59 @@ if(wep != "bandit"){
 	wep = "bandit";
 }
 
+with(Floor){
+	if(random(1000) < 1){
+		with(instance_create(x+18,y+16,SnowFlake)){
+			addx = -5
+		}
+	}
+	switch(sprite_index){
+		case sprFloor0:
+		case sprFloor1:
+		case sprFloor1B:
+		case sprFloor3:
+		case sprFloor3B:
+		material = 1;
+		sprite_index = sprFloor5;
+		break;
+
+		case sprFloor0Explo:
+		case sprFloor1Explo:
+		case sprFloor3Explo:
+		material = 2;
+		sprite_index = sprFloor5Explo;
+		break;
+	}
+}
+
+with(prop){
+	switch(object_get_name(object_index)){
+		case "Cactus":
+		case "NightCactus":
+		case "BigSkull":
+		case "BonePile":
+		case "BonePileNight":
+		case "Tires":
+		toReplace = choose(Hydrant, Hydrant, Hydrant, StreetLight, SodaMachine, SodaMachine, SnowMan);
+		with(instance_create(x,y,toReplace)){
+			if(object_index = Hydrant){
+				if(random(100) < 5){
+					spr_idle = sprNewsStand;
+					spr_hurt = sprNewsStandHurt;
+					spr_dead = sprNewsStandDead;
+				}
+			}
+		}
+		instance_delete(self);
+		break;
+	}
+}
+
+instance_delete(RainDrop);
+instance_delete(RainSplash);
+
+// StreetLight Hydrant SodaMachine SnowMan
+// sprNewsStand
 
 #define race_name
 // return race name for character select and various menus
@@ -65,7 +118,7 @@ return "Snow Bandit";
 
 #define race_text
 // return passive and active for character selection screen
-return "HAS BANDIT RIFLE";
+return "HAS BANDIT RIFLE#@sVERY @wFESTIVE";
 
 
 #define race_portrait
