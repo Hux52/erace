@@ -2,7 +2,7 @@
 // character select button
 global.sprMenuButton = sprite_add("sprites/sprSnowTankSelect.png", 1, 0, 0);
 // character select portrait
-global.sprPortrait = sprite_add("/sprites/sprPortraitBandit.png", 1, 22, 210);
+global.sprPortrait = sprite_add("/sprites/sprPortraitSnowTank.png", 1, 5, 198);
 
 // character select sounds
 // global.sndSelect = sound_add("sounds/sndBanditSelect.ogg");
@@ -74,6 +74,15 @@ is_firing = false;
 // executed within each player instance of this race after step
 // most actives and passives handled here
 
+on_draw = script_bind_draw(snowtank_draw, depth);
+
+if (ultra_get("snowtank",1) = 1){
+	if (player_get_race(index) == "snowtank"){
+		player_set_race(index, "goldsnowtank");
+		race = "goldsnowtank";
+	}
+}
+
 // no weps
 canswap = 0;
 canpick = 0;
@@ -98,7 +107,7 @@ if(button_pressed(index,"fire")){
 	if(can_fire){
 		if(is_charging = false){
 			is_charging = true;
-			sound_play_pitchvol(snd_aim, random_range(0.9,1.1), 0.6);
+			sound_play_pitchvol(snd_aim, random_range(0.9,1.1), 0.75);
 			spread = choose(0,1);
 		}
 	}
@@ -116,7 +125,7 @@ if(is_firing){
 	fire_cooldown = fire_cooldown_base;
 	if(bulletCount > 0){
 		if(fireDelay <= 0){
-			//spawn laser
+			//hshshoot bullit
 			sound_play_pitchvol(snd_fire, random_range(0.9,1.1), 0.6);
 			if(bulletCount = bulletCountBase){
 				sound_play_pitchvol(sndSnowTankPreShoot, random_range(0.9,1.1), 0.6);
@@ -128,7 +137,7 @@ if(is_firing){
 					r = 1;
 				}
 				q = d + ((spread-(bulletCount/bulletCountBase))*r * 20)
-				with(instance_create(x,y,Bullet1)){
+				with(instance_create(x,y,EnemyBullet4)){
 					damage = 3;
 					speed = 12;
 					team = other.team;
@@ -142,6 +151,7 @@ if(is_firing){
 		fireDelay -= current_time_scale;
 	} else {
 		is_firing = false; //stop firing
+		sound_play_pitchvol(sndSnowTankCooldown, random_range(0.9,1.1), 0.6);
 	}
 }
 
@@ -159,8 +169,30 @@ if(my_health < 1){
 		instance_create(x,y,SnowTankExplode);
 		has_died = true;
 	}
+} else {
+	has_died = false;
 }
 
+#define snowtank_draw
+with(Player){
+	laser_x = x;
+	laser_y = y;
+	_n = 0;
+
+	if (is_firing or is_charging){
+		p_dir = point_direction(x,y,mouse_x[index],mouse_y[index]);
+		while(instance_position(x + lengthdir_x(_n,p_dir), y + lengthdir_y(_n,p_dir), Wall) == noone){
+			_n++;
+			laser_x = x + lengthdir_x(_n,p_dir);
+			laser_y = y + lengthdir_y(_n,p_dir);
+			if(_n > 200){
+				break;
+			}
+		}
+		draw_line_color(x,y,laser_x,laser_y,c_red,c_red);
+	}
+}
+instance_destroy();
 
 #define race_name
 // return race name for character select and various menus
@@ -228,7 +260,7 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "SPREAD SHOT";
+	case 1: return "EVOLUTION";
 	case 2: return "NUKE";
 	default: return "";
 }
@@ -237,8 +269,8 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "FIRES IN A WIDE SPREAD";
-	case 2: return "FIRE A @yNUKE @sINSTEAD";
+	case 1: return "EVOLVE INTO @yGOLDEN @wSNOW TANK";
+	case 2: return "LOL";
 	default: return "";
 }
 
