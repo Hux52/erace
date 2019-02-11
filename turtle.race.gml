@@ -46,7 +46,7 @@ mask_index = mskPlayer;
 melee = 1;	// can melee or not
 spin_time = 0;	// spin alarm
 spin_angle = 0;	// delayed angle
-
+spinning = false;
 
 #define game_start
 // executed after picking race and starting for each player picking this race
@@ -73,14 +73,20 @@ else{
 	right = 1;
 }
 
+if(button_pressed(index,"fire")){
+	spin_angle = gunangle;
+}
+
+spinning = button_check(index,"fire");
+
 // spinning
-if(spin_time > 0){
+if(spinning){
 	// angle
 	var _pd = gunangle;
 	var _dd = angle_difference(spin_angle, _pd);
 	spin_angle -= min(abs(_dd), 10) * sign(_dd);
 	// alarm
-	spin_time--;
+	// spin_time--;
 	// movement
 	move_bounce_solid(true);
 	motion_add(spin_angle, maxspeed / 4);
@@ -89,12 +95,8 @@ if(spin_time > 0){
 	}
 }
 else{
-	if(button_pressed(index, "spec")){
-		spin_angle = gunangle;
-		spin_time = 60;
-	}
-	speed = 0;
-	friction = 0;
+	//speed = 0;
+	//friction = 0.3;
 	canwalk = 0;
 }
 
