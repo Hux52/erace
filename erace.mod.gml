@@ -24,7 +24,7 @@ global.races = [
 					[ "bandit_snow", "snowbot", "wolf","snowtank"],
 					["freak","explofreak","rhinofreak","necromancer"],
 					["guardian", "exploguardian", "dogguardian"],
-					["molefish", "molesarge", "fireballer", "jock", "grunt", "inspector", "shielder"]
+					["turtle", "molefish", "molesarge", "fireballer", "jock", "grunt", "inspector", "shielder"]
 				];	// please add races in the order and area you want them to be displayed
 
 global.player_races = ["unknown", "unknown", "unknown", "unknown"];
@@ -35,7 +35,7 @@ global.race_names = ["maggotspawn", MaggotSpawn, "bigmaggot", BigMaggot, "bandit
 					Sniper, "spider", Spider, "lasercrystal", LaserCrystal, "snowbot", SnowBot, "wolf", 
 					Wolf, "bandit_snow", Bandit, "snowtank", SnowTank, "freak", Freak, "explofreak", ExploFreak, "rhinofreak", RhinoFreak, "necromancer", 
 					Necromancer, "guardian", Guardian, "exploguardian", ExploGuardian, "dogguardian", DogGuardian,
-					"molefish", Molefish, "molesarge", Molesarge, "jock", Jock, "fireballer", FireBaller, "grunt", Grunt, "inspector", Inspector, "shielder", Shielder];	// piss off
+					"turtle", Turtle, "molefish", Molefish, "molesarge", Molesarge, "jock", Jock, "fireballer", FireBaller, "grunt", Grunt, "inspector", Inspector, "shielder", Shielder];	// piss off
 
 global.deselect_color = make_color_hsv(0, 0, 80);	// dimmnessss :)
 global.hover_color = make_color_hsv(0, 0, 190);	// same
