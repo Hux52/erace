@@ -399,10 +399,8 @@ if(my_health > 0){
 	}
 
 	if(instance_exists(creator)){
-		//trace(object_get_name(creator));
 		if(instance_is(creator, Player)){
 			if(creator.race != "spider"){
-				trace("isn't spider")
 				with(instance_create(x,y,InvSpider)){
 					my_health = other.my_health;
 					canmelee = 1;
