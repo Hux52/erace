@@ -365,7 +365,7 @@ if(global.select_exists != instance_number(CharSelect) and instance_number(CharS
 				 	ttip = "@gSEWERS";
 				break;
 			 	case 2:
-				 	ttip = "@sSCRAPYARDS";
+				 	ttip = "@wSCRAPYARDS";
 				break;
 			 	case 3:
 				 	ttip = "@pCRYSTAL CAVES";
@@ -374,7 +374,7 @@ if(global.select_exists != instance_number(CharSelect) and instance_number(CharS
 				 	ttip = "@bFROZEN CITY";
 				break;
 			 	case 5:
-				 	ttip = "@wLABS";
+				 	ttip = "@sLABS";
 				break;
 			 	case 6:
 				 	ttip = "@rPALACE";
@@ -391,7 +391,7 @@ if(global.select_exists != instance_number(CharSelect) and instance_number(CharS
 					if(area == 4){
 						sprite_index = global.backgrounds_A[area];
 					} else {
-						sprite_index = choose(global.backgrounds_A[area], global.backgrounds_B[area]);
+						sprite_index = choose(global.backgrounds_A[area], global.backgrounds_A[area], global.backgrounds_B[area]);
 					}					
 					image_index = irandom(sprite_get_number(sprite_index));	// specific frame of sprite
 					image_speed = 0;	// no anim
