@@ -107,16 +107,18 @@ if(venom > 0){
 	// bullets
 	sound_play_gun(sndScorpionFire, 0.2, 0.6);
 	repeat((u2+1)*current_time_scale ){
-		with(instance_create(x, y, Bullet1)){
-			var acc = 60;
-			creator = other;
-			team = creator.team;
-			sprite_index = sprScorpionBullet;
-			direction = other.dir + (random(creator.accuracy) * choose(1, -1) * random(acc));
-			image_angle = direction;
-			friction = 0;
-			speed = 3.5;
-			damage = 2;
+		if(venom - floor(venom) = 0){
+			with(instance_create(x, y, Bullet1)){
+				var acc = 60;
+				creator = other;
+				team = creator.team;
+				sprite_index = sprScorpionBullet;
+				direction = other.dir + (random(creator.accuracy) * choose(1, -1) * random(acc));
+				image_angle = direction;
+				friction = 0;
+				speed = 3.5;
+				damage = 2;
+			}
 		}
 	}
 	venom -= current_time_scale + (u2*current_time_scale);
