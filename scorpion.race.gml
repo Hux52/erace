@@ -71,7 +71,7 @@ canpick = 0;
 
 // special- venom
 if(button_pressed(index, "fire")){
-	if(cooldown = 0){
+	if(cooldown <= 0){
 		cooldown = 60;	// cooldown til next fire
 		venom = 18;	// firing duration
 		dir = gunangle;	// inital firing direction, as you may not control after starting
@@ -89,14 +89,14 @@ if(venom > 0){
 	if (u2 = 1){
 		if(place_meeting(x + (hspeed*5.5), y + (vspeed*5.5), Wall)){
 			with(instance_nearest(x + hspeed, y + vspeed, Wall)){
-				if(random(10) < 3) sound_play_pitch(sndHammerHeadEnd, random_range(0.8,1.2));
+				if(random(10) < 5) sound_play_pitchvol(sndHammerHeadEnd, 2, 0.6);
 				sound_play_pitch(sndHammerHeadProc, random_range(0.8,1.2));
 				instance_create(x, y, FloorExplo);
 				instance_destroy();
 			}
 		}
 	}
-	move_towards_point(x + lengthdir_x(maxspeed, direction), y + lengthdir_y(maxspeed, direction), maxspeed);
+	move_towards_point(x + lengthdir_x(maxspeed, direction), y + lengthdir_y(maxspeed, direction), maxspeed * current_time_scale);
 	// face direction as you are not in control of wep
 	if(dir > 90 and dir <= 270){
 		right = -1;
@@ -106,18 +106,20 @@ if(venom > 0){
 	}
 	// bullets
 	sound_play_gun(sndScorpionFire, 0.2, 0.6);
-	with(instance_create(x, y, Bullet1)){
-		var acc = 60;
-		creator = other;
-		team = creator.team;
-		sprite_index = sprScorpionBullet;
-		direction = other.dir + (random(creator.accuracy) * choose(1, -1) * random(acc));
-		image_angle = direction;
-		friction = 0;
-		speed = 3.5;
-		damage = 2;
+	repeat((u2+1)*current_time_scale ){
+		with(instance_create(x, y, Bullet1)){
+			var acc = 60;
+			creator = other;
+			team = creator.team;
+			sprite_index = sprScorpionBullet;
+			direction = other.dir + (random(creator.accuracy) * choose(1, -1) * random(acc));
+			image_angle = direction;
+			friction = 0;
+			speed = 3.5;
+			damage = 2;
+		}
 	}
-	venom--;
+	venom -= current_time_scale + (u2*current_time_scale);
 }
 else{
 	// return to normal
@@ -128,7 +130,7 @@ else{
 
 // cooldown management
 if(cooldown > 0){
-	cooldown--;
+	cooldown -= current_time_scale + (u2*current_time_scale);
 }
 
 // outgoing contact damage
