@@ -162,10 +162,12 @@ with(ChestOpen){
 if (instance_exists(GenCont) == false){
 with(AmmoChest){
 		wait(1);
+		if(instance_exists(self)){
 		instance_create(x, y, HealthChest);
 		instance_create(x, y, HealFX);
 		instance_create(x, y, BloodLust);
 		instance_destroy();
+		}
 	}
 	
 	with(WeaponChest){
