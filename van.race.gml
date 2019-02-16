@@ -1,7 +1,6 @@
 #define init
 global.sprMenuButton = sprite_add("sprites/sprRatSelect.png", 1, 0, 0);
 global.sprPortrait = sprite_add("sprites/sprPortraitRat.png",1 , 15, 185);
-global.van_sound = true;
 
 // level start init- MUST GO AT END OF INIT
 global.newLevel = instance_exists(GenCont);
@@ -22,15 +21,11 @@ while(true){
 	if(instance_exists(GenCont)) global.newLevel = 1;
 	else if(global.newLevel){
 		global.newLevel = 0;
-		global.van_sound = false;
 	}
 	var hadGenCont = global.hasGenCont;
 	global.hasGenCont = instance_exists(GenCont);
 	if (!hadGenCont && global.hasGenCont) {
-		if(global.van_sound = false){
-			sound_play(sndVanPortal);
-			global.van_sound = true;
-		}
+		//
 	}
 	wait 1;
 }
@@ -83,6 +78,8 @@ right = choose(-1, 1);
 // vars
 melee = 1;	// can melee or not
 stop_alarm = 0;	// it's time to stop
+want_van = 50;	// time until van
+sprite_change = false;	// sprites not changed
 
 
 #define game_start
@@ -112,33 +109,52 @@ else{
 // movement
 friction = 0;
 direction = 90;
-with(collision_rectangle(x + 37, y + 22, x - 37, y - 22, Wall, 0, 1)){
-	if(x > other.x + 25){
-		other.stop_alarm = 3;
+
+if(want_van <= 0){
+	if(sprite_change = false){
+		spr_idle = sprVanDrive;
+		spr_walk = sprVanDrive;
+		spr_hurt = sprVanHurt;
+		spr_dead = sprVanDead;
+		sprite_change = true;
 	}
-	instance_create(x, y, FloorExplo);
-	instance_destroy();
-}
-
-if(stop_alarm <= 0){
-	x += maxspeed * right;
-}
-else if(stop_alarm <= 2){
-	x += 5 + maxspeed * right;
-}
-
-if(stop_alarm >= 0){
-	stop_alarm -= current_time_scale;
-}
-
-// outgoing contact damage
-with(collision_rectangle(x + 37, y + 22, x - 37, y - 22, enemy, 0, 1)){
-	if(sprite_index != spr_hurt){
-		my_health -= 20;
-		sound_play_pitch(snd_hurt, random_range(0.9, 1.1));
-		sprite_index = spr_hurt;
-		direction = other.direction;
+	with(collision_rectangle(x + 37, y + 22, x - 37, y - 22, Wall, 0, 1)){
+		if(sprite_index != mskNone){
+			if(x > other.x + 25){
+				other.stop_alarm = 3;
+			}
+			instance_create(x, y, FloorExplo);
+			instance_destroy();
+		}
 	}
+
+	if(stop_alarm <= 0){
+		x += maxspeed * right;
+	}
+	else if(stop_alarm <= 2){
+		x += 3 + maxspeed * right;
+	}
+
+	if(stop_alarm >= 0){
+		stop_alarm -= current_time_scale;
+	}
+
+	// outgoing contact damage
+	with(collision_rectangle(x + 37, y + 22, x - 37, y - 22, enemy, 0, 1)){
+		if(sprite_index != spr_hurt){
+			my_health -= 20;
+			sound_play_pitch(snd_hurt, random_range(0.9, 1.1));
+			sprite_index = spr_hurt;
+			direction = other.direction;
+		}
+	}
+}
+else{
+	if(
+}
+
+if(want_van >= 0){
+	want_van -= current_time_scale;
 }
 
 #define race_name
