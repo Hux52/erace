@@ -53,7 +53,7 @@ cooldown_base = 15;
 explo_timer = 0;
 explo_timer_base = 60;
 can_explo = true;
-has_exploded = false;
+has_exploded = true;
 is_exploding = false;
 died = 0;
 
@@ -120,12 +120,11 @@ if(explo_timer <= 0){
 			with(instance_create(x, y, Bullet1)){
 				creator = other;
 				team = creator.team;
-				sprite_index = sprBullet2;
+				sprite_index = sprExploGuardianBullet;
 				mask_index = mskBullet2;
 				speed = 12;
 				direction = other.i;
 				image_angle = direction;
-				image_blend = make_color_hsv(70,130,200);
 				damage = 3;	// damage is normally 2 for exploguardian, this is player bullet damage
 			}
 		}
@@ -152,15 +151,15 @@ if(distance_to_object(Portal) < 20){
 }
 
 if(my_health <= 0){
-	if(died = 0 and explo > 1){
+	if(died = 0 and is_exploding == true){
 		sound_dead = snd_cgdd;
 		for(i = 0 + _o; i < 360 + _o; i += 14){
 			with(instance_create(x, y, Bullet1)){
 				creator = other;
 				team = creator.team;
-				sprite_index = sprBullet2;
+				sprite_index = sprExploGuardianBullet;
 				mask_index = mskBullet2;
-				speed = 12;
+				speed = 4;
 				direction = other.i;
 				image_angle = direction;
 				damage = 3;
