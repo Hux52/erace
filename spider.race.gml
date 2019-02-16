@@ -236,13 +236,13 @@ if(instance_exists(e)){
 	if (point_distance(x,y,e.x,e.y) < 125){
 		//line of sight to enemy
 		if(collision_line(x,y,e.x,e.y,Wall,false, true) == noone){
-			maxspeed = lerp(maxspeed, maxspeed_close, 0.25);
+			maxspeed = lerp(maxspeed, maxspeed_close, 0.25 * current_time_scale);
 		}
 	} else {
-		maxspeed = lerp(maxspeed, maxspeed_base, 0.05);
+		maxspeed = lerp(maxspeed, maxspeed_base, 0.05 * current_time_scale);
 		}
 } else {
-	maxspeed = lerp(maxspeed, maxspeed_base, 0.05);
+	maxspeed = lerp(maxspeed, maxspeed_base, 0.05 * current_time_scale);
 }
 maxspeed *= 10;
 maxspeed = floor(maxspeed);
@@ -527,7 +527,7 @@ if(my_health > 0){
 	// alarm management
 	for(i = 0; i < array_length_1d(alarm); i++){
 		if(alarm[i] > 0){
-			alarm[i]--;
+			alarm[i]-= current_time_scale;
 		}
 	}
 	

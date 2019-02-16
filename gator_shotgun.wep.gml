@@ -19,7 +19,7 @@ if ("smoke_buff_bullets" not in self){
 blts = smoke_buff_bullets;
 
 if(weapon_custom_delay >= 0){
-	weapon_custom_delay--;
+	weapon_custom_delay-= current_time_scale;
 }
 
 if(weapon_custom_delay = 0){

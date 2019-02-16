@@ -95,7 +95,7 @@ if(button_check(index, "spec")){
 	canwalk = false;
 	spr_idle = spr_smoke_current;
 	if(smoke_buff_bullets < smoke_buff_max_bullets && speed < 1){
-		smoke_buff += smoke_buff_bullets + 1;
+		smoke_buff += (smoke_buff_bullets + 1) * current_time_scale;
 		if (smoke_buff >= smoke_buff_threshold){	
 			smoke_buff = 0;
 			smoke_buff_bullets += 1;
@@ -107,7 +107,7 @@ if(button_check(index, "spec")){
 	canwalk = true;
 	spr_idle = spr_idle_current;
 		if(smoke_buff > 0){
-		smoke_buff -= 0.5;
+		smoke_buff -= 0.5 * current_time_scale;
 		}
 	}
 

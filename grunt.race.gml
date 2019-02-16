@@ -90,7 +90,7 @@ if(canspec){
 	}
 }
 if(roll_time > 0){
-	roll_time--;
+	roll_time-= current_time_scale;
 
 	 // Speedify:
 	speed = maxspeed + 2;
@@ -104,7 +104,7 @@ if(roll_time > 0){
 	/// Roll (No Butt)
 	else{
 		canwalk = 0;				// Can't Use Movement Keys
-		sprite_angle += 40 * right;	// Rotate
+		sprite_angle += 40 * right * current_time_scale;	// Rotate
 		instance_create(x + random_range(-3, 3), y + random(6), Dust); // Dust Particles:
 	}
 
@@ -123,7 +123,7 @@ if(roll_time > 0){
 }
 
 // grenade throw and alarm management
-if(grenade_time = 0){
+if(grenade_time <= 0){
 	if(button_pressed(index, "pick")){
 		sound_play_pitch(snd_nade, random_range(0.9, 1.1));
 		with(instance_create(x, y, PopoNade)){
@@ -140,10 +140,10 @@ if(grenade_time = 0){
 }
 else if(grenade_time = 1){
 	sound_play_pitch(sndIDPDNadeAlmost, random_range(1.4, 1.6));
-	grenade_time--;
+	grenade_time-= current_time_scale;
 }
 else{
-	grenade_time--;
+	grenade_time-= current_time_scale;
 }
 
 #define race_name

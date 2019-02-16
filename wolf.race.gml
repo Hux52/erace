@@ -64,7 +64,6 @@ melee = 1;	// can melee or not
 // executed within each player instance of this race after step
 // most actives and passives handled here
 if(button_pressed(index,"fire")){
-	trace(is_rolling)
 	if(speed <= 0){
 		d = point_direction(x,y,mouse_x[index],mouse_y[index]);
 	} else {

@@ -48,7 +48,13 @@ canwalk = 1;
 
 // vars
 melee = 1;	// can melee or not
-explo = 0;
+cooldown = 0;
+cooldown_base = 15;
+explo_timer = 0;
+explo_timer_base = 60;
+can_explo = true;
+has_exploded = false;
+is_exploding = false;
 died = 0;
 
 
@@ -88,46 +94,54 @@ if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
 	}
 }
 
-if(button_pressed(index, "spec")){
-	if(canspec = true and explo = 0){
-		canwalk = 0;
-		explo = 60;
-		sound_play_pitch(snd_chrg, 1 + random_range(-0.1, 0.1));
-		spr_idle = sprExploGuardianCharge;
-		spr_walk = sprExploGuardianCharge;
-		spr_hurt = sprExploGuardianChargeHurt;
-		sprite_index = spr_idle;
-		speed = 0;
+//on click
+if(button_pressed(index, "fire")){
+	if(can_explo = true){
+		if(is_exploding = false){
+			is_exploding = true;
+			has_exploded = false;
+			canwalk = 0;
+			explo_timer = explo_timer_base;
+			sound_play_pitch(snd_chrg, 1 + random_range(-0.1, 0.1));
+			spr_idle = sprExploGuardianCharge;
+			spr_walk = sprExploGuardianCharge;
+			spr_hurt = sprExploGuardianChargeHurt;
+			sprite_index = spr_idle;
+			speed = 0;
+		}
 	}
 }
 
-if(explo > 1){
-	speed = 0;
-	explo--;
-}
-else if(explo = 1){
-	var _o = random(360);
-	sound_play_pitch(snd_fire, 1 + random_range(-0.1, 0.1));
-	for(i = 0 + _o; i < 360 + _o; i += 14){
-		with(instance_create(x, y, Bullet1)){
-			creator = other;
-			team = creator.team;
-			sprite_index = sprBullet2;
-			mask_index = mskBullet2;
-			speed = 12;
-			direction = other.i;
-			image_angle = direction;
-			image_blend = make_color_hsv(70,130,200);
-			damage = 3;	// damage is normally 2 for exploguardian, this is player bullet damage
+if(explo_timer <= 0){
+	if(has_exploded = false){
+		var _o = random(360);
+		sound_play_pitch(snd_fire, 1 + random_range(-0.1, 0.1));
+		for(i = 0 + _o; i < 360 + _o; i += 14){
+			with(instance_create(x, y, Bullet1)){
+				creator = other;
+				team = creator.team;
+				sprite_index = sprBullet2;
+				mask_index = mskBullet2;
+				speed = 12;
+				direction = other.i;
+				image_angle = direction;
+				image_blend = make_color_hsv(70,130,200);
+				damage = 3;	// damage is normally 2 for exploguardian, this is player bullet damage
+			}
 		}
+		spr_idle = sprExploGuardianIdle;
+		spr_walk = sprExploGuardianWalk;
+		spr_hurt = sprExploGuardianHurt;
+		sprite_index = spr_idle;
+		canwalk = 1;
+		//explo_timer = explo_timer_base;
+		has_exploded = true;
+		is_exploding = false;
 	}
-	spr_idle = sprExploGuardianIdle;
-	spr_walk = sprExploGuardianWalk;
-	spr_hurt = sprExploGuardianHurt;
-	sprite_index = spr_idle;
-	canwalk = 1;
-	explo--;
-}
+} else {
+	speed = 0;
+	explo_timer -= current_time_scale;
+	}
 
 if(distance_to_object(Portal) < 20){
 	spr_idle = sprExploGuardianIdle;
@@ -135,7 +149,6 @@ if(distance_to_object(Portal) < 20){
 	spr_hurt = sprExploGuardianHurt;
 	sprite_index = spr_idle;
 	canwalk = 1;
-	explo = 0;
 }
 
 if(my_health <= 0){
@@ -155,6 +168,13 @@ if(my_health <= 0){
 		}
 		died = 1;
 	}
+}
+
+if (cooldown >= 0){
+	can_explo = false;
+	cooldown -= current_time_scale;
+} else {
+	can_explo = true;
 }
 
 #define race_name

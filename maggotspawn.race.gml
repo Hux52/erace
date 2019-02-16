@@ -81,7 +81,7 @@ if(button_pressed(index, "spec") or button_pressed(index, "fire")){
 
 // alarm management
 if(self_destruct > 0){
-	self_destruct--;
+	self_destruct-= current_time_scale;
 }
 else if(self_destruct != -1){
 	my_health = 0;
@@ -219,7 +219,7 @@ if(my_health > 0){
 	// alarm management
 	for(i = 0; i < array_length_1d(alarm); i++){
 		if(alarm[i] > 0){
-			alarm[i]--;
+			alarm[i]-= current_time_scale;
 		}
 	}
 	

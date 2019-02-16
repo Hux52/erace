@@ -129,7 +129,7 @@ if(button_pressed(index, "spec")){
 					
 					// nearest 8 x
 					while(_x1 % 8 != 0){
-						_x1--;
+						_x1-= current_time_scale;
 					}
 					while(_x2 % 8 != 0){
 						_x2++;
@@ -146,7 +146,7 @@ if(button_pressed(index, "spec")){
 					
 					// nearest 8 y
 					while(_y1 % 8 != 0){
-						_y1--;
+						_y1-= current_time_scale;
 					}
 					while(_y2 % 8 != 0){
 						_y2++;
@@ -297,7 +297,7 @@ if(fly_alarm > 0){
 	view_pan_factor[index] = 22;	// limit mouse pan
 	script_bind_draw(draw_flight, -999, id, fly_alarm, fly_index);
 	wkick = 99999;	// hide weapon
-	fly_alarm--;	// alarm management
+	fly_alarm-= current_time_scale;	// alarm management
 	can_shoot = 0;
 	
 	// sprite management
@@ -349,12 +349,12 @@ if(cooldown > 0){
 	if(cooldown = 1){
 		sound_play(sndRavenScreech);	// cooldown screech
 	}
-	cooldown--;
+	cooldown-= current_time_scale;
 }
 
 // index management
 if(fly_index < sprite_get_number(spr_fly)){
-	fly_index += 1 * image_speed;
+	fly_index +=  current_time_scale * image_speed;
 }
 else{
 	fly_index = 0;

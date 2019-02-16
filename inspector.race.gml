@@ -51,7 +51,6 @@ mask_index = mskPlayer;
 
 // vars
 melee = 0;	// can melee or not
-pullStrength = 0.75;	// telekinesis strength
 startsound = -4;
 stopsound = -4;
 
@@ -69,6 +68,8 @@ stopsound = -4;
 // no weps
 canswap = 0;
 canpick = 0;
+
+pullStrength = 0.75 * current_time_scale;	// telekinesis strength
 
 // telekinesis
 if(canspec){

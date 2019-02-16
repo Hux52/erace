@@ -11,7 +11,7 @@ if ("weapon_custom_delay" not in self){
 	weapon_custom_delay = 0;
 }
 if(weapon_custom_delay >= 0){
-	weapon_custom_delay--;
+	weapon_custom_delay-= current_time_scale;
 	// no moving
 	canwalk = false;
 	firing = true;
@@ -108,7 +108,7 @@ else if(alarm[0] = 1){
 
 for(i = 0; i < array_length_1d(alarm); i++){
 	if(alarm[i] > 0){
-		alarm[i]--;
+		alarm[i]-= current_time_scale;
 	}
 }
 
@@ -172,7 +172,7 @@ else if(alarm[0] = 1){
 
 for(i = 0; i < array_length_1d(alarm); i++){
 	if(alarm[i] > 0){
-		alarm[i]--;
+		alarm[i]-= current_time_scale;
 	}
 }
 

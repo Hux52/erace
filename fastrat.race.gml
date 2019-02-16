@@ -85,7 +85,7 @@ if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 }
 
 // age management and consequence
-age--;
+age-= current_time_scale;
 if(my_health > 0) {
 	hasDied = false;
 }

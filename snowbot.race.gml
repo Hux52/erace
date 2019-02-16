@@ -200,7 +200,7 @@ if(charge > 0){
 		spr_hurt = sprSnowBotHurt;
 		sound_stop(loop);
 	}
-	charge--;
+	charge-= current_time_scale;
 }
 
 // pickup car
@@ -238,7 +238,7 @@ if(lift > 0){
 		spr_idle = spr_carc[0];
 		spr_walk = spr_carc[1];
 	}
-	lift--;
+	lift-= current_time_scale;
 }
 
 // spec b- throw car
