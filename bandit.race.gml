@@ -58,20 +58,15 @@ if(wep != "bandit"){
 	wep = "bandit";
 }
 
-// ULTRA A: SNOWY JABRONI
-if (ultra_get("bandit",1) = 1){
-	if (player_get_race(index) == "bandit"){
-		player_set_race(index, "bandit_snow");
-		race = "bandit_snow";
-	}
-}
+u1 = ultra_get(player_get_race(index), 1); // bandit gun
+u2 = ultra_get(player_get_race(index), 2); // reincarnation
 
-// ULTRA B: JUNGLE JAPER
-if (ultra_get("bandit",2) = 1){
-	if (player_get_race(index) == "bandit"){
-		player_set_race(index, "bandit_jungle");
-		race = "bandit_jungle";
-		wep = "bandit_popgun";
+if(ultra_get(player_get_race(index), 1) == 1){
+	if(object_index = Player){
+		if(button_pressed(index, "spec")){
+			reload = 20;
+			spawn_bandit();
+		}
 	}
 }
 
@@ -142,8 +137,9 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "FESTIVITY";
-	case 2: return "OVERGROWTH";
+	case 1: return "BANDIT GUN";
+	case 2: return "REINCARNATION";
+	//case 3: return "ALLIES";
 	default: return "";
 }
 
@@ -151,8 +147,9 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "TIME TO CELEBRATE";
-	case 2: return "MERCENARY MODE";
+	case 1: return "@wRIGHT CLICK @sTO SUMMON @yREINFORCEMENTS";
+	case 2: return "@sREQUIRES A @wVESSEL";
+	//case 3: return "@sALL BANDITS BECOME @gFRIENDLY";
 	default: return "";
 }
 
@@ -174,3 +171,210 @@ switch(argument0){
 #define race_ttip
 // return character-specific tooltips
 return choose("WARM BARRELS", "DUST PROOF", "PLUNDER", "FIRE FIRST, AIM LATER");
+
+#define bandit_step
+if(my_health > 0){
+	// speed management
+	speed = clamp(speed, 0, maxspeed);
+	// collision - dies on touching a wall
+	if(place_meeting(x+hspeed, y+vspeed, Wall)){
+		instance_destroy();
+	}
+
+	// targeting
+	var _e = instance_nearest(x, y, enemy);
+	if(instance_exists(_e) and distance_to_object(_e) < 100 and !collision_line(x, y, _e.x, _e.y, Wall, true, true)){
+		// target is enemy
+		if(target == noone){instance_create(x,y-8,AssassinNotice)}
+		target = _e;
+	} else {
+		//target is nobody
+		target = noone;
+	}
+
+	if(reload > 0){	// manage reload
+		reload--;
+	}
+	
+	if(wkick > 0){	// manage weapon kick
+		wkick--;
+	}
+
+	if(target != noone){
+		gunangle = point_direction(x,y,target.x,target.y);
+		//shoOoOoOot
+		if(reload <= 0){
+			sound_play_gun(sndEnemyFire, 0.2, 0.6);
+			with(instance_create(x, y, AllyBullet)){
+				creator = other;
+				team = creator.team;
+				direction = other.gunangle;
+				image_angle = direction;
+				friction = 0;
+				speed = 8;
+				damage = 3;
+			}
+			wkick = 10;
+			reload = weapon_get_load(wep);
+		}
+	}
+
+	
+	
+	// movement
+	motion_set(dir, maxspeed);
+	_f = instance_place(x,y,Floor);
+	if(instance_exists(_f)){
+		friction = lerp(friction, _f.traction, 0.5);
+	}
+	
+	// stop hit sprite
+	if(sprite_index = spr_hurt and image_index >= 2){
+		sprite_index = spr_idle;
+	}
+	
+	// alarm management
+	for(i = 0; i < array_length_1d(alarm); i++){
+		if(alarm[i] > 0){
+			alarm[i]-= current_time_scale;
+		}
+	}
+	
+	// incoming/outgoing contact damage
+	with(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
+		if(sprite_index != spr_hurt){
+			if(meleedamage > 0){
+				other.my_health -= meleedamage;
+				sound_play(snd_mele);
+			}
+		}
+	}
+		
+	// sprite facing based on direction
+	if(speed > 0 and sprite_index != spr_hurt){
+		sprite_index = spr_walk;
+	}
+	else if(sprite_index != spr_hurt){
+		sprite_index = spr_idle;
+	}
+	
+	if(gunangle > 90 and gunangle <= 270){
+		right = -1;
+	}
+	else{
+		right = 1;
+	}
+	// face right or left
+	if(right = 1){
+		image_xscale = 1;
+	}
+	else{
+		image_xscale = -1;
+	}
+	if(place_meeting(x,y,TrapFire)){
+		sprite_index = spr_hurt;
+	}
+}
+else{
+	_e = noone;
+	instance_destroy();
+}
+
+#define bandit_draw
+d3d_set_fog(1, playerColor, 0, 0);
+draw_sprite_ext(sprite_index, -1, x - 1, y, 1 * right, 1, image_angle, playerColor, 1);
+draw_sprite_ext(sprite_index, -1, x + 1, y, 1 * right, 1, image_angle, playerColor, 1);
+draw_sprite_ext(sprite_index, -1, x, y - 1, 1 * right, 1, image_angle, playerColor, 1);
+draw_sprite_ext(sprite_index, -1, x, y + 1, 1 * right, 1, image_angle, playerColor, 1);
+// gun outline
+draw_sprite_ext(weapon_get_sprite(wep), -1, x - lengthdir_x(wkick, gunangle) - 1, y - lengthdir_y(wkick, gunangle), 1, right, gunangle, playerColor, 1);
+draw_sprite_ext(weapon_get_sprite(wep), -1, x - lengthdir_x(wkick, gunangle) + 1, y - lengthdir_y(wkick, gunangle), 1, right, gunangle, playerColor, 1);
+draw_sprite_ext(weapon_get_sprite(wep), -1, x - lengthdir_x(wkick, gunangle), y - lengthdir_y(wkick, gunangle) - 1, 1, right, gunangle, playerColor, 1);
+draw_sprite_ext(weapon_get_sprite(wep), -1, x - lengthdir_x(wkick, gunangle), y - lengthdir_y(wkick, gunangle) + 1, 1, right, gunangle, playerColor, 1);
+d3d_set_fog(0,c_lime,0,0);
+// draw gun
+draw_sprite_ext(weapon_get_sprite(wep), 0, x - lengthdir_x(wkick, gunangle), y - lengthdir_y(wkick, gunangle), 1, right, gunangle, c_white, 1);
+draw_self();
+
+#define bandit_destroy
+sound_play(snd_dead);
+// make corpse
+with (instance_create(x, y, Corpse)){
+	sprite_index = other.spr_dead;
+	size = 1;
+	direction = other.direction;
+	speed = other.speed;
+	friction = 0.3;
+}
+
+#define bandit_hurt(damage, kb_vel, kb_dir)
+// incoming damage
+if(sprite_index != spr_hurt){
+	if(nexthurt <= current_frame){		
+		sound_play_pitchvol(snd_hurt,1,0.6);
+		my_health -= argument0;
+		motion_add(argument2, argument1);
+		nexthurt = current_frame + 3;
+		sprite_index = spr_hurt;
+	}
+}
+
+#define draw_outline(playerColor, toDraw)
+d3d_set_fog(1,playerColor,0,0);
+if(instance_exists(toDraw)){
+    with(toDraw){
+        draw_sprite_ext(sprite_index, -1, x - 1, y, 1 * right, 1, image_angle, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x + 1, y, 1 * right, 1, image_angle, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x, y - 1, 1 * right, 1, image_angle, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x, y + 1, 1 * right, 1, image_angle, playerColor, 1);
+    }
+}
+d3d_set_fog(0,c_lime,0,0);
+
+#define spawn_bandit
+	_b = (instance_create(x, y, CustomHitme));
+	with(_b){
+		name = "BanditFriendly";
+		creator = other;
+		team = creator.team;
+		dir = creator.gunangle;
+
+		gunangle = random(360);
+		wep = "bandit";
+		wkick = 0;
+		reload = 0;
+		//sprites
+		spr_idle = sprBanditIdle;
+		spr_walk = sprBanditWalk;
+		spr_hurt = sprBanditHurt;
+		spr_dead = sprBanditDead;
+
+		sprite_index = spr_idle;
+		
+		// sounds
+		snd_hurt = sndBanditHit;
+		snd_dead = sndBanditDie;
+
+		maxhealth = creator.maxhealth;
+		my_health = maxhealth;
+		maxspeed = creator.maxspeed;
+		mask_index = mskBandit;
+		size = 1;
+		image_speed = 0.4;
+		depth = -1.9;
+		spr_shadow = shd24;
+		move_bounce_solid(true);
+		friction = 0.45;
+		right = choose(-1, 1);
+		alarm = [0]; // shoot timer
+		target = noone;
+		on_step = script_ref_create(bandit_step);
+		on_hurt = script_ref_create(bandit_hurt);
+		on_destroy = script_ref_create(bandit_destroy);
+		on_draw = script_ref_create(bandit_draw);
+		toDraw = self;		
+		playerColor = player_get_color(creator.index);	
+		script_bind_draw(draw_outline, depth, playerColor, toDraw);
+		wall_stuck = 0;
+	}
+ return _b;
