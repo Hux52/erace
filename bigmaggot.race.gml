@@ -65,6 +65,8 @@ melee = 1;	// can melee or not
 canswap = 0;
 canpick = 0;
 
+footstep = 10;
+
 // face the direction you're moving in- no gun
 if(direction > 90 and direction <= 270){
 	right = -1;
