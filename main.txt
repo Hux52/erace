@@ -64,6 +64,7 @@ secret
 /loadrace jock
 
 /loadrace maggot
+/loadrace radmaggot
 /loadrace bandit_jungle
 /loadrace goldscorpion
 /loadrace fastrat
@@ -72,5 +73,6 @@ secret
 /loadrace grunt
 /loadrace inspector
 /loadrace shielder
+/loadrace van
 
 /loadmod erace
