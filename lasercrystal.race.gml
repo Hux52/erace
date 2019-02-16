@@ -41,7 +41,7 @@ snd_laser = sndLaser;
 maxspeed = 1.1;
 team = 2;
 maxhealth = 45;
-spr_shadow_y = 5;
+spr_shadow_y = 8;
 
 //laser stuff
 laserCountBase = 4;
@@ -75,6 +75,8 @@ melee = false;	// can melee or not
 // no weps
 canswap = 0;
 canpick = 0;
+
+footstep = 10;
 
 u1 = ultra_get(player_get_race(index), 1);
 u2 = ultra_get(player_get_race(index), 2);

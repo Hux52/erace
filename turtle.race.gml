@@ -61,6 +61,8 @@ spinning = false;
 canswap = 0;
 canpick = 0;
 
+footstep = 10;
+
 if(wep != 0){
 	wep = 0;
 }

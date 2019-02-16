@@ -61,7 +61,7 @@ hasFired = false;
 // most actives and passives handled here
 canswap = 0;
 canpick = 0;
-
+footstep = 10;
 //he f l o a t
 if(image_index > 2 and image_index < 4){
 	spr_shadow = shd32;

@@ -273,6 +273,7 @@ if(instance_exists(CharSelect)){
 						with(instance_create(64 + lengthdir_x(50, 90 * i), 64 + lengthdir_y(50, 90 * i), global.race_names[m + 1])){
 							want_x = x;
 							want_y = y;
+							instance_create(x,y,PortalClear);
 							index = other.i;
 							mask_index = mskNone;
 							friction = 10;
@@ -552,8 +553,8 @@ if(selected = 1){
 _c = draw_get_color();
 _a = draw_get_alpha();
 draw_set_color(c_white);
-if(t < pi){
-	draw_set_alpha(abs(sin(t*3)));
+if(t < 10){
+	draw_set_alpha(min(abs(cos(t*3 + area/8)), (-1*t + 3)));
 	draw_rectangle(_x1, _y1, _x2, _y2,true);
 }
 if(mouse_over){
