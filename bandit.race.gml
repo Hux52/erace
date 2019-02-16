@@ -176,10 +176,6 @@ return choose("WARM BARRELS", "DUST PROOF", "PLUNDER", "FIRE FIRST, AIM LATER");
 if(my_health > 0){
 	// speed management
 	speed = clamp(speed, 0, maxspeed);
-	// collision - dies on touching a wall
-	if(place_meeting(x+hspeed, y+vspeed, Wall)){
-		instance_destroy();
-	}
 
 	// targeting
 	var _e = instance_nearest(x, y, enemy);
@@ -219,8 +215,6 @@ if(my_health > 0){
 		}
 	}
 
-	
-	
 	// movement
 	motion_set(dir, maxspeed);
 	_f = instance_place(x,y,Floor);
@@ -274,9 +268,13 @@ if(my_health > 0){
 	if(place_meeting(x,y,TrapFire)){
 		sprite_index = spr_hurt;
 	}
+
+	// collision - dies on touching a wall
+	if(place_meeting(x+hspeed, y+vspeed, Wall)){
+		instance_destroy();
+	}
 }
 else{
-	_e = noone;
 	instance_destroy();
 }
 
