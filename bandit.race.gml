@@ -77,30 +77,31 @@ if(ultra_get(player_get_race(index), 1) == 1){
 		}
 	}
 }
-
-if(my_health = 0){ //reincarnation in tarnation
-	if(instance_exists(Bandit)){
-		_b = instance_nearest(x,y,Bandit);
-		with(instance_create(x,y,Corpse)){
-			sprite_index = other.spr_dead;
-			size = 1;
-			direction = other.direction;
-			speed = other.speed;
-			friction = 0.3;
+if(u2 == 1){
+	if(my_health = 0){ //reincarnation in tarnation
+		if(instance_exists(Bandit)){
+			_b = instance_nearest(x,y,Bandit);
+			with(instance_create(x,y,Corpse)){
+				sprite_index = other.spr_dead;
+				size = 1;
+				direction = other.direction;
+				speed = other.speed;
+				friction = 0.3;
+			}
+			x = _b.x;
+			y = _b.y;
+			my_health = ceil(_b.my_health);
+			spr_idle = _b.spr_idle;
+			spr_walk = _b.spr_walk;
+			spr_hurt = _b.spr_hurt;
+			spr_dead = _b.spr_dead;
+			canspirit = true;
+			sound_play_pitchvol(sndStrongSpiritGain,0.8 + random_range(-0.1,0.1),0.4);
+			sound_play_pitchvol(sndStrongSpiritLost,0.6 + random_range(-0.1,0.1),0.4);
+			sound_play_pitchvol(sndNecromancerRevive,0.4 + random_range(-0.1,0.1),0.8);
+			instance_create(_b.x,_b.y,ReviveFX);
+			instance_delete(_b);
 		}
-		x = _b.x;
-		y = _b.y;
-		my_health = ceil(_b.my_health);
-		spr_idle = _b.spr_idle;
-		spr_walk = _b.spr_walk;
-		spr_hurt = _b.spr_hurt;
-		spr_dead = _b.spr_dead;
-		canspirit = true;
-		sound_play_pitchvol(sndStrongSpiritGain,0.8 + random_range(-0.1,0.1),0.4);
-		sound_play_pitchvol(sndStrongSpiritLost,0.6 + random_range(-0.1,0.1),0.4);
-		sound_play_pitchvol(sndNecromancerRevive,0.4 + random_range(-0.1,0.1),0.8);
-		instance_create(_b.x,_b.y,ReviveFX);
-		instance_delete(_b);
 	}
 }
 
