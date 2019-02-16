@@ -96,12 +96,12 @@ else if(collision_rectangle(x - 30, y - 10, x + 30, y + 10, enemy, 0, 1)){
 }
 
 if(exploded > 0){
-	exploded--;
+	exploded-= current_time_scale;
 }
 
 // noise cooldown to prevent spam
 if(close > 0){
-	close--;
+	close-= current_time_scale;
 }
 
 // on death

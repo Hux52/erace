@@ -58,9 +58,9 @@ if(wep != "bandit"){
 }
 
 with(Floor){
-	if(random(1000) < 1){
+	if(random(1000) < current_time_scale){
 		with(instance_create(x+18,y+16,SnowFlake)){
-			addx = -5
+			addx = -5;
 		}
 	}
 	switch(sprite_index){

@@ -110,7 +110,7 @@ if(ambience = 0){
 
 // manage ambience
 if(ambience > 0){
-	ambience--;
+	ambience-= current_time_scale;
 }
 
 // explode on contact- make noise when close
@@ -127,11 +127,11 @@ else if(collision_rectangle(x + 30, y + 10, x - 30, y - 10, enemy, 0, 1)){
 
 // noise cooldown to prevent spam
 if(close > 0){
-	close--;
+	close-= current_time_scale;
 }
 
 if(exploded > 0){
-	exploded--;
+	exploded-= current_time_scale;
 }
 
 // on death

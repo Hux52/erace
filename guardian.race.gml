@@ -91,7 +91,7 @@ if(nudge = 0){
 	nudge = 15;
 }
 else{
-	nudge--;
+	nudge-= current_time_scale;
 }
 
 // special - teleport
@@ -142,7 +142,7 @@ if(teleport > 0){
 	}
 	// no firing
 	reload = 2;
-	teleport--;
+	teleport-= current_time_scale;
 }
 
 // firing
@@ -157,7 +157,7 @@ else if(spr_idle = spr_fire){
 
 // cooldown management
 if(cooldown > 0){
-	cooldown--;
+	cooldown-= current_time_scale;
 }
 
 #define race_name

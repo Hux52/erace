@@ -83,7 +83,7 @@ if(instance_exists(creator)){
 				}
 			}
 			for(i = 0; i < array_length(alarm); i++){
-				alarm[i]--;
+				alarm[i]-= current_time_scale;
 			}
 			if(alarm[0] <= 0){
 				instance_destroy();

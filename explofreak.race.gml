@@ -90,7 +90,7 @@ if(instance_exists(en)){
 }
 
 //explosion cooldown
-exploded -= 1;
+exploded -= current_time_scale;
 
 #define race_name
 // return race name for character select and various menus

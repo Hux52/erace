@@ -137,7 +137,7 @@ if(spawn_cool > 0){
 		spr_idle = sprRatkingIdle;
 		spr_walk = sprRatkingWalk;
 	}
-	spawn_cool--;	// cooldown
+	spawn_cool-= current_time_scale;	// cooldown
 }
 
 // special b- self destruct charge
@@ -149,7 +149,7 @@ if(button_pressed(index, "spec") and spawn_cool <= 60 and charge_cool = 0){
 // if charging
 if(charge_cool > 0){
 	canwalk = 0;	// lose control
-	charge_cool--;
+	charge_cool-= current_time_scale;
 	spr_walk = sprRatkingRageAttack;
 	spr_idle = sprRatkingRageAttack;
 	move_towards_point(x + lengthdir_x(maxspeed + 3, direction), y + lengthdir_y(maxspeed + 3, direction), maxspeed + 3);
@@ -258,7 +258,7 @@ if(my_health > 0){
 	}
 
 	// age management
-	alarm[1]--;
+	alarm[1]-= current_time_scale;
 
 	// collision
 	move_bounce_solid(true);
@@ -339,7 +339,7 @@ if(my_health > 0){
 	// alarm management
 	for(i = 0; i < array_length_1d(alarm); i++){
 		if(alarm[i] > 0){
-			alarm[i]--;
+			alarm[i]-= current_time_scale;
 		}
 	}
 	

@@ -100,7 +100,7 @@ if(canspec){
 							spr_shadow = shd24;
 						}
 					}
-					shield_time++;
+					shield_time += current_time_scale;
 					shield_cool = 15;
 				}
 				else{
@@ -126,7 +126,7 @@ if(want_shield = false){
 if(shield_time = 0){
 	canwalk = 1;
 	if(shield_cool > 0){
-		shield_cool--;
+		shield_cool-= current_time_scale;
 	}
 }
 

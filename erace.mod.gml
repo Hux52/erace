@@ -162,10 +162,12 @@ with(ChestOpen){
 if (instance_exists(GenCont) == false){
 with(AmmoChest){
 		wait(1);
+		if(instance_exists(self)){
 		instance_create(x, y, HealthChest);
 		instance_create(x, y, HealFX);
 		instance_create(x, y, BloodLust);
 		instance_destroy();
+		}
 	}
 	
 	with(WeaponChest){
@@ -485,7 +487,7 @@ if(selected = 1){
 	// move buttons relative to parent of same area
 	with(instances_matching(CharSelect, "area", area)){
 		xstart = other.x + 88 + (20 * (index + 1)) - (((array_length(global.races[area]) + 1) * 20) / 2) + other.view_offset;	// :twitchSmile:
-		ystart = lerp(ystart, other.y + 16, 0.5);
+		ystart = lerp(ystart, other.y + 16, 0.4 * current_time_scale);
 		if(ystart > 200){
 			visible = false;
 		} else {
@@ -512,7 +514,7 @@ if(selected = 1){
 		
 		//version B:
 		my_bg[i].y = ystart - 15;
-		my_bg[i].x = lerp(my_bg[i].x, -96 + (i*32), 0.1);
+		my_bg[i].x = lerp(my_bg[i].x, -96 + (i*32), 0.2 * current_time_scale);
 
 		my_bg[i].d = abs(xstart - (my_bg[i].x+16));
 		my_bg[i].image_blend = make_color_hsv(0, 0, clamp(game_width/(my_bg[i].d+1)*10,0,255));

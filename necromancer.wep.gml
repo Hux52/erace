@@ -74,7 +74,7 @@ else{
 
 #define revarea_step
 // alarm management
-alarm[0]--;
+alarm[0]-= current_time_scale;
 // right before destruction
 if(alarm[0] = 1){
 	SpawnFreak();
@@ -178,7 +178,7 @@ if(my_health > 0){
 	// alarm management
 	for(i = 0; i < array_length_1d(alarm); i++){
 		if(alarm[i] > 0){
-			alarm[i]--;
+			alarm[i]-= current_time_scale;
 		}
 	}
 	

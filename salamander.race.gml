@@ -64,8 +64,10 @@ loop = 0;
 canswap = 0;
 canpick = 0;
 
+lastscale = current_time_scale;
+
 if(cooldown > 0){
-	cooldown--;
+	cooldown-= current_time_scale;
 	canspec = false;
 } else {
 	canspec = true;
@@ -82,6 +84,7 @@ if(button_pressed(index, 'fire') && canspec = true){
 }
 if(button_released(index,"fire")){
 	is_spewing_fire = false;
+	fire_remaining = floor(fire_remaining);
 }
 
 //currently gushing flames
@@ -91,24 +94,27 @@ if(is_spewing_fire){
 	spr_walk = sprSalamanderFire;
 	correction = sign(angle_difference(fire_angle,point_direction(x,y,mouse_x[index],mouse_y[index]))) * 2;
 	fire_angle_increase = lerp(fire_angle_increase, correction, 0.1);
-	fire_angle -= fire_angle_increase;
-	fire_remaining--;
+	fire_angle -= fire_angle_increase * current_time_scale;
+	fire_remaining-= current_time_scale;
 	fireBar_alpha = 2;
 	
-	with(instance_create(x,y,TrapFire)){
-		creator = other;
-		team = creator.team;
-		direction = creator.fire_angle;
-		image_angle = direction;
-		speed = 6;
-		sprite_index = sprSalamanderBullet;
-		damage = 2;
+	if(fire_remaining - floor(fire_remaining) == 0){
+		with(instance_create(x,y,TrapFire)){
+			creator = other;
+			team = creator.team;
+			direction = creator.fire_angle;
+			image_angle = direction;
+			speed = 6;
+			sprite_index = sprSalamanderBullet;
+			damage = 2;
+		}
 	}
 } else {
 	if(fire_remaining < 60){
-		fire_remaining++; //fire refills when not in use
+		fire_remaining +=  current_time_scale; //fire refills when not in use
 	} else {
-		fireBar_alpha -= 0.1;
+		fireBar_alpha -= 0.1 * current_time_scale;
+		fire_remaining = floor(fire_remaining);
 	}
 	
 	spr_idle = sprSalamanderIdle;
@@ -119,6 +125,7 @@ if(is_spewing_fire){
 }
 
 if(fire_remaining <= 0){
+	fire_remaining = floor(fire_remaining);
 	is_spewing_fire = false;
 }
 
@@ -141,7 +148,7 @@ draw_set_color(c_red);
 draw_vertex(xx, yy);
 for(i = 0; i <= num; i += 1){
 	if((fire_remaining/fire_max) >= (i / num)){
-		if(fireBar_alpha = 1.5 || fireBar_alpha = 1.6 || fireBar_alpha = 1.8 || fireBar_alpha = 1.9){
+		if(fireBar_alpha = 1.5 || fireBar_alpha = 1.55 || fireBar_alpha = 1.6 || fireBar_alpha = 1.65  || fireBar_alpha = 1.8 || fireBar_alpha = 1.85 || fireBar_alpha = 1.9 || fireBar_alpha = 1.95 ){
 			draw_set_color(c_white);
 		} else {
 		draw_set_color(make_color_hsv(40 * (i/num),255,255));

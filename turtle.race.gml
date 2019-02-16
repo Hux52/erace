@@ -84,9 +84,9 @@ if(spinning){
 	// angle
 	var _pd = gunangle;
 	var _dd = angle_difference(spin_angle, _pd);
-	spin_angle -= min(abs(_dd), 10) * sign(_dd);
+	spin_angle -= min(abs(_dd), 10) * sign(_dd) * current_time_scale;
 	// alarm
-	// spin_time--;
+	// spin_time-= current_time_scale;
 	// movement
 	move_bounce_solid(true);
 	motion_add(spin_angle, maxspeed / 4);

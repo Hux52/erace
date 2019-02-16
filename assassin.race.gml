@@ -113,7 +113,7 @@ if(getup > 0){
 	}
 	
 	// alarm management
-	getup--;
+	getup-= current_time_scale;
 	
 	// hide wep
 	creator.wkick = 999;

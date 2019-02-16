@@ -1,6 +1,6 @@
 #define init
 //global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADpSURBVDhPvZI9CgIxEEYHvIWttYWdpWfYI3gNK4s9huAJrKzt7Bc8g6UHEIToBF74ErKL4K7Fg2Qm38vPrj0uTXDMLEHtG6LAQ8v9LPJ/gYZVArWQYrvNIjga1nEtpNi9OwWHHT3YPucRajCN4HZchT4QDl3nU7f4BorXCOtpphPwDuV7eFCvA5mABexejpWa5HfBa23BIaTQA8KZrBas4YsZZ6fSRUP0CrxxaLehu54TPqfGuBSka2Evwwi8p2EE6QSjCQgRoKZzlbBhEkD8tjInoDVON55AF/CHIaJfShI0NFgT1Nc04Q2YTjeSiZKRigAAAABJRU5ErkJggg==", 1, 0, 0);
-global.sprPortrait = sprite_add("sprites/sprPortraitScorpion.png",1 , 10, 200);
+global.sprPortrait = sprite_add("sprites/sprPortraitGoldScorpion.png",1 , 10, 200);
 
 #define create
 // player instance creation of this race
@@ -49,7 +49,7 @@ canpick = 0;
 
 // special- shoot venom
 if(button_pressed(index, "fire")){
-	if(cooldown = 0){
+	if(cooldown <= 0){
 		cooldown = 90;	// shoot venom again in 90 frames
 		venom = 25;	// shoot venom for 25 frames
 		dir = gunangle;	// initial direction, as you can't change firing direction once started
@@ -72,30 +72,32 @@ if(venom > 0){
 	}
 	sound_play_gun(sndScorpionFire, 0.2, 0.6);
 	// ambient, slow spread of bullets
-	with(instance_create(x, y, Bullet1)){
-		var acc = 80;
-		creator = other;
-		team = creator.team;
-		sprite_index = sprScorpionBullet;
-		direction = other.dir + (random(creator.accuracy) * choose(1, -1) * random(acc));
-		image_angle = direction;
-		friction = 0;
-		speed = 2;
-		damage = 2;
+	if(venom - floor(venom) = 0){
+		with(instance_create(x, y, Bullet1)){
+			var acc = 80;
+			creator = other;
+			team = creator.team;
+			sprite_index = sprScorpionBullet;
+			direction = other.dir + (random(creator.accuracy) * choose(1, -1) * random(acc));
+			image_angle = direction;
+			friction = 0;
+			speed = 2;
+			damage = 2;
+		}
+		// fast, concentrated bullets
+		with(instance_create(x, y, Bullet1)){
+			var acc = 20;
+			creator = other;
+			team = creator.team;
+			sprite_index = sprScorpionBullet;
+			direction = other.dir + (random(creator.accuracy) * choose(1, -1) * random(acc));
+			image_angle = direction;
+			friction = 0;
+			speed = 7;
+			damage = 2;
+		}
 	}
-	// fast, concentrated bullets
-	with(instance_create(x, y, Bullet1)){
-		var acc = 20;
-		creator = other;
-		team = creator.team;
-		sprite_index = sprScorpionBullet;
-		direction = other.dir + (random(creator.accuracy) * choose(1, -1) * random(acc));
-		image_angle = direction;
-		friction = 0;
-		speed = 7;
-		damage = 2;
-	}
-	venom--;
+	venom -= current_time_scale;
 }
 else{
 	// fix sprites when not firing
@@ -106,7 +108,7 @@ else{
 
 // cooldown management
 if(cooldown > 0){
-	cooldown--;
+	cooldown -= current_time_scale;
 }
 
 // outgoing contact damage

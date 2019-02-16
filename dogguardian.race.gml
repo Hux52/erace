@@ -185,7 +185,7 @@ if(jump > 0){
 		}
 	}
 	jump_dir = direction;
-	jump--;
+	jump-= current_time_scale;
 }
 else{
 	move_bounce_solid(false);
@@ -194,7 +194,7 @@ else{
 }
 
 if(bounce > 0){
-	bounce--;
+	bounce-= current_time_scale;
 }
 
 if(distance_to_object(Portal) < 60){

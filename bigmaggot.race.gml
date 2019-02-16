@@ -122,12 +122,12 @@ if(dig_alarm > 0){
 	// while digging
 	instance_create(x + random_range(-10, 10), y + random(5), Dust);
 	nexthurt = current_frame + 1;	// invincibility
-	dig_alarm--;
+	dig_alarm-= current_time_scale;
 }
 
 // cooldown management
 if(cooldown > 0){
-	cooldown--;
+	cooldown-= current_time_scale;
 }
 
 // outgoing contact damage
@@ -275,7 +275,7 @@ if(my_health > 0){
 	// alarm management
 	for(i = 0; i < array_length_1d(alarm); i++){
 		if(alarm[i] > 0){
-			alarm[i]--;
+			alarm[i]-= current_time_scale;
 		}
 	}
 	
