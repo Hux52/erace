@@ -2,7 +2,9 @@
 global.sprMenuButton = sprite_add("sprites/sprMaggotSpawnSelect.png", 1, 0, 0);
 global.sprPortrait = sprite_add("sprites/sprPortraitMaggotSpawn.png",1 , 0, 190);
 
-// character select sounds
+// level start init- MUST GO AT END OF INIT
+global.newLevel = instance_exists(GenCont);
+global.hasGenCont = false;
 global.sndSelect = sound_add("sounds/sndMaggotSpawnSelect.ogg");
 var _race = [];
 for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
@@ -15,9 +17,24 @@ while(true){
 		}
 		_race[i] = r;
 	}
+	// first chunk here happens at the start of the level, second happens in portal
+	if(instance_exists(GenCont)) global.newLevel = 1;
+	else if(global.newLevel){
+		global.newLevel = 0;
+		level_start();
+	}
+	var hadGenCont = global.hasGenCont;
+	global.hasGenCont = instance_exists(GenCont);
+	if (!hadGenCont && global.hasGenCont) {
+		// nothing yet
+	}
 	wait 1;
 }
 
+#define level_start
+with(instances_matching(Player, "race", "maggot")){
+	race = "maggotspawn";
+}
 
 #define create
 // player instance creation of this race
@@ -62,6 +79,11 @@ canswap = 0;
 canpick = 0;
 canwalk = 0;
 
+// max health fix
+if(maxhealth != 12 + skill_get(mut_rhino_skin) * 4){
+	maxhealth = 12 + skill_get(mut_rhino_skin) * 4;
+}
+
 // face direction you're "moving" as you have no weps
 if(direction > 90 and direction <= 270){
 	right = -1;
@@ -100,18 +122,28 @@ if(my_health = 0 and died = 0){
 		}
 	}
 	// maggot spawn
-	repeat(5){
+	repeat(5 + max(0, GameCont.hard)){
 		with(instance_create(x, y, CustomHitme)){
 			name = "Maggot";
 			creator = other;
 			team = creator.team;
-			spr_idle = sprMaggotIdle;
-			spr_walk = sprMaggotIdle;
-			spr_hurt = sprMaggotHurt;
-			spr_dead = sprMaggotDead;
+			if!(ultra_get(mod_current, 1)){
+				spr_idle = sprMaggotIdle;
+				spr_walk = sprMaggotIdle;
+				spr_hurt = sprMaggotHurt;
+				spr_dead = sprMaggotDead;
+				my_health = 2;
+				maxspeed = 2;
+			}
+			else{
+				spr_idle = sprRadMaggot;
+				spr_walk = sprRadMaggot;
+				spr_hurt = sprRadMaggotHurt;
+				spr_dead = sprRadMaggotDead;
+				my_health = 3;
+				maxspeed = 3;
+			}
 			sprite_index = spr_idle;
-			my_health = 2;
-			maxspeed = 2;
 			mask_index = mskMaggot;
 			size = 1;
 			image_speed = 0.3;
@@ -127,13 +159,19 @@ if(my_health = 0 and died = 0){
 			// friendly player outline
 			playerColor = player_get_color(creator.index);
 			toDraw = self;
-			script_bind_draw(draw_outline, depth, playerColor, toDraw);
+			on_draw = script_ref_create(outline_draw);
 		}
 	}
 	// become maggot
-	race = "maggot";
-	my_health = 2;
 	died = 1;
+	if!(ultra_get(mod_current, 1)){
+		race = "maggot";
+	}
+	else{
+		race = "radmaggot";
+	}
+	maxhealth = 2 + max(0, floor(GameCont.hard / 2));	// get +1 max hp every 2 levels
+	my_health = maxhealth;
 }
 
 #define maggot_step
@@ -228,7 +266,10 @@ if(my_health > 0){
 		with(instance_nearest(x, y, enemy)){
 			if(sprite_index != spr_hurt){
 				my_health -= 1;
-				sound_play(snd_hurt);
+				if(other.name = "radmaggot"){
+					my_health -= 2;
+				}
+				sound_play_pitch(snd_hurt, random_range(0.9, 1.1));
 				sprite_index = spr_hurt;
 			}
 		}
@@ -241,8 +282,18 @@ else{
 #define maggot_destroy
 // create corpse
 with(instance_create(x, y, Corpse)){
-	sprite_index = sprMaggotDead;
+	sprite_index = other.spr_dead;
 	size = 1;
+}
+
+// ultra
+if(ultra_get(mod_current, 1)){
+	with(instance_create(x, y, HorrorBullet)){
+		damage = 8;
+		direction = random(360);
+		image_angle = direction;
+		speed = 8;
+	}
 }
 
 #define maggot_hurt(damage, kb_vel, kb_dir)
@@ -321,7 +372,7 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "NOTHING";
+	case 1: return "IRRADIATED";
 	default: return "";
 }
 
@@ -329,7 +380,7 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "DOES NOTHING";
+	case 1: return "SPAWN @gRAD MAGGOTS @wTHAT FIRE @gRADS";
 	default: return "";
 }
 
@@ -350,12 +401,18 @@ switch(argument0){
 
 #define race_ttip
 // return character-specific tooltips
-return choose("HUNGRY", "WRIGGLE", "FAMILY");
+return choose("HUNGRY", "WRIGGLE", "FAMILY", "LET'S GET SOME GRUB      @r@qL@qO@qO@qO@qO@qO@qO@qO@qO@qO@qO@qO@qO");
 
-#define draw_outline(playerColor, toDraw)
+#define outline_draw
+if(instance_exists(creator)){
+	playerColor = player_get_color(creator.index);
+} 
 d3d_set_fog(1,playerColor,0,0);
 if(instance_exists(toDraw)){
     with(toDraw){
+		if(instance_exists(creator)){
+			playerColor = player_get_color(creator.index);
+		}
         draw_sprite_ext(sprite_index, -1, x - 1, y, 1 * right, 1, 0, playerColor, 1);
         draw_sprite_ext(sprite_index, -1, x + 1, y, 1 * right, 1, 0, playerColor, 1);
         draw_sprite_ext(sprite_index, -1, x, y - 1, 1 * right, 1, 0, playerColor, 1);
@@ -363,3 +420,4 @@ if(instance_exists(toDraw)){
     }
 }
 d3d_set_fog(0,c_lime,0,0);
+draw_self();
