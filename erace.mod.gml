@@ -98,6 +98,9 @@ while(true){
 }
 
 #define level_start
+with(instances_matching_ne(Player, "wantrace", null)){
+	race = wantrace;
+}
 wait(2);
 with(ChestOpen){
 	instance_destroy();
@@ -268,6 +271,8 @@ if(instance_exists(CharSelect)){
 							instance_delete(_e[0]);
 						}
 						with(instance_create(64 + lengthdir_x(50, 90 * i), 64 + lengthdir_y(50, 90 * i), global.race_names[m + 1])){
+							want_x = x;
+							want_y = y;
 							index = other.i;
 							mask_index = mskNone;
 							friction = 10;
@@ -294,6 +299,10 @@ if(instance_exists(CharSelect)){
 		global.player_races[i] = player_get_race(i);
 	}
 	with(instances_matching_ne(enemy, "index", null)){
+		speed = 0;
+		friction = 0;
+		x = want_x;
+		y = want_y;
 		for(i = 0; i < 8; i++){
 			alarm_set(i, 0);
 		}

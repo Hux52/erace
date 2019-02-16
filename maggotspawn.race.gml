@@ -32,9 +32,6 @@ while(true){
 }
 
 #define level_start
-with(instances_matching(Player, "race", "maggot")){
-	race = "maggotspawn";
-}
 
 #define create
 // player instance creation of this race
@@ -166,9 +163,11 @@ if(my_health = 0 and died = 0){
 	died = 1;
 	if!(ultra_get(mod_current, 1)){
 		race = "maggot";
+		wantrace = "maggotspawn";
 	}
 	else{
 		race = "radmaggot";
+		wantrace = "maggotspawn";
 	}
 	maxhealth = 2 + max(0, floor(GameCont.hard / 2));	// get +1 max hp every 2 levels
 	my_health = maxhealth;
