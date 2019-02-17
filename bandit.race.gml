@@ -119,6 +119,15 @@ if(u2 == 1){
 			sound_play_pitchvol(sndStrongSpiritLost,0.6 + random_range(-0.1,0.1),0.4);
 			sound_play_pitchvol(sndNecromancerRevive,0.4 + random_range(-0.1,0.1),0.8);
 			instance_create(_b.x,_b.y,ReviveFX);
+			t = choose("BORN ANEW!", "RETURN TO LIFE!", "ONCE MORE!", "EXTRA LIFE!", "I'M BACK!");
+			with(instance_create(x,y,PopupText)){
+				xstart = x;
+				ystart = y;
+				text = other.t;
+				mytext = other.t;
+				time = 10;
+				target = 0;
+			}
 			instance_delete(_b);
 		}
 	}
