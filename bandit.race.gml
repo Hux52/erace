@@ -43,6 +43,7 @@ team = 2;
 maxhealth = 4;
 melee = 0;	// can melee or not
 
+has_bandit = false; //input bubber
 
 #define game_start
 // executed after picking race and starting for each player picking this race
@@ -67,16 +68,34 @@ if(reload > 0){
 	can_shoot = true;
 }
 
-if(ultra_get(player_get_race(index), 1) == 1){
-	if(object_index = Player){
-		if(button_pressed(index, "spec") and reload <= 0){
-			weapon_post(5, 30, 10);	// weapon kick and screen shake
-			sound_play_pitchvol(sndEnemyFire,0.5,1);
+if(u1 == 1){
+	if(button_pressed(index, "spec") and reload <= weapon_get_load(wep)/2){
+		has_bandit = true;
+	}
+	if(has_bandit and can_shoot){
+	weapon_post(10, 30, 10);	// weapon kick and screen shake
+			sound_play_pitchvol(sndBloodGamble,0.5,0.6);
+			sound_play_pitchvol(sndBloodHurt,0.5,0.6);
+			with(instance_create(x + lengthdir_x(6,gunangle), y + lengthdir_y(6,gunangle), BloodGamble)){
+				image_angle = other.gunangle;
+			}
+			for(i = 0; i < 3; i++){
+				with(instance_create(x + lengthdir_x(18,gunangle), y + lengthdir_y(18,gunangle),BloodStreak)){
+					image_angle = other.gunangle - 45 + (other.i * 45);
+					direction = image_angle;
+					speed = 3;
+				}
+			}
 			reload = weapon_get_load(wep);
-			spawn_bandit();
-		}
+			with(spawn_bandit()){
+				direction = other.gunangle;
+				speed = other.maxspeed * 3;
+			}
+			
+		has_bandit = false;
 	}
 }
+
 if(u2 == 1){
 	if(my_health = 0){ //reincarnation in tarnation
 		if(instance_exists(Bandit)){
@@ -210,31 +229,42 @@ return choose("WARM BARRELS", "DUST PROOF", "PLUNDER", "FIRE FIRST, AIM LATER");
 #define bandit_step
 if(my_health > 0){
 	// speed management
-	speed = clamp(speed, 0, maxspeed);
+	speed = lerp(speed,maxspeed, 0.1 * current_time_scale);
 
+	_enemies = instances_matching_gt(enemy, "my_health", 0);
 	// targeting
-	var _e = instance_nearest(x, y, enemy);
-	if(instance_exists(_e) and distance_to_object(_e) < 100 and !collision_line(x, y, _e.x, _e.y, Wall, true, true)){
-		// target is enemy
-		if(target == noone){instance_create(x,y-8,AssassinNotice)}
-		target = _e;
+	if(array_length(_enemies) > 0){
+		for (i = 0; i < array_length(_enemies); i++){
+			if(instance_exists(_enemies[i])){
+				if(!collision_line(x, y, _enemies[i].x, _enemies[i].y, Wall, false, true)){
+					if(point_distance(x,y,_enemies[i].x,_enemies[i].y) > 150) continue;
+					if(instance_exists(_enemies[i])){
+						target = _enemies[i];
+						break;
+					}
+				}
+				target = noone;
+			}
+		}
 	} else {
 		//target is nobody
 		target = noone;
 	}
 
 	if(reload > 0){	// manage reload
-		reload--;
+		reload -= current_time_scale;
 	}
 	
 	if(wkick > 0){	// manage weapon kick
-		wkick--;
+		wkick -= current_time_scale;
 	}
 
 	if(target != noone){
-		gunangle = point_direction(x,y,target.x,target.y);
 		//shoOoOoOot
 		if(reload <= 0){
+			if(instance_exists(target)){
+				gunangle = point_direction(x,y,target.x,target.y);
+			}
 			sound_play_gun(sndEnemyFire, 0.2, 0.6);
 			with(instance_create(x, y, AllyBullet)){
 				creator = other;
@@ -251,7 +281,9 @@ if(my_health > 0){
 	}
 
 	// movement
-	motion_set(dir, maxspeed);
+	if(speed <= maxspeed){
+		motion_set(dir, maxspeed);
+	}
 	_f = instance_place(x,y,Floor);
 	if(instance_exists(_f)){
 		friction = lerp(friction, _f.traction, 0.5);
@@ -287,11 +319,20 @@ if(my_health > 0){
 		sprite_index = spr_idle;
 	}
 	
-	if(gunangle > 90 and gunangle <= 270){
-		right = -1;
-	}
-	else{
-		right = 1;
+	if(target != noone){
+		if(gunangle > 90 and gunangle <= 270){
+			right = -1;
+		}
+		else{
+			right = 1;
+		}
+	} else {
+		if(direction > 90 and direction <= 270){
+			right = -1;
+		}
+		else{
+			right = 1;
+		}
 	}
 	// face right or left
 	if(right = 1){
@@ -337,7 +378,7 @@ with (instance_create(x, y, Corpse)){
 	size = 1;
 	direction = other.direction;
 	speed = other.speed;
-	friction = 0.3;
+	friction = 0.4;
 }
 
 #define bandit_hurt(damage, kb_vel, kb_dir)
