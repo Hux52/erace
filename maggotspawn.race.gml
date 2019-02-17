@@ -238,16 +238,6 @@ if(my_health > 0){
 		}
 	}
 
-
-	var _w = instance_nearest(x, y, Wall);
-	// OLD WALL COLLISION DEBUG
-	/*if(collision_rectangle(_w.x, _w.y + 15, _w.x + 15, _w.y, self, false, false)){
-		//trace("hit wall");		// debug
-		var _f = instance_nearest(x, y, Floor);
-		x = _f.x + 8;
-		y = _f.y + 8;
-	}*/
-
 	// stop showing hurt sprite
 	if(sprite_index = spr_hurt and image_index >= 2){
 		sprite_index = spr_idle;
@@ -261,16 +251,14 @@ if(my_health > 0){
 	}
 	
 	// outgoing/incoming contact damage
-	if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
-		with(instance_nearest(x, y, enemy)){
-			if(sprite_index != spr_hurt){
-				my_health -= 1;
-				if(other.name = "radmaggot"){
-					my_health -= 2;
-				}
-				sound_play_pitch(snd_hurt, random_range(0.9, 1.1));
-				sprite_index = spr_hurt;
+	with(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
+		if(sprite_index != spr_hurt){
+			my_health -= 1;
+			if(other.name = "radmaggot"){
+				my_health -= 2;
 			}
+			sound_play_hit(snd_hurt, 0.1);
+			sprite_index = spr_hurt;
 		}
 	}
 }
@@ -300,7 +288,6 @@ if(ultra_get(mod_current, 1)){
 if(sprite_index != spr_hurt){
 	my_health -= argument0;
 	motion_add(argument2, argument1);
-	nexthurt = 3;
 	sprite_index = spr_hurt;
 }
 

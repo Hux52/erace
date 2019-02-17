@@ -94,7 +94,7 @@ if(button_pressed(index, "spec")){
 				cooldown = -1;
 				dig_alarm = 50;
 				canwalk = 0;
-				sound_play(sndBigMaggotBurrow);
+				sound_play_pitch(sndBigMaggotBurrow, random_range(0.9, 1.1));
 				// log coordinates for later
 				coords[0] = mouse_x[index];
 				coords[1] = mouse_y[index] - 8;
@@ -112,7 +112,7 @@ if(dig_alarm > 0){
 		image_index = 1;
 		x = coords[0];
 		y = coords[1];
-		sound_play(sndBigMaggotUnburrow);
+		sound_play_pitch(sndBigMaggotUnburrow, random_range(0.9, 1.1));
 	}
 	// fully out
 	else if(dig_alarm = 1){
@@ -137,8 +137,8 @@ if(collision_rectangle(x + 20, y + 10, x - 20, y - 10, enemy, 0, 1)){
 	with(instance_nearest(x, y, enemy)){
 		if(sprite_index != spr_hurt){
 			my_health -= 1;
-			sound_play(snd_hurt);
-			sound_play(sndBigMaggotBite);
+			sound_play_hit(snd_hurt, 0.1);
+			sound_play_pitch(sndBigMaggotBite, random_range(0.9, 1.1));
 			sprite_index = spr_hurt;
 			direction = other.direction;
 		}
@@ -191,6 +191,7 @@ if(my_health = 0 and died = 0){
 	died = 1;
 	// become small maggot
 	race = "maggot";
+	wantrace = "bigmaggot";
 	my_health = 2;
 }
 
@@ -286,7 +287,7 @@ if(my_health > 0){
 		with(instance_nearest(x, y, enemy)){
 			if(sprite_index != spr_hurt){
 				my_health -= 1;
-				sound_play(snd_hurt);
+				sound_play_hit(snd_hurt, 0.1);
 				sprite_index = spr_hurt;
 			}
 		}
