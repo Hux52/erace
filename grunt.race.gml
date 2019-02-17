@@ -50,8 +50,8 @@ mask_index = mskPlayer;
 // vars
 melee = 0;	// can melee or not
 roll_time = 0;	// rolling time
-grenade_time = 5;	// grenade cooldown
-
+grenade_time = 0;	// grenade cooldown
+can_grenade = true;
 
 #define game_start
 // executed after picking race and starting for each player picking this race
@@ -124,7 +124,15 @@ if(roll_time > 0){
 
 // grenade throw and alarm management
 if(grenade_time <= 0){
-	if(button_pressed(index, "pick")){
+	if(can_grenade = false){
+		sound_play_pitch(sndIDPDNadeAlmost, random_range(1.4, 1.6));
+	}
+	can_grenade = true;
+}else{
+	can_grenade = false;
+	grenade_time-= current_time_scale;
+}
+if(button_pressed(index, "pick") and can_grenade){
 		sound_play_pitch(snd_nade, random_range(0.9, 1.1));
 		with(instance_create(x, y, PopoNade)){
 			creator = other;
@@ -137,15 +145,6 @@ if(grenade_time <= 0){
 		}
 		grenade_time = 120;
 	}
-}
-else if(grenade_time = 1){
-	sound_play_pitch(sndIDPDNadeAlmost, random_range(1.4, 1.6));
-	grenade_time-= current_time_scale;
-}
-else{
-	grenade_time-= current_time_scale;
-}
-
 #define race_name
 // return race name for character select and various menus
 return "GRUNT";
