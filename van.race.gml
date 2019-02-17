@@ -67,6 +67,7 @@ sprite_change = false;	// sprites not changed
 my_wall = -4;	// van cover
 deploy_alarm = 0;
 my_portal = -4;
+want_portal = true;
 
 
 #define game_start
@@ -96,18 +97,19 @@ direction = dir;
 friction = 0;
 
 // spawn portal graphic
-if!(instance_exists(my_portal)){
+if(!instance_exists(my_portal) and want_portal = true){
 	my_portal = instance_create(x, y, CustomObject);
 	with(my_portal){
 		creator = other;
 		name = "VanPortal";
+		depth = -3;
 		sprite_index = sprVanPortalStart;
 		speed = 0;
 		friction = 0;
 		spr_shadow = mskNone;
 		mask_index = mskNone;
-		sprite_alarm = 75;
-		image_speed = 0.4;
+		sprite_alarm = 83;
+		image_speed = 0.5;
 		on_step = script_ref_create(vp_step);
 	}
 }
@@ -170,7 +172,7 @@ if(want_van <= 0){
 		with(instance_create(x, y, CustomHitme)){
 			depth = -1.8;
 			creator = other;
-			team = -99;
+			team = creator.team;
 			right = other.right;
 			direction = other.direction;
 			friction = 0;
@@ -247,16 +249,19 @@ if(sprite_alarm >= 0){
 	sprite_alarm -= current_time_scale;
 }
 
-if(sprite_alarm >= 70){
+if(sprite_alarm >= 79){
 	sprite_index = sprVanPortalStart;
 }
-else if(sprite_alarm >= 20){
+else if(sprite_alarm >= 28){
 	sprite_index = sprVanPortalCharge;
 }
 else if(sprite_alarm > 0){
 	sprite_index = sprVanPortalClose;
 }
 else if(sprite_alarm <= 0){
+	if(instance_exists(creator)){
+		creator.want_portal = false;
+	}
 	instance_destroy();
 }
 

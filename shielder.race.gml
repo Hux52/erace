@@ -43,7 +43,7 @@ else{
 // stats
 maxspeed = 4;
 team = 2;
-maxhealth = 8;
+maxhealth = 16;
 spr_shadow_y = 0;
 mask_index = mskPlayer;
 
