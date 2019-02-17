@@ -745,11 +745,11 @@ if(my_health > 0){
 	}
 	
 	if(reload > 0){	// manage reload
-		reload--;
+		reload-= current_time_scale;
 	}
 	
 	if(wkick > 0){	// manage weapon kick
-		wkick--;
+		wkick-= current_time_scale;
 	}
 	
 	// start pulling
@@ -818,7 +818,7 @@ if(my_health > 0){
 	// alarm management
 	for(i = 0; i < array_length(alarm); i++){
 		if(alarm[i] > 0){
-			alarm[i]--;
+			alarm[i]-= current_time_scale;
 		}
 	}
 	
@@ -975,7 +975,7 @@ if(my_health > 0){
 		}
 		wkick = 10;
 		alarm[1] = 3;
-		ammo--;
+		ammo-= current_time_scale;
 	}
 	
 	if(ammo > 0){	// manage ammo
@@ -983,11 +983,11 @@ if(my_health > 0){
 	}
 	
 	if(reload > 0){	// manage reload
-		reload--;
+		reload-= current_time_scale;
 	}
 	
 	if(wkick > 0){	// manage weapon kick
-		wkick--;
+		wkick-= current_time_scale;
 	}
 	
 	// start shielding
@@ -1026,7 +1026,7 @@ if(my_health > 0){
 		}
 	}
 	else if(shieldCool > 0){
-		shieldCool--;
+		shieldCool-= current_time_scale;
 	}
 	
 	//getting unstuck from walls
@@ -1054,7 +1054,7 @@ if(my_health > 0){
 	// alarm management
 	for(i = 0; i < array_length(alarm); i++){
 		if(alarm[i] > 0){
-			alarm[i]--;
+			alarm[i]-= current_time_scale;
 		}
 	}
 	
@@ -1214,15 +1214,15 @@ if(my_health > 0){
 		}
 		wkick = 10;
 		alarm[1] = 3;
-		ammo--;
+		ammo-= current_time_scale;
 	}
 	
 	if(reload > 0){	// manage reload
-		reload--;
+		reload-= current_time_scale;
 	}
 	
 	if(wkick > 0){	// manage weapon kick
-		wkick--;
+		wkick-= current_time_scale;
 	}
 	
 	// rolling
@@ -1264,7 +1264,7 @@ if(my_health > 0){
 	
 	// rolling
 	if(roll_time > 0){
-		roll_time--;
+		roll_time-= current_time_scale;
 
 		 // speed up
 		speed = maxspeed + 2;
@@ -1310,7 +1310,7 @@ if(my_health > 0){
 	// alarm management
 	for(i = 0; i < array_length(alarm); i++){
 		if(alarm[i] > 0){
-			alarm[i]--;
+			alarm[i]-= current_time_scale;
 		}
 	}
 	
