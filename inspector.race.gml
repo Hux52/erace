@@ -133,6 +133,18 @@ if(canspec){
 	}
 }
 
+if(my_health <= 0){
+	if(instance_exists(CustomHitme)){
+		sq = instances_matching(CustomHitme, "name", "squad");
+		if(array_length(sq) > 0){
+			_to = sq[0];
+		}
+	}
+	if(instance_exists(_to)){
+		mod_script_call("mod","erace","respawn_as", true, _to.class, "squad");
+	}
+}
+
 #define draw_tele(toDrawOn)
 if(instance_exists(toDrawOn)){
 	with(toDrawOn){

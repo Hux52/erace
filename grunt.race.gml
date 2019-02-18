@@ -145,6 +145,18 @@ if(button_pressed(index, "pick") and can_grenade){
 		}
 		grenade_time = 120;
 	}
+
+if(my_health <= 0){
+	if(instance_exists(CustomHitme)){
+		sq = instances_matching(CustomHitme, "name", "squad");
+		if(array_length(sq) > 0){
+			_to = sq[0];
+		}
+	}
+	if(instance_exists(_to)){
+		mod_script_call("mod","erace","respawn_as", true, _to.class, "squad");
+	}
+}
 #define race_name
 // return race name for character select and various menus
 return "GRUNT";

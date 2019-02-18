@@ -43,7 +43,7 @@ else{
 // stats
 maxspeed = 4;
 team = 2;
-maxhealth = 16;
+maxhealth = 45;
 spr_shadow_y = 0;
 mask_index = mskPlayer;
 
@@ -130,10 +130,22 @@ if(shield_time = 0){
 	}
 }
 
+if(my_health <= 0){
+	if(instance_exists(CustomHitme)){
+		sq = instances_matching(CustomHitme, "name", "squad");
+		if(array_length(sq) > 0){
+			_to = sq[0];
+		}
+	}
+	if(instance_exists(_to)){
+		mod_script_call("mod","erace","respawn_as", true, _to.class, "squad");
+	}
+}
+
 
 #define race_name
 // return race name for character select and various menus
-return "SHIELDER";
+return "I.D.P.D. SHIELDER";
 
 
 #define race_text

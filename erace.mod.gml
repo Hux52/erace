@@ -572,6 +572,63 @@ draw_rectangle(_x1, _y1, _x2, _y2,false);
 draw_set_alpha(_a);
 draw_set_color(_c);
 
+/// custom = whether a CustomHitme is needed
+/// as_what = respawn as this thing 
+/// requires_what = required object to respawn
+#define respawn_as(custom, as_what, requires_what)
+
+if(custom = true){
+	_req = instances_matching(CustomHitme, "name", requires_what);
+	if(array_length(_req) > 0){
+		_b = _req[0];
+	}
+} else {
+	if(instance_exists(requires_what)){
+		_b = instance_nearest(x,y,requires_what);
+	} 
+}	
+
+if(instance_exists(_b)){
+	with(instance_create(x,y,Corpse)){
+		sprite_index = other.spr_dead;
+		size = 1;
+		direction = other.direction;
+		speed = other.speed;
+		friction = 0.4;
+	}
+
+	sound_play_pitchvol(snd_dead, random_range(0.9,1.1), 0.6);
+
+	if(as_what != race){
+		race = as_what;
+	}
+	x = _b.x;
+	y = _b.y;
+	if("wep" in _b){
+		wep = _b.wep;
+	}
+	my_health = ceil(_b.my_health); //set health to the other object's health
+	canspirit = true; // reset spirit
+	spr_idle = _b.spr_idle;
+	spr_walk = _b.spr_walk;
+	spr_hurt = _b.spr_hurt;
+	spr_dead = _b.spr_dead;
+	sound_play_pitchvol(sndStrongSpiritGain,0.8 + random_range(-0.1,0.1),0.4);
+	sound_play_pitchvol(sndStrongSpiritLost,0.6 + random_range(-0.1,0.1),0.4);
+	sound_play_pitchvol(sndGammaGutsProc, 0.5 + random_range(-0.1,0.1),0.9);
+	sound_play_pitchvol(sndNecromancerRevive,0.4 + random_range(-0.1,0.1),0.4);
+
+	t = choose("BORN ANEW!", "RETURN TO LIFE!", "ONCE MORE!", "EXTRA LIFE!", "I'M BACK!", "TAKING OVER!", "COME BACK!");
+	with(instance_create(x,y,PopupText)){
+		xstart = x;
+		ystart = y;
+		text = other.t;
+		mytext = other.t;
+		time = 10;
+		target = 0;
+	}
+	instance_delete(_b);
+}
 #define chat_command
 // chat commands
 var command = string_upper(argument0);
