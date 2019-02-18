@@ -89,6 +89,8 @@ else{
 	right = 1;
 }
 
+u1 = ultra_get(mod_current, 1);
+
 // special- self destruct init
 if(button_pressed(index, "spec") or button_pressed(index, "fire")){
 	if(self_destruct = -1){
@@ -121,23 +123,24 @@ if(my_health = 0 and died = 0){
 	// maggot spawn
 	repeat(5 + max(0, GameCont.hard)){
 		with(instance_create(x, y, CustomHitme)){
-			name = "Maggot";
 			creator = other;
 			team = creator.team;
-			if!(ultra_get(mod_current, 1)){
+			if!(other.u1){
+				name = "Maggot";
 				spr_idle = sprMaggotIdle;
 				spr_walk = sprMaggotIdle;
 				spr_hurt = sprMaggotHurt;
 				spr_dead = sprMaggotDead;
-				my_health = 2;
+				my_health = 2 + (skill_get(mut_rhino_skin) * 4) + max(0, floor(GameCont.hard / 2));	// get +1 max hp every 2 levels
 				maxspeed = 2;
 			}
 			else{
+				name = "RadMaggot";
 				spr_idle = sprRadMaggot;
 				spr_walk = sprRadMaggot;
 				spr_hurt = sprRadMaggotHurt;
 				spr_dead = sprRadMaggotDead;
-				my_health = 3;
+				my_health = 2 + (skill_get(mut_rhino_skin) * 4) + max(0, floor(GameCont.hard / 2));	// get +1 max hp every 2 levels
 				maxspeed = 3;
 			}
 			sprite_index = spr_idle;
@@ -169,7 +172,7 @@ if(my_health = 0 and died = 0){
 		race = "radmaggot";
 		wantrace = "maggotspawn";
 	}
-	maxhealth = 2 + max(0, floor(GameCont.hard / 2));	// get +1 max hp every 2 levels
+	maxhealth = 2 + (skill_get(mut_rhino_skin) * 4) + max(0, floor(GameCont.hard / 2));	// get +1 max hp every 2 levels
 	my_health = maxhealth;
 }
 
@@ -275,12 +278,16 @@ with(instance_create(x, y, Corpse)){
 
 // ultra
 if(ultra_get(mod_current, 1)){
-	with(instance_create(x, y, HorrorBullet)){
-		damage = 8;
-		direction = random(360);
-		image_angle = direction;
-		speed = 8;
+	repeat(4){
+		with(instance_create(x, y, HorrorBullet)){
+			team = 2;
+			damage = 2;
+			direction = random(360);
+			image_angle = direction;
+			speed = random_range(6,8);
+		}
 	}
+	instance_create(x,y,GammaBlast);
 }
 
 #define maggot_hurt(damage, kb_vel, kb_dir)
@@ -366,7 +373,7 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "SPAWN @gRAD MAGGOTS @wTHAT FIRE @gRADS";
+	case 1: return "SPAWN @gRAD MAGGOTS @sTHAT EXPLODE INTO @gRADIATION";
 	default: return "";
 }
 

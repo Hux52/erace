@@ -87,6 +87,42 @@ if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
 	}
 }
 
+//respawn as other maggot
+_maggots = instances_matching(CustomHitme, "name", "Maggot");
+	if(my_health = 0){ //reincarnation in tarnation
+if(array_length(_maggots) > 0){
+	choice = irandom(array_length(_maggots) - 1);
+	_b = _maggots[choice];
+		with(instance_create(x,y,Corpse)){
+			sprite_index = other.spr_dead;
+			size = 1;
+			direction = other.direction;
+			speed = other.speed;
+			friction = 0.4;
+		}
+		x = _b.x;
+		y = _b.y;
+		my_health = ceil(_b.my_health);
+		canspirit = true;
+		sound_play_pitchvol(sndStrongSpiritGain,0.8 + random_range(-0.1,0.1),0.2);
+		sound_play_pitchvol(sndStrongSpiritLost,0.6 + random_range(-0.1,0.1),0.2);
+		sound_play_pitchvol(sndBigMaggotUnburrow,0.7 + random_range(-0.1,0.1),0.9);
+
+		instance_create(x,y,MeatExplosion);
+
+		t = choose("BORN ANEW!", "RETURN TO LIFE!", "ONCE MORE!", "EXTRA LIFE!", "I'M BACK!");
+		with(instance_create(x,y,PopupText)){
+			xstart = x;
+			ystart = y;
+			text = other.t;
+			mytext = other.t;
+			time = 10;
+			target = 0;
+		}
+		instance_delete(_b);
+	}
+}
+
 #define race_name
 // return race name for character select and various menus
 return "MAGGOT";

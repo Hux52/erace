@@ -168,7 +168,8 @@ if(my_health = 0 and died = 0){
 			spr_hurt = sprMaggotHurt;
 			spr_dead = sprMaggotDead;
 			sprite_index = spr_idle;
-			my_health = 2;
+			maxhealth = 2 + (skill_get(mut_rhino_skin) * 4);
+			my_health = maxhealth;//2 + (skill_get(mut_rhino_skin) * 4);
 			maxspeed = 2;
 			mask_index = mskMaggot;
 			size = 1;
@@ -192,7 +193,7 @@ if(my_health = 0 and died = 0){
 	// become small maggot
 	race = "maggot";
 	wantrace = "bigmaggot";
-	my_health = 2;
+	my_health = 2 + (skill_get(mut_rhino_skin) * 4);
 }
 
 #define maggot_step
