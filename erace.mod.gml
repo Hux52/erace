@@ -621,7 +621,6 @@ if(instance_exists(_b)){
 		wep = _b.wep;
 	}
 	my_health = ceil(_b.my_health); //set health to the other object's health
-	canspirit = true; // reset spirit
 	spr_idle = _b.spr_idle;
 	spr_walk = _b.spr_walk;
 	spr_hurt = _b.spr_hurt;
