@@ -376,12 +376,12 @@ if(nexthurt <= 0){
 
 #define race_name
 // return race name for character select and various menus
-return "VAN";
+return "I.D.P.D. VAN";
 
 
 #define race_text
 // return passive and active for character selection screen
-return "CONTACT DAMAGE";
+return "CONTACT DAMAGE#@sDEPLOY @bREINFORCEMENTS#FREEZE!";
 
 
 #define race_portrait
