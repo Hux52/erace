@@ -161,7 +161,7 @@ if(u2 == 1){
 	spr_dead = global.sprLightningSpiderDead;
 
 	if(lightning_timer > 0){
-		lightning_timer -= 1;
+		lightning_timer -= current_time_scale;
 	} else {
 		lightning_timer = irandom_range(5,25);
 		sound_play_pitchvol(sndLightningHit,random_range(0.6,0.8), 0.5);
@@ -261,6 +261,8 @@ if(u1 == 1){
 		if(split_chance_death <= 25 + (global.debug_haHAA*75)){
 			my_health = maxhealth - 1 - (global.debug_haHAA * 16);
 			spawn_spood(1,maxhealth-1, player_get_color(index));
+		} else {
+			mod_script_call("mod","erace","respawn_as", true, "spider", "CursedSpiderFriendly");
 		}
 	}
 	if(sprite_index == spr_hurt and image_index == 2){
