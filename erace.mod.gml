@@ -240,9 +240,14 @@ with(enemy){
     }
 }
 
-// Boiling Veins' HP from 4 up to half of max hp
 with(Player){
+// Boiling Veins' HP from 4 up to half of max hp
 	boilcap = floor(maxhealth/2);
+	if(melee == 1){
+		// Boiling Veins automaticall given to melee races
+		skill_set(mut_boiling_veins, 1);
+		skill_set_active("fake_veins", 0);
+	}
 }
 
 // berid of locked race buttons
