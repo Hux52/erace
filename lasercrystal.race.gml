@@ -78,6 +78,9 @@ canpick = 0;
 
 footstep = 10;
 
+//passive: is floaty
+friction = 0.2;
+
 u1 = ultra_get(player_get_race(index), 1);
 u2 = ultra_get(player_get_race(index), 2);
 

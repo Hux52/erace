@@ -76,6 +76,9 @@ if(wep != 0){
 
 footstep = 10;
 
+//passive: is floaty
+friction = 0.3;
+
 // face direction you're moving in, as you have no weps
 if(direction > 90 and direction <= 270){
 	right = -1;
