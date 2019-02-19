@@ -57,6 +57,9 @@ skill_set_active(mut_shotgun_shoulders, 0);
 skill_set_active(mut_lucky_shot, 0);
 skill_set_active(mut_back_muscle, 0);
 
+// disable boiling veins for new boiling veins
+skill_set_active(mut_boiling_veins, 0);
+
 // replace chest corpse sprites
 // open_sprites = [sprAmmoChestMysteryOpen, sprAmmoChestOpen, sprAmmoChestSteroidsOpen, sprWeaponChestOpen, sprWeaponChestBigOpen, sprWeaponChestSteroidsUltraOpen];
 // for(i = 0; i < array_length(open_sprites); i++){
@@ -235,6 +238,11 @@ with(enemy){
 			}
         }
     }
+}
+
+// Boiling Veins' HP from 4 up to half of max hp
+with(Player){
+	boilcap = floor(maxhealth/2);
 }
 
 // berid of locked race buttons
