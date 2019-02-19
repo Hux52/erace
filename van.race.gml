@@ -68,6 +68,10 @@ my_wall = -4;	// van cover
 deploy_alarm = 0;
 my_portal = -4;
 want_portal = true;
+speed = 0;
+roll_time = 0;
+sprite_angle = 0;
+my_direction = noone;
 
 
 #define game_start
@@ -96,13 +100,47 @@ direction = dir;
 // movement
 friction = 0;
 
+//direction thing
+if(instance_exists(my_direction) == false){
+	if(want_van > 0){
+		my_direction = instance_create(x,y, CustomObject);
+	}
+	with(my_direction){
+		name = "VanDirection";
+		d = 1; //left or right
+		depth = -10;
+		sprite_index = sprRogueStrike;
+		image_alpha = 0.3;
+		image_speed = 0.4;
+		speed = 0;
+		friction = 0;
+		spr_shadow = mskNone;
+		mask_index = mskNone;
+		image_speed = 0.5;
+	}
+} else {
+	with(my_direction){
+		if(button_pressed(other.index, "west")){
+			d = -1;
+		} 
+		if(button_pressed(other.index, "east")){
+			d = 1;
+		}
+		image_xscale = d;
+		other.dir = d;
+	}
+	if(want_van <= 0){
+		instance_delete(my_direction);
+	}
+}
+
 // spawn portal graphic
 if(!instance_exists(my_portal) and want_portal = true){
 	my_portal = instance_create(x, y, CustomObject);
 	with(my_portal){
 		creator = other;
 		name = "VanPortal";
-		depth = -3;
+		depth = -11;
 		sprite_index = sprVanPortalStart;
 		speed = 0;
 		friction = 0;
