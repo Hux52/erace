@@ -152,7 +152,7 @@ if(charge_cool > 0){
 	charge_cool-= current_time_scale;
 	spr_walk = sprRatkingRageAttack;
 	spr_idle = sprRatkingRageAttack;
-	move_towards_point(x + lengthdir_x(maxspeed + 3, direction), y + lengthdir_y(maxspeed + 3, direction), maxspeed + 3);
+	move_towards_point(x + lengthdir_x((maxspeed + 3) * current_time_scale, direction), y + lengthdir_y((maxspeed + 3) * current_time_scale, direction), (maxspeed + 3) * current_time_scale);
 	// destroy walls
 	var _w = instance_nearest(x, y, Wall);
 	if(instance_exists(_w)){
