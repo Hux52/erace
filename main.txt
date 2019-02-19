@@ -16,6 +16,9 @@ weps
 /loadwep inspector
 /loadwep shielder
 
+skill
+/loadskill skill/fake_veins
+
 desert
 /loadrace maggotspawn
 /loadrace bigmaggot
