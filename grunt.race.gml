@@ -159,12 +159,12 @@ if(my_health <= 0){
 }
 #define race_name
 // return race name for character select and various menus
-return "GRUNT";
+return "I.D.P.D. GRUNT";
 
 
 #define race_text
 // return passive and active for character selection screen
-return "CAN ROLL@b#FREEZE!";
+return "@sCAN @wROLL#@sTHROW @bGRENADES@b#FREEZE!";
 
 
 #define race_portrait

@@ -155,12 +155,12 @@ instance_destroy();
 
 #define race_name
 // return race name for character select and various menus
-return "INSPECTOR";
+return "I.D.P.D. INSPECTOR";
 
 
 #define race_text
 // return passive and active for character selection screen
-return "HAS TELEKINESIS@b#FREEZE!";
+return "@sHAS @wTELEKINESIS#@sTHROW @bGRENADES@b#FREEZE!";
 
 
 #define race_portrait

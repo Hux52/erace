@@ -57,6 +57,9 @@ skill_set_active(mut_shotgun_shoulders, 0);
 skill_set_active(mut_lucky_shot, 0);
 skill_set_active(mut_back_muscle, 0);
 
+// disable boiling veins for new boiling veins
+skill_set_active(mut_boiling_veins, 0);
+
 // replace chest corpse sprites
 // open_sprites = [sprAmmoChestMysteryOpen, sprAmmoChestOpen, sprAmmoChestSteroidsOpen, sprWeaponChestOpen, sprWeaponChestBigOpen, sprWeaponChestSteroidsUltraOpen];
 // for(i = 0; i < array_length(open_sprites); i++){
@@ -235,6 +238,16 @@ with(enemy){
 			}
         }
     }
+}
+
+with(Player){
+// Boiling Veins' HP from 4 up to half of max hp
+	boilcap = floor(maxhealth/2);
+	if(melee == 1){
+		// Boiling Veins automaticall given to melee races
+		skill_set(mut_boiling_veins, 1);
+		skill_set_active("fake_veins", 0);
+	}
 }
 
 // berid of locked race buttons
@@ -608,7 +621,6 @@ if(instance_exists(_b)){
 		wep = _b.wep;
 	}
 	my_health = ceil(_b.my_health); //set health to the other object's health
-	canspirit = true; // reset spirit
 	spr_idle = _b.spr_idle;
 	spr_walk = _b.spr_walk;
 	spr_hurt = _b.spr_hurt;

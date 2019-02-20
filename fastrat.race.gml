@@ -112,16 +112,20 @@ if(age <= 0){
 	age = 150;
 	my_health -= 1;
 }
-
 // on death
-if(my_health = 0 && hasDied = false){
-	sound_play(snd_dead);
-	// effect
-	with(instance_create(x, y, AcidStreak)){
-		speed = 8;
-		direction = other.direction;
+if(my_health < 1){
+	if(hasDied = false){
+		sound_play(snd_dead);
+		// effect
+		with(instance_create(x, y, AcidStreak)){
+			speed = 8;
+			direction = other.direction;
+		}
+		hasDied = true;
 	}
-	hasDied = true;
+	mod_script_call("mod","erace","respawn_as", true, "fastrat", "Fastrat");
+} else {
+	hasDied = false;
 }
 
 #define race_name

@@ -47,7 +47,7 @@ mask_index = mskPlayer;
 canwalk = 1;
 
 // vars
-melee = 1;	// can melee or not
+melee = 0;	// can melee or not
 cooldown = 0;
 cooldown_base = 15;
 explo_timer = 0;
@@ -75,6 +75,9 @@ if(wep != 0){
 }
 
 footstep = 10;
+
+//passive: is floaty
+friction = 0.3;
 
 // face direction you're moving in, as you have no weps
 if(direction > 90 and direction <= 270){

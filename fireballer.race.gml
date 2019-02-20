@@ -71,8 +71,8 @@ if(image_index > 2 and image_index < 4){
 	spr_shadow_y = -4;
 }
 
-//passive: floats over terrain
-friction = 0.45;
+//passive: is floaty
+friction = 0.2;
 
 u1 = ultra_get(player_get_race(index),1);
 u2 = ultra_get(player_get_race(index),2);
