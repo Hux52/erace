@@ -106,7 +106,7 @@ canswap = 0;
 canpick = 0;
 canwalk = 0;
 friction = 69;
-image_speed = current_time_scale / 2;
+image_speed = 0.5;
 
 if(wep != "turret"){
 	wep = "turret";
