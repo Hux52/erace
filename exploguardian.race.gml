@@ -47,7 +47,7 @@ mask_index = mskPlayer;
 canwalk = 1;
 
 // vars
-melee = 1;	// can melee or not
+melee = 0;	// can melee or not
 cooldown = 0;
 cooldown_base = 15;
 explo_timer = 0;

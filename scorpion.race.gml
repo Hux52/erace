@@ -46,7 +46,7 @@ mask_index = mskPlayer;
 cooldown = 0;	// cooldown til next fire
 venom = 0;	// firing duration
 dir = 0;	// initial fire direction
-melee = 1;	// can melee or not
+melee = 0;	// can melee or not
 
 #define game_start
 // executed after picking race and starting for each player picking this race
