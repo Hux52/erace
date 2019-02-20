@@ -22,7 +22,7 @@ global.races = [
 					["raven", "salamander", "sniper"],
 					["spider", "lasercrystal"],
 					[ "bandit_snow", "snowbot", "wolf","snowtank"],
-					["freak","explofreak","rhinofreak","necromancer"],
+					["freak", "explofreak", "rhinofreak", "turret", "necromancer"],
 					["guardian", "exploguardian", "dogguardian"],
 					["turtle", "molefish", "molesarge", "fireballer", "jock", "grunt", "inspector", "shielder", "van"]
 				];	// please add races in the order and area you want them to be displayed
@@ -33,8 +33,8 @@ global.race_names = ["maggotspawn", MaggotSpawn, "bigmaggot", BigMaggot, "bandit
 					Scorpion, "rat", Rat, "ratking", Ratking, "exploder", Exploder, "gator", Gator, 
 					"assassin", MeleeBandit, "raven", Raven, "salamander", Salamander, "sniper", 
 					Sniper, "spider", Spider, "lasercrystal", LaserCrystal, "snowbot", SnowBot, "wolf", 
-					Wolf, "bandit_snow", Bandit, "snowtank", SnowTank, "freak", Freak, "explofreak", ExploFreak, "rhinofreak", RhinoFreak, "necromancer", 
-					Necromancer, "guardian", Guardian, "exploguardian", ExploGuardian, "dogguardian", DogGuardian,
+					Wolf, "bandit_snow", Bandit, "snowtank", SnowTank, "freak", Freak, "explofreak", ExploFreak, "rhinofreak", RhinoFreak, "turret", Turret,
+					"necromancer", Necromancer, "guardian", Guardian, "exploguardian", ExploGuardian, "dogguardian", DogGuardian,
 					"turtle", Turtle, "molefish", Molefish, "molesarge", Molesarge, "jock", Jock, "fireballer", FireBaller, "grunt", Grunt, "inspector", Inspector, "shielder", Shielder, "van", Van];	// piss off
 
 global.deselect_color = make_color_hsv(0, 0, 80);	// dimmnessss :)

@@ -7,6 +7,7 @@ weps
 /loadwep raven
 /loadwep guardian
 /loadwep necromancer
+/loadwep turret
 /loadwep sniper
 /loadwep sniper_ultra
 /loadwep super_sniper_cannon
@@ -48,6 +49,7 @@ labs
 /loadrace freak
 /loadrace explofreak
 /loadrace rhinofreak
+/loadrace turret
 /loadrace necromancer
 
 palace

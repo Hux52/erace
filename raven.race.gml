@@ -129,7 +129,7 @@ if(button_pressed(index, "spec")){
 					
 					// nearest 8 x
 					while(_x1 % 8 != 0){
-						_x1-= current_time_scale;
+						_x1--;
 					}
 					while(_x2 % 8 != 0){
 						_x2++;
@@ -146,7 +146,7 @@ if(button_pressed(index, "spec")){
 					
 					// nearest 8 y
 					while(_y1 % 8 != 0){
-						_y1-= current_time_scale;
+						_y1--;
 					}
 					while(_y2 % 8 != 0){
 						_y2++;

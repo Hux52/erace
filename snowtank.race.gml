@@ -4,6 +4,8 @@ global.sprMenuButton = sprite_add("sprites/sprSnowTankSelect.png", 1, 0, 0);
 // character select portrait
 global.sprPortrait = sprite_add("/sprites/sprPortraitSnowTank.png", 1, 5, 198);
 
+global.sprThruster = sprite_add("/sprites/sprTankThruster.png", 8, 24, 24);
+
 // character select sounds
 // global.sndSelect = sound_add("sounds/sndBanditSelect.ogg");
 // var _race = [];
