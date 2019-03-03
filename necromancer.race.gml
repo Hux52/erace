@@ -1,5 +1,6 @@
 #define init
 global.sprMenuButton = sprite_add("sprites/sprNecromancerSelect.png", 1, 0, 0);
+global.sprPortrait = sprite_add("sprites/sprPortraitNecromancer.png",1 , 35, 205);
 
 
 #define create
@@ -58,7 +59,7 @@ return "REVIVES @rCORPSES";
 
 #define race_portrait
 // return portrait for character selection screen and pause menu
-return sprBigPortraitChickenHeadless;
+return global.sprPortrait;
 
 
 #define race_mapicon
