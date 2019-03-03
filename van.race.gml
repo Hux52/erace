@@ -389,6 +389,8 @@ if(want_van >= 0){
 if("creator" in self){
 	x = view_xview[creator.index];
 	y = view_yview[creator.index];
+	image_xscale = game_width/320;
+	image_yscale = game_height/240;
 	image_alpha = 0.5;
 
 	if(creator.deploy_alarm < 0 or creator.want_van > 0 or instance_exists(GenCont)){
