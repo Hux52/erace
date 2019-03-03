@@ -2,6 +2,13 @@
 global.sprMenuButton = sprite_add("sprites/sprVanSelect.png", 1, 0, 0);
 global.sprPortrait = mskNone;
 global.sprEmptyHurt = sprite_add("sprites/sprDogHit.png", 3, 0, 0);
+global.sprAnime = sprite_add("sprites/anime_squish.png", 30, 0, 0);
+global.sndmusAbegin = sound_add("sounds/sndAbegin.ogg");
+global.sndmusAloop = sound_add("sounds/sndAloop.ogg");
+global.sndmusBbegin = sound_add("sounds/sndBbegin.ogg");
+global.sndmusBloop = sound_add("sounds/sndBloop.ogg");
+global.sndRecordA = sound_add("sounds/sndRecordScratch1.ogg");
+global.sndRecordB = sound_add("sounds/sndRecordScratch2.ogg");
 
 // level start init- MUST GO AT END OF INIT
 global.newLevel = instance_exists(GenCont);
@@ -57,6 +64,7 @@ spr_shadow_y = -8;
 spr_shadow = mskNone;
 mask_index = mskNone;
 canwalk = 0;
+friction = 0;
 right = choose(-1, 1);
 dir = right;
 
@@ -72,6 +80,23 @@ speed = 0;
 roll_time = 0;
 sprite_angle = 0;
 my_direction = noone;
+my_anime = noone;
+music_index = choose(0,1);
+music_start = [global.sndmusAbegin,global.sndmusBbegin];
+music_loop = [global.sndmusAloop, global.sndmusBloop];
+is_in_portal = false;
+
+if("anime_sound_start" not in self){
+	anime_sound_start = -1;
+}
+
+if("anime_sound_loop" not in self){
+	anime_sound_loop = -1;
+} else {
+	if(audio_is_playing(anime_sound_loop)){
+		sound_stop(anime_sound_loop);
+	}
+}
 
 
 #define game_start
@@ -82,6 +107,9 @@ my_direction = noone;
 #define step
 // executed within each player instance of this race after step
 // most actives and passives handled here
+
+footstep = 10;
+u1 = ultra_get(player_get_race(index), 1);
 
 // no weps
 canswap = 0;
@@ -94,11 +122,8 @@ if(wep != 0){
 canwalk = 0;
 
 // sprite faces direction, as you have no weps
-right = dir;
-direction = dir;
-
-// movement
-friction = 0;
+right = 1;
+//direction = dir;
 
 //direction thing
 if(instance_exists(my_direction) == false){
@@ -128,6 +153,13 @@ if(instance_exists(my_direction) == false){
 		}
 		image_xscale = d;
 		other.dir = d;
+		if(other.u1 == 1){
+			if(d = 1){
+				other.sprite_angle = 0;
+			} else {
+				other.sprite_angle = 180;
+			}
+		}
 	}
 	if(want_van <= 0){
 		instance_delete(my_direction);
@@ -170,18 +202,90 @@ if(want_van <= 0){
 			my_wall = -4;
 		}
 		sprite_change = true;
-	}
-	move_bounce_all(false);
-	move_bounce_solid(false);
-	with(collision_rectangle(x + 42, y + 22, x - 42, y - 22, Wall, 0, 1)){
-		if(mask_index == mskNone){
-			continue;
+		if(audio_is_playing(anime_sound_start)){
+			sound_stop(anime_sound_start);
 		}
-		instance_create(x, y, FloorExplo);
-		instance_destroy();
 	}
 
-	x += maxspeed * dir;
+	if(u1 == 1){
+		if(instance_exists(Portal)){			
+			if(audio_is_playing(anime_sound_loop)){
+				sound_stop(anime_sound_loop);
+				sound_play(choose(global.sndRecordA,global.sndRecordB));
+			}
+			_port = instance_nearest(x,y,Portal);
+			if(point_distance(x,y,_port.x,_port.y) < 25){
+				is_in_portal = true;
+				direction = point_direction(x,y, _port.x,_port.y);
+			} else {
+				is_in_portal = false;
+			}
+		} else {
+			if(audio_is_playing(anime_sound_loop) == false){
+				anime_sound_loop = sound_loop(music_loop[music_index]);
+			}
+		}
+		while(collision_rectangle(x + 42, y + 40, x - 42, y - 40, Wall, 0, 1) != noone){
+			with(collision_rectangle(x + 42, y + 40, x - 42, y - 40, Wall, 0, 1)){
+				if(mask_index == mskNone){
+					continue;
+				}
+				instance_create(x, y, FloorExplo);
+				instance_destroy();
+			}
+		}
+		deploy_alarm = 20;
+		friction = 0.4;
+		if(instance_exists(my_anime) == false){
+			my_anime = instance_create(x,y,CustomObject);
+		} else {
+			with(my_anime){
+				creator = other;
+				name = "animeSpeed";
+				depth = -100;
+				sprite_index = global.sprAnime;
+				speed = 0;
+				friction = 0;
+				spr_shadow = mskNone;
+				mask_index = mskNone;
+				image_speed = 1;
+				on_step = script_ref_create(anime_step);
+
+			}
+		}
+		sprite_angle += (button_check(index,"west") * 7) - ((button_check(index,"east") * 7));
+		if(abs(sprite_angle mod 360) >= 90 and abs(sprite_angle mod 360) <= 270){
+			image_yscale = -1;
+		} else {
+			image_yscale = 1;
+		}
+		maxspeed = 10;
+
+		if(is_in_portal = false){
+			if(speed < 3){
+				motion_set(sprite_angle, 3);
+			}
+			motion_add(sprite_angle, 0.8);
+		}
+
+		if(button_pressed(index,"spec")){
+			deploy_alarm = -1;
+			if(audio_is_playing(anime_sound_loop)){
+				sound_stop(anime_sound_loop);
+				sound_play(choose(global.sndRecordA,global.sndRecordB));
+			}
+		}
+	} else {
+		with(collision_rectangle(x + 42, y + 22, x - 42, y - 22, Wall, 0, 1)){
+			if(mask_index == mskNone){
+				continue;
+			}
+			instance_create(x, y, FloorExplo);
+			instance_destroy();
+		}
+		x += maxspeed * dir;
+		right = dir;
+	}
 
 	// outgoing contact damage
 	with(collision_rectangle(x + 37, y + 22, x - 37, y - 22, enemy, 0, 1)){
@@ -207,8 +311,10 @@ if(want_van <= 0){
 	}
 	else{
 		sound_play(sndVanOpen);
+		sprite_angle = 0;
+		image_yscale = 1;
 		with(instance_create(x, y, CustomHitme)){
-			depth = -1.8;
+			depth = 1;
 			creator = other;
 			team = creator.team;
 			right = other.right;
@@ -256,7 +362,11 @@ if(want_van <= 0){
 else{
 	if(my_wall = -4){
 		my_wall = instance_create(x, y, Wall);
-		sound_play(sndVanWarning);
+		if(u1 == 0){
+			sound_play(sndVanWarning);
+		} else {
+			anime_sound_start = sound_play_pitchvol(music_start[music_index], 1, 2);
+		}
 		with(my_wall){
 			creator = other;
 			mask_index = mskNone;
@@ -266,12 +376,25 @@ else{
 			name = "VanCover";
 		}
 	}
+	if(instance_exists(my_anime)){
+		instance_delete(my_anime);
+	}
 }
 
 if(want_van >= 0){
 	want_van -= current_time_scale;
 }
 
+#define anime_step
+if("creator" in self){
+	x = view_xview[creator.index];
+	y = view_yview[creator.index];
+	image_alpha = 0.5;
+
+	if(creator.deploy_alarm < 0 or creator.want_van > 0 or instance_exists(GenCont)){
+		instance_destroy(); // delet this
+	}
+}
 
 #define vp_step
 /*if(random(3) < 1){
