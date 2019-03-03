@@ -568,11 +568,19 @@ _a = draw_get_alpha();
 draw_set_color(c_white);
 if(t < 10){
 	draw_set_alpha(min(abs(cos(t*3 + area/8)), (-1*t + 3)));
-	draw_rectangle(_x1, _y1, _x2, _y2,true);
+	draw_point_color(_x1,_y1,c_white); //lol
+	draw_line_width_color(_x1, _y1, _x2, _y1, 1, c_white, c_white);
+	draw_line_width_color(_x2, _y1, _x2, _y2, 1, c_white, c_white);
+	draw_line_width_color(_x2, _y2, _x1, _y2, 1, c_white, c_white);
+	draw_line_width_color(_x1, _y2, _x1, _y1, 1, c_white, c_white);
 }
 if(mouse_over){
 	draw_set_alpha(1);
-	draw_rectangle(_x1, _y1, _x2, _y2,true);
+	draw_point_color(_x1,_y1,c_white); // pixel that's omitted for some reason in 1x scaling
+	draw_line_width_color(_x1, _y1, _x2, _y1, 1, c_white, c_white);
+	draw_line_width_color(_x2, _y1, _x2, _y2, 1, c_white, c_white);
+	draw_line_width_color(_x2, _y2, _x1, _y2, 1, c_white, c_white);
+	draw_line_width_color(_x1, _y2, _x1, _y1, 1, c_white, c_white);
 	draw_set_font(fntSmall);
 	draw_set_halign(fa_center);
 	draw_set_valign(fa_top);
