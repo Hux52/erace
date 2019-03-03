@@ -167,6 +167,10 @@ if(my_health = 0 and died = 0){
 			spr_walk = sprMaggotIdle;
 			spr_hurt = sprMaggotHurt;
 			spr_dead = sprMaggotDead;
+
+			// sounds
+			snd_hurt = sndHitFlesh;
+			snd_dead = sndEnemyDie;
 			sprite_index = spr_idle;
 			maxhealth = 2 + (skill_get(mut_rhino_skin) * 4);
 			my_health = maxhealth;//2 + (skill_get(mut_rhino_skin) * 4);
@@ -299,6 +303,7 @@ else{
 }
 
 #define maggot_destroy
+sound_play_pitchvol(snd_dead, random_range(0.9,1.1), 0.6);
 // create corpse
 with(instance_create(x, y, Corpse)){
 	sprite_index = sprMaggotDead;
@@ -308,10 +313,13 @@ with(instance_create(x, y, Corpse)){
 #define maggot_hurt(damage, kb_vel, kb_dir)
 // incoming damage
 if(sprite_index != spr_hurt){
-	my_health -= argument0;
-	motion_add(argument2, argument1);
-	nexthurt = 3;
-	sprite_index = spr_hurt;
+	if(nexthurt <= current_frame){
+		sound_play_pitchvol(snd_hurt,1,0.6);
+		my_health -= argument0;
+		motion_add(argument2, argument1);
+		nexthurt = current_frame + 3;
+		sprite_index = spr_hurt;
+	}
 }
 
 #define race_name
