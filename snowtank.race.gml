@@ -6,6 +6,8 @@ global.sprPortrait = sprite_add("/sprites/sprPortraitSnowTank.png", 1, 5, 198);
 
 global.sprThruster = sprite_add("/sprites/sprTankThruster.png", 8, 24, 24);
 
+global.laser_color = make_color_rgb(250, 54, 0);
+
 // character select sounds
 // global.sndSelect = sound_add("sounds/sndBanditSelect.ogg");
 // var _race = [];
@@ -191,7 +193,7 @@ with(Player){
 				break;
 			}
 		}
-		draw_line_color(x,y,laser_x,laser_y,c_red,c_red);
+		draw_line_width_color(x,y,laser_x,laser_y,1,global.laser_color,global.laser_color);
 	}
 }
 instance_destroy();
