@@ -77,7 +77,7 @@ trace_color ("Type '/ehelp list' for a list of available commands!",c_white);
 //oldPick = array_create(4, 0);
 //global.e = array_create(4, 0);
 
-global.t = -1;
+global.t = -2;
 
 sprite_replace(sprShield, "sprites/sprPopoShieldAppear.png", 4);
 sprite_replace(sprShieldDisappear, "sprites/sprPopoShieldDisappear.png", 6);
