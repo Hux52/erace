@@ -53,6 +53,7 @@ mask_index = mskPlayer;
 melee = 0;	// can melee or not
 startsound = -4;
 stopsound = -4;
+_to = noone;
 
 
 

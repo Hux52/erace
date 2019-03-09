@@ -52,7 +52,7 @@ melee = 0;	// can melee or not
 shield_time = 0;
 shield_cool = 0;
 want_shield = false;
-
+_to = noone;
 
 
 #define game_start

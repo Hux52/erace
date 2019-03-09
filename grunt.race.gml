@@ -52,6 +52,7 @@ melee = 0;	// can melee or not
 roll_time = 0;	// rolling time
 grenade_time = 0;	// grenade cooldown
 can_grenade = true;
+_to = noone;
 
 #define game_start
 // executed after picking race and starting for each player picking this race
