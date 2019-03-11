@@ -1,6 +1,6 @@
 #define init
 global.sprMenuButton = sprite_add("sprites/sprNecromancerSelect.png", 1, 0, 0);
-global.sprPortrait = sprite_add("sprites/sprPortraitNecromancer.png",1 , 35, 205);
+global.sprPortrait = sprite_add("sprites/sprPortraitNecromancer.png",1 , 25, 205);
 
 
 #define create
