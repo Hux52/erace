@@ -306,9 +306,97 @@ if(show_anim <= 0 and hide_anim <= 0){
 	}
 }
 
-// don't shoot when teleporting
-if(show_anim >= 0 and hide_anim >= 0){
+// don't shoot when teleporting and manage pickups
+if(show_anim >= 0 or hide_anim >= 0){
 	canshoot = 0;
+	repeat(30){
+		with(instance_nearest(x, y, Pickup)){
+			if(distance_to_object(other) < 10){
+				switch(object_index){
+					case Rad:
+						GameCont.rad++;
+						sound_play(sndRadPickup);
+					break;
+					case BigRad:
+						GameCont.rad += 20;
+						sound_play(sndRadPickup);
+					break;
+					case HPPickup:
+						with(other){
+							my_health += min(maxhealth - my_health, 2)
+						}
+						sound_play(sndHPPickup);
+					break;
+					case AmmoPickup:
+						with(other){
+							var _mywep = choose(wep, bwep);	// choose either primary or secondary to work with
+							var _typ = weapon_get_type(_mywep)	//	chosen weapon type
+							want_type = 0;	// setting this up prematurely because I'm paranoid
+							if(_typ != 0){	// if chosen weapon type not melee
+								if(ammo[_typ] >= typ_amax[_typ]){	// if ammo for that type is max
+									want_type = irandom(4) + 1;	// choose random type
+									ammo[_typ] += typ_ammo[want_type];	// add ammo
+								}
+								else{
+									want_type = _typ;	// use chosen weapon ammo type
+									ammo[_typ] += typ_ammo[want_type];	// add ammo
+								}
+							}
+							else{
+								// do the same for melee as if chosen weapon ammo type was full
+								want_type = irandom(4) + 1;
+								ammo[_typ] += typ_ammo[want_type];
+							}
+							
+							// determine string for popup text by gained ammo type
+							switch(want_type){
+								case 1:
+									wepstring = "BULLETS";
+								break;
+								case 2:
+									wepstring = "SHELLS";
+								break;
+								case 3:
+									wepstring = "BOLTS";
+								break;
+								case 4:
+									wepstring = "EXPLOSIVES";
+								break;
+								case 5:
+									wepstring = "ENERGY";
+								break;
+							}
+							
+							// create popup text
+							if(ammo[want_type] >= typ_amax[want_type]){	// max ammo
+								with(instance_create(x, y, PopupText)){
+									target = other;
+									text = "MAX " + other.wepstring;
+									mytext = text;
+									time = 30;
+								}
+							}
+							else{
+								with(instance_create(x, y, PopupText)){	// plus ammo
+									target = other;
+									text = "+" + string(other.typ_ammo[other.want_type]) + other.wepstring;
+									mytext = text;
+									time = 30;
+								}
+							}
+							
+							// balance ammo
+							for(i = 1; i < 6; i++){
+								ammo[i] = min(ammo[i], typ_amax[i]);
+							}
+						}
+						sound_play(AmmoPickup);
+					break;
+				}
+				instance_destroy();
+			}
+		}
+	}
 }
 
 if(cooldown >= 0){
@@ -412,4 +500,4 @@ switch(argument0){
 
 #define race_ttip
 // return character-specific tooltips
-return choose("WARM BARRELS", "DUST PROOF", "PLUNDER", "FIRE FIRST, AIM LATER");
+return choose("61 63 74 69 76 61 74 65 20 77 69 6e 64 6f 77 73 ", "64 65 73 74 72 6f 79", "72 65 63 61 6c 69 62 72 61 74 69 6e 67 20 64 65 66 65 6e 73 65 20 73 79 73 74 65 6d 73", "BEEP BOOP", "64 65 73 74 72 6f 79");
