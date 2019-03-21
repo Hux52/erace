@@ -17,7 +17,7 @@ return 1;
 return true;
 
 #define weapon_load
-return 30;
+return 15 + (GameCont.loops * 5);
 
 #define weapon_cost
 return 0;
@@ -52,7 +52,8 @@ if("fly_alarm" in self){
 			direction = other.gunangle + (random(other.accuracy) * choose(1, -1));
 			friction = 0;
 			on_step = script_ref_create(ravenBurst_step);
-			alarm = [15];
+			alarm = [0];
+			ammo = 3 + GameCont.loops;
 		}
 	}
 }
@@ -66,7 +67,7 @@ if(instance_exists(creator)){
 			x = creator.x + lengthdir_x(5, creator.gunangle);
 			y = creator.y + lengthdir_y(5, creator.gunangle);
 			// fire bullets
-			if(alarm[0] % 5 = 0){	// 3 bullets
+			if(alarm[0] = 0){	// 3 bullets
 				sound_play_gun(sndEnemyFire, 0.2, 0.6);
 				with(instance_create(x, y, AllyBullet)){
 					creator = other.creator;
@@ -74,18 +75,22 @@ if(instance_exists(creator)){
 					direction = other.direction;
 					image_angle = direction;
 					friction = 0;
-					speed = 4;
-					damage = 3;
+					speed = 6;
+					damage = 2.80 + (0.20 * GameCont.level) + (GameCont.loops * 0.33);
 					with(creator){
 						weapon_post(5, 30, 10);	// weapon kick and screen shake
 					}
 					
 				}
+				ammo--;
 			}
 			for(i = 0; i < array_length(alarm); i++){
+				if(alarm[i] <= 0){
+					alarm[i] = 5;
+				}
 				alarm[i]-= current_time_scale;
 			}
-			if(alarm[0] <= 0){
+			if(ammo <= 0){
 				instance_destroy();
 			}
 		}

@@ -14,10 +14,15 @@ return sprBanditGun;
 return 1;
 
 #define weapon_auto
-return false;
+if(GameCont.level = 10){
+	return true;
+}
+else{
+	return false;
+}
 
 #define weapon_load
-return 20;
+return 21 - GameCont.level;
 
 #define weapon_cost
 return 0;
@@ -46,6 +51,6 @@ with instance_create(x + lengthdir_x(8, gunangle), y + lengthdir_y(8, gunangle),
 	direction = creator.gunangle;
 	image_angle = direction;
 	friction = 0;
-	speed = 4;
-	damage = 3;
+	speed = 6;
+	damage = 2.5 + (0.5 * GameCont.level) + (GameCont.loops * 0.33);
 }
