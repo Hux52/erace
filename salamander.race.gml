@@ -63,6 +63,7 @@ loop = 0;
 // most actives and passives handled here
 canswap = 0;
 canpick = 0;
+boilcap = maxhealth;
 
 lastscale = current_time_scale;
 

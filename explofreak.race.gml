@@ -52,6 +52,7 @@ exploded = 0;
 #define step
 // executed within each player instance of this race after step
 // most actives and passives handled here
+boilcap = maxhealth;
 
 // no weps
 canswap = 0;
@@ -68,7 +69,7 @@ else{
 // outgoing contact damage
 if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
 	if(exploded <= 0){
-		sound_play(sndExploFreakKillself);
+		sound_play_pitchvol(sndExploFreakKillself, random_range(0.9,1.1), 0.65);
 		instance_create(x,y,Explosion);
 		exploded = 15;
 	}
