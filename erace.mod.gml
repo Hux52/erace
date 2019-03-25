@@ -118,6 +118,11 @@ with(ChestOpen){
 	sprite_index = sprHealthChestOpen;
 }
 
+with(Mimic){
+	instance_create(x,y,SuperMimic);
+	instance_delete(self);
+}
+
 // global.pNum = 0;
 
 // for (i = 0; i < array_length(oldPick); i++){
