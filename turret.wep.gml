@@ -50,6 +50,7 @@ if("show_anim" in self and "hide_anim" in self){
 			name = "turretBurst";
 			creator = other;
 			team = creator.team;
+			creator.cooldown = current_time_scale * 2;
 			mask_index = mskNone;
 			spr_shadow = mskNone;
 			direction = other.gunangle + (random(other.accuracy) * choose(1, -1));
@@ -63,6 +64,7 @@ if("show_anim" in self and "hide_anim" in self){
 
 #define turretBurst_step
 if(instance_exists(creator)){
+	creator.cooldown = current_time_scale * 2;
 	if("show_anim" in creator and "hide_anim" in creator){
 		if(creator.show_anim <= 0 and creator.hide_anim <= 0){
 			direction = creator.gunangle + (random(creator.accuracy) * choose(1, -1) * random(10));

@@ -205,7 +205,8 @@ else{
 // make corpse
 sound_play_pitchvol(snd_dead, random_range(0.9,1.1), 0.6);
 with(instance_create(x, y, Corpse)){
-	sprite_index = sprFreak1Dead;
+	sprite_index = other.spr_dead;
+	freak_nerf = true;
 	size = 1;
 }
 
@@ -259,7 +260,13 @@ d3d_set_fog(0,c_lime,0,0);
 
 
 					sprite_index = spr_idle;
-					my_health = 7;
+					if("freak_nerf" in other){
+						my_health = 1;
+						trace(265);
+					}
+					else{
+						my_health = 7;
+					}
 					maxspeed = 3.6;
 					mask_index = mskFreak;
 					size = 1;
