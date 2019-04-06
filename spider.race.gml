@@ -126,6 +126,7 @@ with(instances_matching(Player, "race", "spider")){
 #define step
 // executed within each player instance of this race after step
 // most actives and passives handled here
+footstep = choose(1,3);
 
 //update stats for muts
 maxspeed_base = 2.6 + (skill_get(mut_extra_feet) * 0.5); //original wandering speed
