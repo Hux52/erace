@@ -1,5 +1,6 @@
 #define init
 global.sprMenuButton = sprite_add("sprites/sprGuardianSelect.png", 1, 0,0);
+global.sprPortrait = sprite_add("sprites/sprPortraitGuardian.png", 1, 0, 200);
 
 // level start init- MUST GO AT END OF INIT
 global.newLevel = instance_exists(GenCont);
@@ -172,7 +173,7 @@ return "@sFIRE @gRAD BALLS#@sCAN @wTELEPORT";
 
 #define race_portrait
 // return portrait for character selection screen and pause menu
-return sprBigPortraitChickenHeadless;
+return global.sprPortrait;
 
 
 #define race_mapicon

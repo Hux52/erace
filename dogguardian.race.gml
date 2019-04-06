@@ -1,6 +1,6 @@
 #define init
 global.sprMenuButton = sprite_add("sprites/sprDogGuardianSelect.png", 1, 0, 0);
-global.sprPortrait = mskNone; //sprite_add("sprites/sprPortraitRat.png", 1 , 15, 185);
+global.sprPortrait = sprite_add("sprites/sprPortraitDogGuardian.png", 1 , 0, 195);
 
 global.sprDogHit = sprite_add("sprites/sprDogHit.png", 3, 0, 0);
 
@@ -79,6 +79,10 @@ if(direction > 90 and direction <= 270){
 }
 else{
 	right = 1;
+}
+
+if(ultra_get(player_get_race(index), 1) == 1){
+		maxspeed = 4;
 }
 
 if(jump = -1 and canspec = 1){
@@ -350,13 +354,8 @@ switch(argument0){
 // recieves ultra mutation index
 // called when ultra for race is picked
 // player of race may not be alive at the time
-switch(argument0){
-	case 1:
-		maxspeed = 4;
-	break;
-}
 
 
 #define race_ttip
 // return character-specific tooltips
-return choose("WOOF", "YAHOO", "HOPS", "PANT", "RADICAL");
+return choose("WOOF", "HOPS", "RADICAL", "POUNCE");
