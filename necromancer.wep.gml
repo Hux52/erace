@@ -262,7 +262,6 @@ d3d_set_fog(0,c_lime,0,0);
 					sprite_index = spr_idle;
 					if("freak_nerf" in other){
 						my_health = 1;
-						trace(265);
 					}
 					else{
 						my_health = 7;
