@@ -98,7 +98,8 @@ if(u1 == 1){
 
 if(u2 == 1){
 	if(my_health = 0){ //reincarnation in tarnation
-		mod_script_call("mod","erace","respawn_as", false, "bandit", Bandit);
+		_to = mod_script_call("mod","erace","respawn_as", false, "bandit", Bandit);
+		instance_delete(_to);
 	}
 }
 

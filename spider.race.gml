@@ -263,7 +263,8 @@ if(u1 == 1){
 			my_health = maxhealth - 1 - (global.debug_haHAA * 16);
 			spawn_spood(1,maxhealth-1, player_get_color(index));
 		} else {
-			mod_script_call("mod","erace","respawn_as", true, "spider", "CursedSpiderFriendly");
+			_to = mod_script_call("mod","erace","respawn_as", true, "spider", "CursedSpiderFriendly");
+			instance_delete(_to);
 		}
 	}
 	if(sprite_index == spr_hurt and image_index == 2){

@@ -102,6 +102,7 @@ while(true){
 
 #define level_start
 with(instances_matching_ne(Player, "wantrace", null)){
+	image_blend = c_white; //lol
 	race = wantrace;
 }
 wait(2);
@@ -652,8 +653,8 @@ if(instance_exists(_b)){
 		time = 10;
 		target = 0;
 	}
-	instance_delete(_b);
-}
+} return _b;
+
 #define chat_command
 // chat commands
 var command = string_upper(argument0);

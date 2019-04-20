@@ -90,23 +90,12 @@ if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
 //respawn as other maggot
 if(my_health = 0){
 	//before respawn
-	repeat(4){
-		with(instance_create(x, y, HorrorBullet)){
-			team = 2;
-			damage = 2;
-			direction = random(360);
-			image_angle = direction;
-			speed = random_range(6,8);
-		}
-	}
-	instance_create(x,y,GammaBlast);
+	
 
 	//respawn
 	mod_script_call("mod","erace","respawn_as", true, "radmaggot", "RadMaggot");
 
-	//green shit
-	instance_create(x,y,FishA);
-	instance_create(x,y,LaserBrain);
+	
 }
 
 #define race_name

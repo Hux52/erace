@@ -123,7 +123,8 @@ if(my_health < 1){
 		}
 		hasDied = true;
 	}
-	mod_script_call("mod","erace","respawn_as", true, "fastrat", "Fastrat");
+	_to = mod_script_call("mod","erace","respawn_as", true, "fastrat", "Fastrat");
+	instance_delete(_to);
 } else {
 	hasDied = false;
 }
