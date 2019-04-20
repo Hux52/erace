@@ -43,6 +43,9 @@ spr_shadow_y = 0;
 mask_index = mskMaggot;
 canwalk = 1;
 
+type = "normal"; //types: meat, [tba]
+_to = noone;
+
 // vars
 melee = 1;	// can melee or not
 
@@ -55,6 +58,18 @@ melee = 1;	// can melee or not
 #define step
 // executed within each player instance of this race after step
 // most actives and passives handled here
+
+switch(type){
+		case "meat":
+			image_blend = make_color_hsv(0,169,200);
+		break;
+		case "rad":
+			image_blend = c_lime;
+		break;
+		default:
+			image_blend = c_white;
+		break;
+}
 
 // no weps
 canswap = 0;
@@ -87,9 +102,40 @@ if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
 	}
 }
 
-//respawn as other maggot
-if(my_health = 0){ //reincarnation in tarnation
-	mod_script_call("mod","erace","respawn_as", true, "maggot", "Maggot");
+if(my_health = 0){
+	//create explosion
+	switch(type){
+		case "meat":
+			repeat(3) {
+				instance_create(x,y,MeatExplosion);
+				with(instance_create(x,y,BloodStreak)){
+					image_angle = random(360);
+					speed = 8;
+				}
+			}
+		break;
+		case "rad":
+			repeat(4){
+				with(instance_create(x, y, HorrorBullet)){
+					team = 2;
+					damage = 2;
+					direction = random(360);
+					image_angle = direction;
+					speed = random_range(6,8);
+				}
+			}
+			instance_create(x,y,GammaBlast);
+			//green shit
+			instance_create(x,y,FishA);
+			instance_create(x,y,LaserBrain);
+		break;
+	}
+
+	_to = mod_script_call("mod","erace","respawn_as", true, "maggot", "Maggot"); //reincarnation in tarnation
+	if(instance_exists(_to)){
+		type = _to.type;
+		instance_delete(_to);
+	}
 }
 
 #define race_name

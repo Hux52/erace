@@ -91,6 +91,14 @@ else{
 
 u1 = ultra_get(mod_current, 1);
 
+maggot_health = 2 + (skill_get(mut_rhino_skin) * 4) + max(0, floor(GameCont.hard / 2));	// get +1 max hp every 2 levels
+
+if(u1 == 1){
+	maggotType = "rad";
+} else {
+	maggotType = "normal";
+}
+
 // special- self destruct init
 if(button_pressed(index, "spec") or button_pressed(index, "fire")){
 	if(self_destruct = -1){
@@ -122,67 +130,16 @@ if(my_health = 0 and died = 0){
 	}
 	// maggot spawn
 	repeat(5 + max(0, GameCont.hard)){
-		with(instance_create(x, y, CustomHitme)){
-			creator = other;
-			team = creator.team;
-			if!(other.u1){
-				name = "Maggot";
-				spr_idle = sprMaggotIdle;
-				spr_walk = sprMaggotIdle;
-				spr_hurt = sprMaggotHurt;
-				spr_dead = sprMaggotDead;
-
-				// sounds
-				snd_hurt = sndHitFlesh;
-				snd_dead = sndEnemyDie;
-
-				my_health = 2 + (skill_get(mut_rhino_skin) * 4) + max(0, floor(GameCont.hard / 2));	// get +1 max hp every 2 levels
-				maxspeed = 2;
-			}
-			else{
-				name = "RadMaggot";
-				spr_idle = sprRadMaggot;
-				spr_walk = sprRadMaggot;
-				spr_hurt = sprRadMaggotHurt;
-				spr_dead = sprRadMaggotDead;
-
-				// sounds
-				snd_hurt = sndHitFlesh;
-				snd_dead = sndRadMaggotDie;
-
-				my_health = 2 + (skill_get(mut_rhino_skin) * 4) + max(0, floor(GameCont.hard / 2));	// get +1 max hp every 2 levels
-				maxspeed = 3;
-			}
-			sprite_index = spr_idle;
-			mask_index = mskMaggot;
-			size = 1;
-			image_speed = 0.3;
-			spr_shadow = shd16;
-			direction = random(360);
-			move_bounce_solid(true);
-			my_damage = 1;
-			right = choose(-1, 1);
-			alarm = [0];	// movement alarm
-			on_step = script_ref_create(maggot_step);
-			on_hurt = script_ref_create(maggot_hurt);
-			on_destroy = script_ref_create(maggot_destroy);
-			// friendly player outline
-			playerColor = player_get_color(creator.index);
-			toDraw = self;
-			on_draw = script_ref_create(outline_draw);
-		}
+		SpawnMaggot(maggot_health,maggotType);
 	}
 	// become maggot
 	died = 1;
-	if!(ultra_get(mod_current, 1)){
-		race = "maggot";
-		wantrace = "maggotspawn";
+	race = "maggot";
+	wantrace = "maggotspawn";
+	if(u1 == 1){
+		type = "rad";
 	}
-	else{
-		race = "radmaggot";
-		wantrace = "maggotspawn";
-	}
-	maxhealth = 2 + (skill_get(mut_rhino_skin) * 4) + max(0, floor(GameCont.hard / 2));	// get +1 max hp every 2 levels
+	maxhealth = maggot_health;
 	my_health = maxhealth;
 }
 
@@ -288,7 +245,7 @@ with(instance_create(x, y, Corpse)){
 }
 
 // ultra
-if(ultra_get(mod_current, 1)){
+if(type == "rad"){
 	repeat(4){
 		with(instance_create(x, y, HorrorBullet)){
 			team = 2;
@@ -313,6 +270,51 @@ if(sprite_index != spr_hurt){
 	}
 }
 
+#define SpawnMaggot(hp, t) // t - type
+	with(instance_create(x, y, CustomHitme)){
+		creator = other;
+		team = creator.team;
+		name = "Maggot";
+		spr_idle = sprMaggotIdle;
+		spr_walk = sprMaggotIdle;
+		spr_hurt = sprMaggotHurt;
+		spr_dead = sprMaggotDead;
+
+		// sounds
+		snd_hurt = sndHitFlesh;
+		snd_dead = sndEnemyDie;
+		type = t;
+		my_health = hp;
+		maxspeed = 2;
+		if(type == "rad"){
+			snd_dead = sndRadMaggotDie;
+		}
+		sprite_index = spr_idle;
+		mask_index = mskMaggot;
+		size = 1;
+		image_speed = 0.3;
+		spr_shadow = shd16;
+		direction = random(360);
+		move_bounce_solid(true);
+		my_damage = 1;
+		right = choose(-1, 1);
+		alarm = [0];	// movement alarm
+		on_step = script_ref_create(maggot_step);
+		on_hurt = script_ref_create(maggot_hurt);
+		on_destroy = script_ref_create(maggot_destroy);
+		// friendly player outline
+		playerColor = player_get_color(creator.index);
+		toDraw = self;
+		on_draw = script_ref_create(outline_draw);
+		switch(type){
+			case "normal":
+				image_blend = c_white;
+			break;
+			case "rad":
+				image_blend = c_lime;
+			break;
+		}
+	}
 
 #define race_name
 // return race name for character select and various menus
