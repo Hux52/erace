@@ -100,10 +100,19 @@ if(canspec){
 							spr_shadow = shd24;
 						}
 					}
-					shield_time += current_time_scale;
+					shield_time += current_time_scale + (current_time_scale * ultra_get(mod_current, 1));
 					shield_cool = 15;
 				}
 				else{
+					if(ultra_get(mod_current, 1)){
+						if!(collision_point(mouse_x[index], mouse_y[index] - 8, Wall, false, true)){
+							if(collision_point(mouse_x[index], mouse_y[index] - 8, Floor, false, true)){
+								sound_play(sndEliteShielderTeleport);
+								x = mouse_x[index];
+								y = mouse_y[index] - 8;
+							}
+						}
+					}
 					shield_time = 0;
 					want_shield = false;
 				}
@@ -209,7 +218,7 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "NOTHING";
+	case 1: return "HYPERSPACE INSTALLMENT";
 	default: return "";
 }
 
@@ -217,7 +226,7 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "DOES NOTHING";
+	case 1: return "TELEPORT AFTER SHIELDING";
 	default: return "";
 }
 

@@ -70,7 +70,7 @@ _to = noone;
 canswap = 0;
 canpick = 0;
 
-pullStrength = 0.75 * current_time_scale;	// telekinesis strength
+pullStrength = 0.75 * current_time_scale + ultra_get(mod_current, 1);	// telekinesis strength
 
 // telekinesis
 if(canspec){
@@ -220,7 +220,7 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "NOTHING";
+	case 1: return "BRAIN TRAINING";
 	default: return "";
 }
 
@@ -228,7 +228,7 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "DOES NOTHING";
+	case 1: return "STRONGER TELEKINESIS";
 	default: return "";
 }
 

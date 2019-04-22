@@ -72,14 +72,14 @@ if(canspec){
 	if(button_pressed(index, "spec") && speed <= 0) direction = gunangle;
 
 	 // Start Water Boost:
-	if(skill_get(5)){
-		 // Sound:
+	if(ultra_get(mod_current, 1)){
+		// Sound:
 		if(button_pressed(index, "spec")){
-			sound_play(sndFishRollUpg);
-			sound_loop(sndFishTB);
+			sound_play(sndEliteGruntRoll);
+			sound_loop(sndEliteGruntRocketFly);
 		}
 
-		 // Boost:
+		// Boost:
 		if(button_check(index, "spec")) roll_time = 2;
 	}
 
@@ -97,7 +97,7 @@ if(roll_time > 0){
 	speed = maxspeed + 2;
 
 	/// Throne Butt
-	if(skill_get(5)){
+	if(ultra_get(mod_current, 1)){
 		sprite_angle = direction - 90;	// Point Towards Direction
 		instance_create(x,y,FishBoost);	// Water Particles
 	}
@@ -119,7 +119,7 @@ if(roll_time > 0){
 	if(roll_time <= 0){
 		sprite_angle = 0;		// Reset Rotation
 		canwalk = 1;			// Can Use Movement Keys Again
-		sound_stop(sndFishTB);	// Stop Water Boost Sound
+		sound_stop(sndEliteGruntRocketFly);	// Stop Water Boost Sound
 	}
 }
 
@@ -224,7 +224,7 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "NOTHING";
+	case 1: return "EVASIVE TRAINING";
 	default: return "";
 }
 
@@ -232,7 +232,7 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "DOES NOTHING";
+	case 1: return "ROLL INDEFINITELY WITH#MORE CONTROL";
 	default: return "";
 }
 
