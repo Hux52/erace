@@ -305,7 +305,9 @@ if(sprite_index != spr_hurt){
 		// friendly player outline
 		playerColor = player_get_color(creator.index);
 		toDraw = self;
-		on_draw = script_ref_create(outline_draw);
+		with(script_bind_draw(0, 0)){
+			script = script_ref_create_ext("mod", "erace", "draw_outline", other.playerColor, other);
+		}
 		switch(type){
 			case "normal":
 				image_blend = c_white;
@@ -412,22 +414,3 @@ switch(argument0){
 #define race_ttip
 // return character-specific tooltips
 return choose("HUNGRY", "WRIGGLE", "FAMILY", "LET'S GET SOME GRUB      @r@qL@qO@qO@qO@qO@qO@qO@qO@qO@qO@qO@qO@qO");
-
-#define outline_draw
-if(instance_exists(creator)){
-	playerColor = player_get_color(creator.index);
-} 
-d3d_set_fog(1,playerColor,0,0);
-if(instance_exists(toDraw)){
-    with(toDraw){
-		if(instance_exists(creator)){
-			playerColor = player_get_color(creator.index);
-		}
-        draw_sprite_ext(sprite_index, -1, x - 1, y, 1 * right, 1, 0, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x + 1, y, 1 * right, 1, 0, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x, y - 1, 1 * right, 1, 0, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x, y + 1, 1 * right, 1, 0, playerColor, 1);
-    }
-}
-d3d_set_fog(0,c_lime,0,0);
-draw_self();

@@ -222,18 +222,6 @@ if(sprite_index != spr_hurt){
 	}
 }
 
-#define draw_outline(playerColor, toDraw)
-d3d_set_fog(1,playerColor,0,0);
-if(instance_exists(toDraw)){
-    with(toDraw){
-        draw_sprite_ext(sprite_index, -1, x - 1, y, 1 * right, 1, 0, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x + 1, y, 1 * right, 1, 0, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x, y - 1, 1 * right, 1, 0, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x, y + 1, 1 * right, 1, 0, playerColor, 1);
-    }
-}
-d3d_set_fog(0,c_lime,0,0);
-
 #define SpawnFreak()
 	if(instance_exists(enemy) or instance_exists(Portal)){	// no softlock
 		with(Corpse){
@@ -286,8 +274,9 @@ d3d_set_fog(0,c_lime,0,0);
 					} else {
 						playerColor = c_black;
 					}
-					toDraw = self;
-					script_bind_draw(draw_outline, depth, playerColor, toDraw);
+					with(script_bind_draw(0, 0)){
+						script = script_ref_create_ext("mod", "erace", "draw_outline", other.playerColor, other);
+					}
 					wall_stuck = 0;
 				}
 				// effects and corpse destruction

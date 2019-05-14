@@ -120,8 +120,9 @@ if(spawn_cool > 0){
 				on_destroy = script_ref_create(fastrat_destroy);
 				// friendly outline
 				playerColor = player_get_color(creator.index);
-				toDraw = self;
-				script_bind_draw(draw_outline, depth, playerColor, toDraw);
+				with(script_bind_draw(0, 0)){
+					script = script_ref_create_ext("mod", "erace", "draw_outline", other.playerColor, other);
+				}
 			}
 		}
 		// no control while spawning
@@ -238,8 +239,9 @@ if(my_health = 0 and died = 0){
 				on_destroy = script_ref_create(fastrat_destroy);
 				// friendly outline
 				playerColor = player_get_color(creator.index);
-				toDraw = self;
-				script_bind_draw(draw_outline, depth, playerColor, toDraw);
+				with(script_bind_draw(0, 0)){
+					script = script_ref_create_ext("mod", "erace", "draw_outline", other.playerColor, other);
+				}
 			}
 		}
 		// become a fast rat
@@ -485,15 +487,3 @@ switch(argument0){
 #define race_ttip
 // return character-specific tooltips
 return choose("WHISKERS", "RABID", "ITCHY", "RODENT");
-
-#define draw_outline(playerColor, toDraw)
-d3d_set_fog(1,playerColor,0,0);
-if(instance_exists(toDraw)){
-    with(toDraw){
-        draw_sprite_ext(sprite_index, -1, x - 1, y, 1 * right, 1, 0, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x + 1, y, 1 * right, 1, 0, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x, y - 1, 1 * right, 1, 0, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x, y + 1, 1 * right, 1, 0, playerColor, 1);
-    }
-}
-d3d_set_fog(0,c_lime,0,0);

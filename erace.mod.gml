@@ -772,3 +772,16 @@ switch(command){
 	return true;
 	break;
 	}
+
+
+#define draw_outline(playerColor, toDraw)
+d3d_set_fog(1,playerColor,0,0);
+if(instance_exists(toDraw)){
+    with(toDraw){
+        draw_sprite_ext(sprite_index, -1, x - 1, y, 1 * right, 1, 0, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x + 1, y, 1 * right, 1, 0, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x, y - 1, 1 * right, 1, 0, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x, y + 1, 1 * right, 1, 0, playerColor, 1);
+    }
+}
+d3d_set_fog(0,c_lime,0,0);

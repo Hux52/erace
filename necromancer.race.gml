@@ -142,4 +142,4 @@ switch(argument0){
 
 #define race_ttip
 // return character-specific tooltips
-return choose("NECROMANCY", "FORBIDDEN MAGIC", "HEROES NEVER DIE", "ZOMBIES");
+return choose("NECROMANCY", "FORBIDDEN MAGIC", "MUTANTS NEVER DIE", "ZOMBIES", "...THEY JUST RESPAWN");
