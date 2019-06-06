@@ -43,6 +43,7 @@ spr_shadow_y = 0;
 // vars
 melee = 1;	// can melee or not
 exploded = 0;
+died = false;
 
 #define game_start
 // executed after picking race and starting for each player picking this race
@@ -104,6 +105,13 @@ en = instance_nearest(x,y,enemy);
 if(instance_exists(en)){
 	x += lengthdir_x(1*current_time_scale, point_direction(x,y,en.x,en.y));
 	y += lengthdir_y(1*current_time_scale, point_direction(x,y,en.x,en.y));
+}
+
+if(my_health <= 0 and died = false){
+	instance_create(x,y,Explosion);
+	died = true;
+} else {
+	died = false;
 }
 
 //explosion cooldown
