@@ -142,6 +142,18 @@ with(ProtoStatue){
 	}
 }
 
+with(Player){
+	if("erace_maxspeed_orig" not in self){
+		erace_maxspeed_orig = maxspeed;
+	}
+	if("erace_maxspeed_bonus" not in self){
+		erace_maxspeed_bonus = 0;
+	}
+	if("erace_prevh" not in self){
+		erace_prevh = my_health;
+	}
+}
+
 // global.pNum = 0;
 
 // for (i = 0; i < array_length(oldPick); i++){
@@ -265,12 +277,36 @@ with(enemy){
 }
 
 with(Player){
+	trace(erace_maxspeed_bonus);
+	erace_maxspeed_bonus = lerp(erace_maxspeed_bonus, 0.5, 0.005*current_time_scale);
+	if(race != "spider"){
+		maxspeed = erace_maxspeed_orig * (erace_maxspeed_bonus + 1);
+	}
+	if(array_length(instances_matching(projectile, "creator", self)) > 0){
+		erace_maxspeed_bonus = lerp(erace_maxspeed_bonus, 0, 0.5*current_time_scale);
+	}
+	if(button_pressed(index,"fire") or button_pressed(index,"spec")){
+		erace_maxspeed_bonus = 0;
+	}
+	if(my_health > erace_prevh){
+		erace_prevh = my_health;	
+	}
+	if(my_health < erace_prevh){
+		erace_maxspeed_bonus = 0;
+		erace_prevh = my_health;
+	}
 // Boiling Veins' HP from 4 up to half of max hp
 	boilcap = floor(maxhealth/2);
 	if(melee == 1){
 		// Boiling Veins automaticall given to melee races
 		skill_set(mut_boiling_veins, 1);
 		skill_set_active("fake_veins", 0);
+		if(instance_exists(enemy)){
+			espeed_nearest = instance_nearest(x,y,enemy);
+			if(point_distance(x,y, espeed_nearest.x,espeed_nearest.y) < 25){
+				erace_maxspeed_bonus = 0;
+			}
+		}
 	}
 }
 
