@@ -74,6 +74,14 @@ if(button_pressed(index,"fire")){
 		is_rolling = true;
 		sprite_index = spr_fire;
 		sound_play_pitchvol(snd_roll,random_range(0.9,1.1), 0.6);
+		shield = instance_create(x, y, CustomObject);
+		with(CustomObject){
+			creator = other;
+			team = creator.team;
+			sprite_index = mskNone;
+			mask_index = mskShield;
+			on_step = script_ref_create(shield_step);
+		}
 	}
 }
 
@@ -117,6 +125,9 @@ if(is_rolling){
 		friction = 0.2;
 		if(speed <= 1){
 			is_rolling = false;
+			if(instance_exists(shield)){
+				instance_delete(shield);
+			}
 		}
 	}
 
@@ -152,6 +163,59 @@ if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 		}
 	}
 }
+
+
+#define shield_step
+if(instance_exists(creator)){
+	x = creator.x;
+	y = creator.y;
+
+	with(instance_place(x + hspeed, y, projectile)){
+		if(team != other.team){
+			direction = -direction + 180;
+			sprite_angle = direction;
+			sound_play_pitch(sndCrystalRicochet, random_range(0.9, 1.1));
+			deflected = true;
+			team = other.team;
+		}
+	}
+
+	with(instance_place(x, y + vspeed, projectile)){
+		if(team != other.team){
+			direction = -direction;
+			sprite_angle = direction;
+			sound_play_pitch(sndCrystalRicochet, random_range(0.9, 1.1));
+			deflected = true;
+			team = other.team;
+		}
+	}
+}
+else{
+	instance_delete(self);
+}
+
+/*if(instance_exists(projectile)){
+	var _b = instance_nearest(x, y, projectile);
+	if(_b.team != team and _b.deflected = 0){
+		with(_b){
+			//Horizontal bounce
+			if(place_meeting(x + hspeed, y, other)){
+				direction = -direction + 180;
+			}
+			
+			//Vertical bounce
+			if(place_meeting(x, y + vspeed, other)){
+				direction = -direction;
+			}
+			
+			sprite_angle = direction;
+			sound_play_pitch(sndCrystalRicochet, random_range(0.9, 1.1));
+			deflected = true;
+			team = other.team;
+		}
+	}
+}*/
+
 
 #define race_name
 // return race name for character select and various menus
