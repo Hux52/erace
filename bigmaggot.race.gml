@@ -73,7 +73,7 @@ if(u2 == 1){
 	maggotType = "normal";
 }
 
-if(u2 == 1 or u1 == 1){
+if(u1 == 1){
 	if(my_health > previousHealth){
 		previousHealth = my_health; //healed		
 	}
@@ -109,6 +109,7 @@ if(button_pressed(index, "spec")){
 		// if floor inside borders...
 		if!(collision_point(mouse_x[index], mouse_y[index] - 8, Wall, false, true)){
 			if(collision_point(mouse_x[index], mouse_y[index] - 8, Floor, false, true)){
+				if(u1 == 1){BloodSplosion(irandom_range(3,5));}
 				// start burrowing
 				spr_idle = sprBigMaggotBurrow;
 				spr_walk = sprBigMaggotBurrow;
@@ -134,6 +135,7 @@ if(dig_alarm > 0){
 		image_index = 1;
 		x = coords[0];
 		y = coords[1];
+		if(u1 == 1){BloodSplosion(irandom_range(3,5));}
 		sound_play_pitch(sndBigMaggotUnburrow, random_range(0.9, 1.1));
 	}
 	// fully out
@@ -170,15 +172,7 @@ if(collision_rectangle(x + 20, y + 10, x - 20, y - 10, enemy, 0, 1)){
 // on death
 if(my_health = 0 and died = 0){
 	// effects
-	repeat(3){
-		instance_create(x, y, MeatExplosion);
-	}
-	for(i = 0; i < 360; i += 120){
-		with(instance_create(x, y, BloodStreak)){
-			speed = 8;
-			direction = other.i + random_range(-30, 30);
-		}
-	}
+	BloodSplosion(3);
 	// spawn maggots
 	repeat(5 + GameCont.hard){
 		SpawnMaggot(maggot_health, maggotType);
@@ -327,6 +321,19 @@ if(sprite_index != spr_hurt){
 #define TakenDamage(dmg, wanttype)
 repeat(dmg){
 	SpawnMaggot(maggot_health, wanttype);
+	BloodSplosion(1);
+}
+
+#define BloodSplosion(num)
+repeat(num){
+instance_create(x + random_range(-1,1),y + random_range(-1,1),MeatExplosion);
+	repeat(3){
+		with(instance_create(x,y,BloodStreak)){
+			image_angle = random(360);
+			direction = image_angle;
+			speed = random_range(3,5);
+		}
+	}
 }
 
 #define SpawnMaggot(hp, t) //t - type
