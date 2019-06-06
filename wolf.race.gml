@@ -122,6 +122,7 @@ if(is_rolling){
 
 } else {
 	canwalk = true;
+	meleedamage = meleedamage_base;
 	friction = friction_base;
 	maxspeed = maxspeed_base;
 	has_rolled = false;
