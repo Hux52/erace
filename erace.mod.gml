@@ -277,7 +277,6 @@ with(enemy){
 }
 
 with(Player){
-	trace(erace_maxspeed_bonus);
 	erace_maxspeed_bonus = lerp(erace_maxspeed_bonus, 0.5, 0.005*current_time_scale);
 	if(race != "spider"){
 		maxspeed = erace_maxspeed_orig * (erace_maxspeed_bonus + 1);

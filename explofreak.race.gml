@@ -66,10 +66,11 @@ else{
 	right = 1;
 }
 
+//TODO: purist
 // outgoing contact damage
 if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
 	if(exploded <= 0){
-		sound_play_pitchvol(sndExploFreakKillself, random_range(0.9,1.1), 0.65);
+		sound_play_pitchvol(sndExploFreakKillself, random_range(0.9,1.1), 0.45);
 		instance_create(x,y,Explosion);
 		exploded = 15;
 	}
@@ -83,7 +84,22 @@ if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
 	}
 }
 
+//TODO: purist
+//big sploge at the cost of health on click
+if(button_pressed(index,"fire")){
+	if(my_health > 1){
+		n = my_health - 1;
+		pitch = 1-((n/maxhealth)/2);
+		my_health = 1;
+		sound_play_pitchvol(sndExploFreakKillself, pitch, 0.95)
+		repeat(floor(n * 2.5)){
+			instance_create(x,y,Explosion);
+		}
+	}
+}
+
 //speed
+//TODO: purist
 en = instance_nearest(x,y,enemy);
 if(instance_exists(en)){
 	x += lengthdir_x(1*current_time_scale, point_direction(x,y,en.x,en.y));
