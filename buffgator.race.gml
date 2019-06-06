@@ -1,32 +1,34 @@
 #define init
 // character select button
-global.sprMenuButton = sprite_add("sprites/sprGatorSelect.png", 1, 0,0);
-global.sprPortrait = sprite_add("sprites/sprPortraitGator.png", 1, 20, 205);
 
+global.sprMenuButton = sprite_add("sprites/sprGatorSelect.png", 1, 0,0);
+global.sprBuffGatorSmoke = sprite_add("sprites/sprBuffGatorSmoke.png", 8, 16, 16);
+global.sprPortrait = sprite_add("sprites/sprPortraitBuffGator.png", 1, 15, 200);
 #define create
 // player instance creation of this race
 // https://bitbucket.org/YellowAfterlife/nuclearthronetogether/wiki/Scripting/Objects/Player
 
+
 // sprites
-spr_idle = sprGatorIdle;
-spr_walk = sprGatorWalk;
-spr_hurt = sprGatorHurt;
-spr_dead = sprGatorDead;
+spr_idle = sprBuffGatorIdle;
+spr_walk = sprBuffGatorWalk;
+spr_hurt = sprBuffGatorHurt;
+spr_dead = sprBuffGatorDead;
 spr_sit1 = sprMutant15GoSit;
 spr_sit2 = sprMutant15Sit;
 
 // sounds
-snd_hurt = sndGatorHit;
-snd_dead = sndGatorDie;
+snd_hurt = sndBuffGatorHit;
+snd_dead = sndBuffGatorDie;
 
 // stats
-maxspeed = 2.8;
+maxspeed = 3;
 team = 2;
-maxhealth = 12;
+maxhealth = 30;
 melee = 0;	// can melee or not
 weapon_custom_delay = -1; //for shotgun delay
-spr_smoke_current = sprGatorSmoke;
-spr_idle_current = sprGatorIdle;
+spr_smoke_current = global.sprBuffGatorSmoke;
+spr_idle_current = sprBuffGatorIdle;
 
 //active ability stuff
 smoke_buff = 0; 
@@ -45,28 +47,9 @@ smoke_buff_threshold = 45;
 canswap = 0;
 canpick = 0;
 
-on_draw = script_bind_draw(gator_draw, depth);
-
-u1 = ultra_get("gator",1);
-u2 = ultra_get("gator",2);
-
 // ULTRA A: EVOLUTION - BUFF GATOR
-if (u1 = 1){
-	if (player_get_race(index) == "gator"){
-		player_set_race(index, "buffgator");
-		race = "buffgator";
-	}
-}else{
-	if(wep != "gator_shotgun"){
-		wep = "gator_shotgun";
-	}
-}
-
-
-// ULTRA B: Blaze & Blast
-if (u2 = 1){
-	smoke_buff_threshold = 30;
-	smoke_buff_max_bullets = 5;
+if(wep != "gator_flakcannon"){
+	wep = "gator_flakcannon";
 }
 
 if(button_check(index, "spec")){
@@ -97,9 +80,6 @@ if(reload > weapon_get_load(wep)-2){
 }
 
 if(reload <= 1) reload = 0;
-
-#define gator_draw
-instance_destroy()
 	
 #define draw
 origalpha = draw_get_alpha();
@@ -116,12 +96,6 @@ if(smoke_buff_bullets = 1 && smoke_buff > 0){
 if(smoke_buff_bullets = 2 && smoke_buff > 0){
 	draw_rectangle(x - smoke_buff_offsetx + 16, y - smoke_buff_offsety, x - smoke_buff_offsetx +  16 + 4, y - smoke_buff_offsety - ((smoke_buff/smoke_buff_threshold)*8), false);
 	}
-if(smoke_buff_bullets = 3 && smoke_buff > 0){
-	draw_rectangle(x - smoke_buff_offsetx + 4, y - 32, x - smoke_buff_offsetx + 4 + 4, y - 32 - ((smoke_buff/smoke_buff_threshold)*8), false);
-	}
-if(smoke_buff_bullets = 4 && smoke_buff > 0){
-	draw_rectangle(x - smoke_buff_offsetx + 12, y - 32, x - smoke_buff_offsetx +  12 + 4, y - 32 - ((smoke_buff/smoke_buff_threshold)*8), false);
-	}
 
 draw_set_alpha(1);
 for (i = 0; i < smoke_buff_bullets; i++){
@@ -131,12 +105,6 @@ for (i = 0; i < smoke_buff_bullets; i++){
 
 	draw_set_color(c_yellow);
 	draw_rectangle(x - smoke_buff_offsetx + 8*i, y - smoke_buff_offsety, x - smoke_buff_offsetx + 8*i + 4, y - 22, false);
-	} else {
-		draw_set_color(c_red);
-		draw_rectangle(x - smoke_buff_offsetx + 8*i - 20, y - smoke_buff_offsety - 12, x - smoke_buff_offsetx + 8*i - 20 + 4, y - 28 - 12, false);
-
-		draw_set_color(c_yellow);
-		draw_rectangle(x - smoke_buff_offsetx + 8*i - 20, y - smoke_buff_offsety - 12, x - smoke_buff_offsetx + 8*i - 20 + 4, y - 22 - 12, false);
 	}
 }
 
@@ -144,7 +112,7 @@ draw_set_alpha(origalpha);
 
 #define race_name
 // return race name for character select and various menus
-return "Gator";
+return "Buff Gator";
 
 
 #define race_text
@@ -164,12 +132,12 @@ return sprMapIconChickenHeadless;
 
 #define race_swep
 // return ID for race starting weapon
-return "gator_shotgun";
+return "gator_flakcannon";
 
 
 #define race_avail
 // return if race is unlocked
-return 1;
+return false;
 
 
 #define race_menu_button
@@ -208,8 +176,6 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "BUFF";
-	case 2: return "ARSENAL";
 	default: return "";
 }
 
@@ -217,8 +183,6 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "@sMAXIMUM @wMUSCULATURE";
-	case 2: return "@wRAPID @yFIRE";
 	default: return "";
 }
 

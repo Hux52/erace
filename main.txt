@@ -74,6 +74,7 @@ secret
 /loadrace goldscorpion
 /loadrace fastrat
 /loadrace superfrog
+/loadrace buffgator
 
 /loadrace grunt
 /loadrace inspector
