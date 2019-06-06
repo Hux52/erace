@@ -184,9 +184,7 @@ if(charge > 0){
 		if(collision_rectangle(x + 15, y + 15, x - 15, y - 10, enemy, 0, 1)){
 			with(instance_nearest(x, y, enemy)){
 				if(sprite_index != spr_hurt){
-					my_health -= 4;
-					sound_play(snd_hurt);
-					sprite_index = spr_hurt;
+					projectile_hit_push(self, 4, 12)
 					direction = other.direction;
 				}
 			}
@@ -246,6 +244,7 @@ if(button_pressed(index, "fire")){
 	if(lift = 0 and car = 1){
 		spr_idle = sprSnowBotIdle;
 		spr_walk = sprSnowBotWalk;
+		spr_hurt = sprSnowBotHurt;
 		// car projectile creation
 		with(instance_create(x + lengthdir_x(10, gunangle), y + lengthdir_y(10, gunangle), CarThrow)){
 			creator = other;
