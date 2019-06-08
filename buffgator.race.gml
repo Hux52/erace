@@ -1,9 +1,9 @@
 #define init
 // character select button
 
-global.sprMenuButton = sprite_add("sprites/sprGatorSelect.png", 1, 0,0);
+global.sprMenuButton = sprite_add("sprites/selectIcon/sprGatorSelect.png", 1, 0,0);
 global.sprBuffGatorSmoke = sprite_add("sprites/sprBuffGatorSmoke.png", 8, 16, 16);
-global.sprPortrait = sprite_add("sprites/sprPortraitBuffGator.png", 1, 15, 200);
+global.sprPortrait = sprite_add("sprites/portrait/sprPortraitBuffGator.png", 1, 15, 200);
 #define create
 // player instance creation of this race
 // https://bitbucket.org/YellowAfterlife/nuclearthronetogether/wiki/Scripting/Objects/Player

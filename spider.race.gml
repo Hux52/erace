@@ -1,6 +1,6 @@
 #define init
-global.sprMenuButton = sprite_add("sprites/sprSpiderSelect.png", 1, 0,0);
-global.sprPortrait = sprite_add("sprites/sprPortraitSpider.png",1 , 15, 185);
+global.sprMenuButton = sprite_add("sprites/selectIcon/sprSpiderSelect.png", 1, 0,0);
+global.sprPortrait = sprite_add("sprites/portrait/sprPortraitSpider.png",1 , 15, 185);
 
 global.sprLightningSpiderIdle = sprite_add("/sprites/sprLightningSpiderIdle.png", 8, 12, 12);
 global.sprLightningSpiderWalk = sprite_add("/sprites/sprLightningSpiderWalk.png", 6, 12, 12);

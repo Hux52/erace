@@ -4,9 +4,9 @@ global.newLevel = instance_exists(GenCont);
 global.hasGenCont = false;
 
 // charselect sprite
-global.sprMenuButton = sprite_add("sprites/sprSnowBotSelect.png", 1, 0, 0);
+global.sprMenuButton = sprite_add("sprites/selectIcon/sprSnowBotSelect.png", 1, 0, 0);
 
-global.sprPortrait = sprite_add("/sprites/sprPortraitSnowbot.png", 1, 22, 198);
+global.sprPortrait = sprite_add("/sprites/portrait/sprPortraitSnowbot.png", 1, 22, 198);
 
 // level start init- MUST GO AT END OF INIT
 while(true){

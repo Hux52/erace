@@ -1,8 +1,8 @@
 #define init
 // character select button
-global.sprMenuButton = sprite_add("sprites/sprSalamanderSelect.png", 1, 0,0);
+global.sprMenuButton = sprite_add("sprites/selectIcon/sprSalamanderSelect.png", 1, 0,0);
 // character select portrait
-global.sprPortrait = sprite_add("sprites/sprPortraitSalamander.png",1 , 15, 205);
+global.sprPortrait = sprite_add("sprites/portrait/sprPortraitSalamander.png",1 , 15, 205);
 
 // character select sounds
 global.sndSelect = sndSalamanderFire;

@@ -1,6 +1,6 @@
 #define init
-global.sprMenuButton = sprite_add("sprites/sprGuardianSelect.png", 1, 0,0);
-global.sprPortrait = sprite_add("sprites/sprPortraitGuardian.png", 1, 0, 200);
+global.sprMenuButton = sprite_add("sprites/selectIcon/sprGuardianSelect.png", 1, 0,0);
+global.sprPortrait = sprite_add("sprites/portrait/sprPortraitGuardian.png", 1, 0, 200);
 
 // level start init- MUST GO AT END OF INIT
 global.newLevel = instance_exists(GenCont);

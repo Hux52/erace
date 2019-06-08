@@ -1,7 +1,7 @@
 #define init
 // character select button
-global.sprMenuButton = sprite_add("sprites/sprGatorSelect.png", 1, 0,0);
-global.sprPortrait = sprite_add("sprites/sprPortraitGator.png", 1, 20, 205);
+global.sprMenuButton = sprite_add("sprites/selectIcon/sprGatorSelect.png", 1, 0,0);
+global.sprPortrait = sprite_add("sprites/portrait/sprPortraitGator.png", 1, 20, 205);
 
 #define create
 // player instance creation of this race

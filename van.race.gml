@@ -1,5 +1,5 @@
 #define init
-global.sprMenuButton = sprite_add("sprites/sprVanSelect.png", 1, 0, 0);
+global.sprMenuButton = sprite_add("sprites/selectIcon/sprVanSelect.png", 1, 0, 0);
 global.sprPortrait = mskNone;
 global.sprEmptyHurt = sprite_add("sprites/sprDogHit.png", 3, 0, 0);
 global.sprAnime = sprite_add("sprites/anime_squish.png", 30, 0, 0);

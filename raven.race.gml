@@ -4,8 +4,8 @@ global.newLevel = instance_exists(GenCont);
 global.hasGenCont = false;
 
 // character select button
-global.sprMenuButton = sprite_add("sprites/sprRavenSelect.png", 1, 0, 0);
-global.sprPortrait = sprite_add("/sprites/sprPortraitRaven.png", 1, 0, 190); 
+global.sprMenuButton = sprite_add("sprites/selectIcon/sprRavenSelect.png", 1, 0, 0);
+global.sprPortrait = sprite_add("/sprites/portrait/sprPortraitRaven.png", 1, 0, 190); 
 
 // level start init- MUST GO AT END OF INIT
 while(true){

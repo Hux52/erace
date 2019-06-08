@@ -1,8 +1,8 @@
 #define init
 // character select button
-global.sprMenuButton = sprite_add("sprites/sprSnowTankSelect.png", 1, 0, 0);
+global.sprMenuButton = sprite_add("sprites/selectIcon/sprSnowTankSelect.png", 1, 0, 0);
 // character select portrait
-global.sprPortrait = sprite_add("/sprites/sprPortraitGoldSnowTank.png", 1, 5, 198);
+global.sprPortrait = sprite_add("/sprites/portrait/sprPortraitGoldSnowTank.png", 1, 5, 198);
 
 global.laser_color = make_color_rgb(250, 54, 0);
 

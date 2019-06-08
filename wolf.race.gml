@@ -1,6 +1,6 @@
 #define init
-global.sprMenuButton = sprite_add("sprites/sprWolfSelect.png", 1, 0, 0);
-global.sprPortrait = sprite_add("sprites/sprPortraitWolf.png",1 , 5, 190);
+global.sprMenuButton = sprite_add("sprites/selectIcon/sprWolfSelect.png", 1, 0, 0);
+global.sprPortrait = sprite_add("sprites/portrait/sprPortraitWolf.png",1 , 5, 190);
 
 // character select sounds
 global.sndSelect = sndHalloweenWolf;
@@ -170,7 +170,7 @@ if(instance_exists(creator)){
 	x = creator.x;
 	y = creator.y;
 
-	with(instance_place(x + hspeed, y, projectile)){
+	with(instance_nearest(x + hspeed, y, projectile)){
 		if(team != other.team){
 			direction = -direction + 180;
 			sprite_angle = direction;
@@ -180,7 +180,7 @@ if(instance_exists(creator)){
 		}
 	}
 
-	with(instance_place(x, y + vspeed, projectile)){
+	with(instance_nearest(x, y + vspeed, projectile)){
 		if(team != other.team){
 			direction = -direction;
 			sprite_angle = direction;

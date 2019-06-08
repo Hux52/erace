@@ -1,6 +1,6 @@
 #define init
 global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACiSURBVDhPvZIxDkBAEEX3SEqJXiVRi8oF3EOlcRmNu7iHZFnxN+ub1cwiebLZ+f8VjKma0mowx+Ne4jAEOc4fZ6VgXSbr4AAzj+0NP0su6IdOBPP0Ain8Bor+I0qhNx6Cos5siFQKSS/AYMvNCQsZ5CBKJ2AQkGaO7wXABy948fQCrCYXcf8oMGoBAizAPX4fClggv0hqARdjxET/CcBdUNodXNPrwW8RonsAAAAASUVORK5CYII=", 1, 0, 0);
-global.sprPortrait = sprite_add("sprites/sprPortraitGreenRat.png",1 , 15, 185);
+global.sprPortrait = sprite_add("sprites/portrait/sprPortraitGreenRat.png",1 , 15, 185);
 
 // character select sounds
 global.sndSelect = sound_add("sounds/sndFastRatSelect.ogg");

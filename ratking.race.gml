@@ -4,8 +4,8 @@ global.newLevel = instance_exists(GenCont);
 global.hasGenCont = false;
 
 // charselect sprite
-global.sprMenuButton = sprite_add("sprites/sprRatKingSelect.png", 1, 0, 0);
-global.sprPortrait = sprite_add("sprites/sprPortraitRatKing.png",1,24,200);
+global.sprMenuButton = sprite_add("sprites/selectIcon/sprRatKingSelect.png", 1, 0, 0);
+global.sprPortrait = sprite_add("sprites/portrait/sprPortraitRatKing.png",1,24,200);
 
 // character select sounds
 global.sndSelect = sound_add("sounds/sndRatKingSelect2.ogg");	// not sure

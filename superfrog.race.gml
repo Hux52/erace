@@ -2,7 +2,7 @@
 // for level start
 global.newLevel = instance_exists(GenCont);
 global.hasGenCont = false;
-global.sprPortrait = sprite_add("sprites/sprPortraitSuperExploder.png", 1, 10, 205);
+global.sprPortrait = sprite_add("sprites/portrait/sprPortraitSuperExploder.png", 1, 10, 205);
 
 //global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACySURBVDhPY/CJdPtPCUYxgIGBAQMjy2PD1DMApNhphSYGJmQQUA5hm0q0JhgjGwATg6mhvgHYFMMwNjlkC2lnALIYOoapgRuGTRJZDB1jGPDHguE/CCNLEINBejBcQA6m3ACYk2AhSzKm2ACYU0CGNO1lJRpTzwCYF0C4wKEJjFt/SoExiA3TAJODYZgYQQOQ2cgYJka5AchhgK4IhHEZAMPUNcCGyx0FY9OAjik0oOk/AAPExSzmQZwnAAAAAElFTkSuQmCC", 1, 0, 0);
 

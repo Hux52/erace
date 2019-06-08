@@ -1,6 +1,6 @@
 #define init
 global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABgSURBVDhPY1jfn/WfEjxqwPAwAAhABE6MTRMyBqrBrhGGsWlCxkA12DXCMDZNyJjhyv71/5HxjqlVKJiQYcPFAGQN6AYiY2yGDRIDShOc4RhdEzIepAYgC5KCB4sBWf8B/5uAJW+PFKIAAAAASUVORK5CYIIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==", 1, 0, 0);
-global.sprPortrait = sprite_add("/sprites/sprPortraitRadMaggot.png", 1, 22, 200);
+global.sprPortrait = sprite_add("/sprites/portrait/sprPortraitRadMaggot.png", 1, 22, 200);
 
 // character select sounds
 global.sndSelect = sound_add("sounds/sndMaggotSelect.ogg");

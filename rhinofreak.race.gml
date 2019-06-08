@@ -1,6 +1,6 @@
 #define init
-global.sprMenuButton = sprite_add("sprites/sprRhinoFreakSelect.png", 1, 0,0);
-global.sprPortrait = sprite_add("sprites/sprPortraitRhinoFreak.png",1 , 0, 205);
+global.sprMenuButton = sprite_add("sprites/selectIcon/sprRhinoFreakSelect.png", 1, 0,0);
+global.sprPortrait = sprite_add("sprites/portrait/sprPortraitRhinoFreak.png",1 , 0, 205);
 
 // character select sounds
 // global.sndSelect = sound_add("sounds/sndRatSelect.ogg");

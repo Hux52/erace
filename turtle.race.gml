@@ -1,6 +1,6 @@
 #define init
-global.sprMenuButton = sprite_add("sprites/sprTurtleSelect.png", 1, 0, 0);
-global.sprPortrait = sprite_add("sprites/sprPortraitTurtle.png",1 , 0, 200);
+global.sprMenuButton = sprite_add("sprites/selectIcon/sprTurtleSelect.png", 1, 0, 0);
+global.sprPortrait = sprite_add("sprites/portrait/sprPortraitTurtle.png",1 , 0, 200);
 global.sprWhirlwind = sprite_add("sprites/boom.png", 1, 200, 150);
 
 // for level start

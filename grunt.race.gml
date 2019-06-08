@@ -1,6 +1,6 @@
 #define init
-global.sprMenuButton = sprite_add("sprites/sprGruntSelect.png", 1, 0, 0);
-global.sprPortrait = sprite_add("sprites/sprPortraitIDPDGrunt.png", 1, 0, 205);
+global.sprMenuButton = sprite_add("sprites/selectIcon/sprGruntSelect.png", 1, 0, 0);
+global.sprPortrait = sprite_add("sprites/portrait/sprPortraitIDPDGrunt.png", 1, 0, 205);
 
 // character select sounds
 var _race = [];
