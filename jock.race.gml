@@ -2,7 +2,7 @@
 // character select button
 global.sprMenuButton = sprite_add("sprites/sprJockSelect.png", 1, 0, 0);
 // character select portrait
-global.sprPortrait = sprite_add("/sprites/sprPortraitBandit.png", 1, 22, 210);
+global.sprPortrait = sprite_add("/sprites/sprPortraitJock.png", 1, 10, 198);
 
 // character select sounds
 // global.sndSelect = sound_add("sounds/sndBanditSelect.ogg");
