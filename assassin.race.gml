@@ -8,6 +8,8 @@ global.sprMenuButton = sprite_add("sprites/selectIcon/sprAssassinSelect.png", 1,
 
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitAssassin.png", 1, 15, 205);
 
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_Assasin.png", 1, 8, 8);
+
 // level start init- MUST GO AT END OF INIT
 while(true){
 	// first chunk here happens at the start of the level, second happens in portal
@@ -46,6 +48,7 @@ maxspeed = 4.5;
 team = 2;
 maxhealth = 7;
 melee = 0;	// can melee or not
+firing = false;
 
 // vars
 getup = 0;	// alarm to get up from faking
@@ -95,6 +98,12 @@ with(instances_matching(Player, "race", "assassin")){
 // no more weps
 canswap = 0;
 canpick = 0;
+
+if(firing = true){
+	canwalk = false;
+} else {
+	canwalk = true;
+}
 
 #define fake_step
 if(getup > 0){
@@ -153,7 +162,7 @@ return global.sprPortrait;
 
 #define race_mapicon
 // return sprite for loading/pause menu map
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_swep
