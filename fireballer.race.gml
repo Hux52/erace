@@ -4,6 +4,8 @@ global.sprMenuButton = sprite_add("sprites/selectIcon/sprFireBallerSelect.png", 
 // character select portrait
 global.sprPortrait = sprite_add("/sprites/portrait/sprPortraitFireBaller.png", 1, 10, 210);
 
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_FireBaller.png", 1, 8, 8);
+
 // character select sounds
 // global.sndSelect = sound_add("sounds/sndBanditSelect.ogg");
 // var _race = [];
@@ -126,7 +128,7 @@ return global.sprPortrait;
 
 #define race_mapicon
 // return sprite for loading/pause menu map
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_swep
