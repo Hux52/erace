@@ -277,21 +277,22 @@ with(enemy){
 }
 
 with(Player){
-	erace_maxspeed_bonus = lerp(erace_maxspeed_bonus, 0.5, 0.005*current_time_scale);
+	//erace_maxspeed_bonus = lerp(erace_maxspeed_bonus, 0.5, 0.005*current_time_scale);
+	erace_maxspeed_bonus += 1/room_speed;
 	if(race != "spider"){
-		maxspeed = erace_maxspeed_orig * (erace_maxspeed_bonus + 1);
+		maxspeed = min(erace_maxspeed_orig + (min(erace_maxspeed_orig * logn(2, max(1,(erace_maxspeed_bonus/8)+1)), erace_maxspeed_orig/2)), 4);
 	}
 	if(array_length(instances_matching(projectile, "creator", self)) > 0){
-		erace_maxspeed_bonus = lerp(erace_maxspeed_bonus, 0, 0.5*current_time_scale);
+		erace_maxspeed_bonus = -0.75;
 	}
 	if(button_pressed(index,"fire") or button_pressed(index,"spec")){
-		erace_maxspeed_bonus = 0;
+		erace_maxspeed_bonus = -0.75;
 	}
 	if(my_health > erace_prevh){
 		erace_prevh = my_health;	
 	}
 	if(my_health < erace_prevh){
-		erace_maxspeed_bonus = 0;
+		erace_maxspeed_bonus = -0.75;
 		erace_prevh = my_health;
 	}
 // Boiling Veins' HP from 4 up to half of max hp
@@ -302,8 +303,8 @@ with(Player){
 		skill_set_active("fake_veins", 0);
 		if(instance_exists(enemy)){
 			espeed_nearest = instance_nearest(x,y,enemy);
-			if(point_distance(x,y, espeed_nearest.x,espeed_nearest.y) < 25){
-				erace_maxspeed_bonus = 0;
+			if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
+				erace_maxspeed_bonus = -0.75;
 			}
 		}
 	}
