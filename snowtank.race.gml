@@ -142,6 +142,7 @@ if(is_firing){
 				}
 				q = d + ((spread-(bulletCount/bulletCountBase))*r * 20)
 				with(instance_create(x,y,EnemyBullet4)){
+					creator = other;
 					damage = 3;
 					speed = 12;
 					team = other.team;
