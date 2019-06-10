@@ -7,6 +7,8 @@ global.hasGenCont = false;
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprRatKingSelect.png", 1, 0, 0);
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitRatKing.png",1,24,200);
 
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_BigGreenRat.png", 1, 10, 10);
+
 // character select sounds
 global.sndSelect = sound_add("sounds/sndRatKingSelect2.ogg");	// not sure
 var _race = [];
@@ -44,8 +46,8 @@ snd_dead = sndRatKingDie;
 maxspeed = 3;
 team = 2;
 maxhealth = 35;
-spr_shadow_y = 0;
-spr_shadow = shd24;
+spr_shadow_y = 5;
+spr_shadow = shd64;
 mask_index = mskPlayer;
 
 // vars
@@ -68,6 +70,7 @@ melee = 1;	// can melee or not
 canswap = 0;
 canpick = 0;
 
+spr_shadow_x = 4*right;
 if(charge_cool > 0){
 	// sprite faces direction when charging
 	if(direction > 90 and direction <= 270){
@@ -408,7 +411,7 @@ return global.sprPortrait;
 
 #define race_mapicon
 // return sprite for loading/pause menu map
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_swep
