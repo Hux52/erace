@@ -1,6 +1,7 @@
 #define init
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprDogGuardianSelect.png", 1, 0, 0);
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitDogGuardian.png", 1 , 0, 195);
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_dogguardian.png", 1, 10, 10);
 
 global.sprDogHit = sprite_add("sprites/sprDogHit.png", 3, 0, 0);
 
@@ -280,7 +281,7 @@ return global.sprPortrait;
 
 #define race_mapicon
 // return sprite for loading/pause menu map
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_swep

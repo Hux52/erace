@@ -2,6 +2,7 @@
 // character select button
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprSnowBanditSelect.png", 1, 0, 0);
 global.sprPortrait = sprite_add("/sprites/portrait/sprPortraitSnowBandit.png", 1, 22, 210);
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_snowbandit.png", 1, 10, 10);
 
 // character select sounds
 global.sndSelect = sound_add("sounds/sndSnowBanditSelect.ogg");
@@ -128,7 +129,7 @@ return global.sprPortrait;
 
 #define race_mapicon
 // return sprite for loading/pause menu map
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_swep

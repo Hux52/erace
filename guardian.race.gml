@@ -1,6 +1,7 @@
 #define init
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprGuardianSelect.png", 1, 0,0);
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitGuardian.png", 1, 0, 200);
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_Guardian.png", 1, 10, 10);
 
 // level start init- MUST GO AT END OF INIT
 global.newLevel = instance_exists(GenCont);
@@ -178,7 +179,7 @@ return global.sprPortrait;
 
 #define race_mapicon
 // return sprite for loading/pause menu map
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_swep

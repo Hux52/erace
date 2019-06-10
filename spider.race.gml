@@ -1,6 +1,7 @@
 #define init
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprSpiderSelect.png", 1, 0,0);
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitSpider.png",1 , 15, 185);
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_CrystalSpider2.png", 1, 10, 10);
 
 global.sprLightningSpiderIdle = sprite_add("/sprites/sprLightningSpiderIdle.png", 8, 12, 12);
 global.sprLightningSpiderWalk = sprite_add("/sprites/sprLightningSpiderWalk.png", 6, 12, 12);
@@ -300,7 +301,7 @@ return global.sprPortrait;
 
 #define race_mapicon
 // return sprite for loading/pause menu map
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_swep

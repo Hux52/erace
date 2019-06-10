@@ -2,6 +2,7 @@
 // character select button
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprGatorSelect.png", 1, 0,0);
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitGator.png", 1, 20, 205);
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_SmallCrocodile.png", 1, 10, 10);
 
 #define create
 // player instance creation of this race
@@ -159,7 +160,7 @@ return global.sprPortrait;
 
 #define race_mapicon
 // return sprite for loading/pause menu map
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_swep

@@ -1,7 +1,7 @@
 #define init
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprExploderSelect.png", 1, 0, 0);
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitExploder.png", 1, 10, 205);
-
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_ballguy.png", 1, 10, 10);
 // character select sounds
 global.sndSelect = sound_add("sounds/sndExploderSelect.ogg");
 var _race = [];
@@ -86,12 +86,17 @@ if(canwalk = 1){
 // explode on contact- make noise when close
 if(collision_rectangle(x + 10, y + 10, x - 10, y - 10, enemy, 0, 1) && exploded <= 0){
 	exploder_explode();
-	my_health -= 1;
 }
 else if(collision_rectangle(x - 30, y - 10, x + 30, y + 10, enemy, 0, 1)){
 	if(close = 0){
 		sound_play(sndFrogClose);
 		close = 30;
+	}
+}
+
+if(button_pressed(index, "spec")){
+	if(exploded <= 0){
+		exploder_explode();
 	}
 }
 
@@ -111,16 +116,17 @@ if(my_health = 0 && dead = false){
 }
 
 #define exploder_explode
+my_health -= 1;
 exploded = 30;
 	sound_play_pitchvol(sndFrogPistol, random_range(0.9, 1.1), 0.5);
 	// 8 bullets
-	for(i = 0; i < 360; i += 45){
+	for(i = 0; i < 8; i += 1){
 		if(u2 = 0){
 			with(instance_create(x, y, Bullet1)){
 				creator = other;
 				team = creator.team;
 				sprite_index = sprScorpionBullet;
-				direction = other.i + random_range(-5, 5);
+				direction = (other.i * 45) + random_range(-5, 5);
 				image_angle = direction;
 				friction = 0;
 				speed = 4;
@@ -128,14 +134,26 @@ exploded = 30;
 			}
 		} else {
 			// ULTRA B: HYPER REVENGE
-			with(instance_create(x, y, Devastator)){
-				creator = other;
-				team = creator.team;
-				direction = other.i + random_range(-5, 5);
-				image_angle = direction;
-				friction = 0;
-				speed = 16;
-				damage = 8;
+			if(i % 2 = 0){
+				with(instance_create(x, y, Devastator)){
+					creator = other;
+					team = creator.team;
+					direction = (other.i * 45) + random_range(-5, 5);
+					image_angle = direction;
+					friction = 0;
+					speed = 16;
+					damage = 8;
+				}
+			} else {
+				with(instance_create(x, y, BloodBall)){
+					creator = other;
+					team = creator.team;
+					direction = (other.i * 45) + random_range(-5, 5);
+					image_angle = direction;
+					friction = 0;
+					speed = 4;
+					damage = 45;
+				}
 			}
 		}
 	}
@@ -152,7 +170,7 @@ exploded = 30;
 	}
 	
 	if (u2 = 1){
-		sound_play(sndDevastator);
+		sound_play_pitchvol(sndDevastator, random_range(0.9,1.1), 0.45);
 	}
 
 #define race_name
@@ -172,7 +190,7 @@ return global.sprPortrait;
 
 #define race_mapicon
 // return sprite for loading/pause menu map
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_swep

@@ -8,7 +8,7 @@ global.sprMenuButton = sprite_add("sprites/selectIcon/sprAssassinSelect.png", 1,
 
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitAssassin.png", 1, 15, 205);
 
-global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_Assasin.png", 1, 8, 8);
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_Assasin.png", 1, 10, 10);
 
 // level start init- MUST GO AT END OF INIT
 while(true){

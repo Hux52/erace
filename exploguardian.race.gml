@@ -1,6 +1,7 @@
 #define init
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprExploGuardianSelect.png", 1, 0, 0);
 global.sprPortrait = sprite_add("/sprites/portrait/sprPortraitExploGuardian.png", 1, 10, 205);
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_ExploGuardian.png", 1, 10, 10);
 
 // character select sounds
 global.sndSelect = sndExploGuardianCharge;
@@ -198,7 +199,7 @@ return global.sprPortrait;
 
 #define race_mapicon
 // return sprite for loading/pause menu map
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_swep

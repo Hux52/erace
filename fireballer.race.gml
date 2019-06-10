@@ -4,7 +4,7 @@ global.sprMenuButton = sprite_add("sprites/selectIcon/sprFireBallerSelect.png", 
 // character select portrait
 global.sprPortrait = sprite_add("/sprites/portrait/sprPortraitFireBaller.png", 1, 10, 210);
 
-global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_FireBaller.png", 1, 8, 8);
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_FireBaller.png", 1, 10, 10);
 
 // character select sounds
 // global.sndSelect = sound_add("sounds/sndBanditSelect.ogg");

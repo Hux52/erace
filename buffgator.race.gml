@@ -4,6 +4,7 @@
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprGatorSelect.png", 1, 0,0);
 global.sprBuffGatorSmoke = sprite_add("sprites/sprBuffGatorSmoke.png", 8, 16, 16);
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitBuffGator.png", 1, 15, 200);
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_Crocodile.png", 1, 10, 10);
 #define create
 // player instance creation of this race
 // https://bitbucket.org/YellowAfterlife/nuclearthronetogether/wiki/Scripting/Objects/Player
@@ -127,7 +128,7 @@ return global.sprPortrait;
 
 #define race_mapicon
 // return sprite for loading/pause menu map
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_swep
