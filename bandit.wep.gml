@@ -14,12 +14,7 @@ return sprBanditGun;
 return 1;
 
 #define weapon_auto
-if(GameCont.level = 10){
-	return true;
-}
-else{
-	return false;
-}
+return true;
 
 #define weapon_load
 return 21 - GameCont.level;

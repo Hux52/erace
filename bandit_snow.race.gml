@@ -106,7 +106,9 @@ with(prop){
 	}
 }
 
-instance_delete(RainDrop);
+with(RainDrop){
+	instance_destroy();
+}
 instance_delete(RainSplash);
 
 // StreetLight Hydrant SodaMachine SnowMan
