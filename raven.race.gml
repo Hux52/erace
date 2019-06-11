@@ -70,7 +70,7 @@ with(instances_matching(Player, "race", "raven")){
 	spr_walk = sprRavenWalk;
 	spr_fly = sprRavenFly;
 	mask_index = mskPlayer;	// can get hit again
-	sound_play(sndRavenLand);
+	sound_play_pitchvol(sndRavenLand, random_range(0.9,1.1), 0.65);
 	canwalk = 1;	// walk again
 	cooldown = 10;	// cooldown init
 	wkick = 0;	// show weapon
@@ -101,6 +101,9 @@ with(instances_matching(Player, "race", "raven")){
 #define step
 // executed within each player instance of this race after step
 // most actives and passives handled here
+
+u1 = ultra_get(player_get_race(index), 1);
+u2 = ultra_get(player_get_race(index), 2);
 
 // no weps
 canswap = 0;
@@ -242,7 +245,7 @@ if(button_pressed(index, "spec")){
 						spr_fly = sprRavenLift;
 						mask_index = mskNone;	// no hit
 						fly_index = 0;	// set index for flight sprite
-						sound_play(sndRavenLift);
+						sound_play_pitchvol(sndRavenLift, random_range(0.9,1.1), 0.65);
 						cooldown = -1;
 						fly_alarm = 40;	// flight duration
 						speed = 0;	// no sliding
@@ -270,7 +273,7 @@ if(instance_number(enemy) = 0 and instance_exists(Portal) and fly_alarm > 0){
 	spr_walk = sprRavenWalk;
 	spr_fly = sprRavenFly;
 	mask_index = mskPlayer;	// can get hit again
-	sound_play(sndRavenLand);
+	sound_play_pitchvol(sndRavenLand, random_range(0.9,1.1), 0.65);
 	canwalk = 1;	// walk again
 	cooldown = 60;	// cooldown init
 	wkick = 0;	// show weapon
@@ -305,6 +308,24 @@ if(fly_alarm > 0){
 		spr_fly = sprRavenFly;
 	}
 	else if(fly_alarm = 20){
+		if(u1 == 1){
+		// lamp oil? ropes? bombs? you want it? it's yours my friend
+			pdist = point_distance(x,y, coords[0], coords[1]);
+			pdir = point_direction(x,y, coords[0], coords[1]);
+			for(i = 0; i < 5; i++){
+				with (instance_create(x + lengthdir_x((pdist/5) * i, pdir), y + lengthdir_y((pdist/5) * i, pdir), CustomObject)){
+					creator = other;
+					name = "RavenBomb";
+					timer = other.i*2;
+					if(other.i = 4){
+						exploType = "big";
+					} else {
+						exploType = "small";
+					}
+					on_step = script_ref_create(bomb_step);
+				}
+			}
+		}
 		// move view
 		with(tempView){
 			x = creator.coords[0];
@@ -325,7 +346,7 @@ if(fly_alarm > 0){
 		spr_walk = sprRavenWalk;
 		spr_fly = sprRavenFly;
 		mask_index = mskPlayer;	// can get hit again
-		sound_play(sndRavenLand);
+		sound_play_pitchvol(sndRavenLand, random_range(0.9,1.1), 0.65);
 		canwalk = 1;	// walk again
 		cooldown = 60;	// cooldown init
 		wkick = 0;	// show weapon
@@ -347,7 +368,7 @@ if(fly_alarm > 0){
 // cooldown management
 if(cooldown > 0){
 	if(cooldown = 1){
-		sound_play(sndRavenScreech);	// cooldown screech
+		sound_play_pitchvol(sndRavenScreech, random_range(0.9,1.1), 0.65);
 	}
 	cooldown-= current_time_scale;
 }
@@ -398,6 +419,19 @@ with(id){
 	}
 }
 instance_destroy();
+
+#define bomb_step
+timer -= current_time_scale;
+if(timer <= 0){
+	if(exploType == "big"){
+		instance_create(x,y,Explosion);
+		sound_play_pitchvol(sndExplosion, random_range(0.6,0.9), 0.45);
+	} else {
+		instance_create(x,y,SmallExplosion);
+		sound_play_pitchvol(sndExplosionS, random_range(1.5,2), 0.45);
+	}
+	instance_destroy();
+}
 
 #define race_name
 // return race name for character select and various menus
@@ -465,7 +499,7 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "NOTHING";
+	case 1: return "CARPET BOMBS";
 	default: return "";
 }
 
@@ -473,7 +507,7 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "DOES NOTHING";
+	case 1: return "@sRAIN @yDEATH @sFROM @wABOVE";
 	default: return "";
 }
 

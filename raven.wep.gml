@@ -17,7 +17,7 @@ return 1;
 return true;
 
 #define weapon_load
-return 15 + (GameCont.loops * 5);
+return 20 - GameCont.level;
 
 #define weapon_cost
 return 0;
@@ -53,7 +53,8 @@ if("fly_alarm" in self){
 			friction = 0;
 			on_step = script_ref_create(ravenBurst_step);
 			alarm = [0];
-			ammo = 3 + GameCont.loops;
+			maxammo = 3;
+			ammo = maxammo;
 		}
 	}
 }
@@ -67,7 +68,7 @@ if(instance_exists(creator)){
 			x = creator.x + lengthdir_x(5, creator.gunangle);
 			y = creator.y + lengthdir_y(5, creator.gunangle);
 			// fire bullets
-			if(alarm[0] = 0){	// 3 bullets
+			if(alarm[0] <= 0){	// 3 bullets
 				sound_play_gun(sndEnemyFire, 0.2, 0.6);
 				with(instance_create(x, y, AllyBullet)){
 					creator = other.creator;
@@ -86,7 +87,7 @@ if(instance_exists(creator)){
 			}
 			for(i = 0; i < array_length(alarm); i++){
 				if(alarm[i] <= 0){
-					alarm[i] = 5;
+					alarm[i] = max(2, (weapon_get_load(creator.wep)/3) - 2);
 				}
 				alarm[i]-= current_time_scale;
 			}
