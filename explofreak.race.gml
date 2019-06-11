@@ -36,7 +36,7 @@ snd_hurt = sndExploFreakHurt;
 snd_dead = sndExploFreakDead;
 
 // stats
-maxspeed = 2.6;
+maxspeed = 3.6;
 team = 2;
 maxhealth = 5;
 spr_shadow_y = 0;
@@ -88,28 +88,32 @@ if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
 
 //TODO: purist
 //big sploge at the cost of health on click
-if(button_pressed(index,"fire")){
+if(button_pressed(index, "spec")){
 	if(my_health > 1){
-		n = my_health - 1;
-		pitch = 1-((n/maxhealth)/2);
-		my_health = 1;
-		sound_play_pitchvol(sndExploFreakKillself, pitch, 0.95)
-		repeat(floor(n * 2.5)){
-			instance_create(x,y,Explosion);
+		my_health -= 1;
+		sound_play_pitchvol(sndExploFreakDead, random_range(0.5,0.7), 0.65);
+		sound_play_pitchvol(sndExploFreakHurt, random_range(0.5,0.7), 0.45);
+		sound_play_pitchvol(sndExplosionS, random_range(1.1,1.3), 0.65);
+		instance_create(x,y,Explosion);
+		
+		for(i = 0; i < 16; i++){
+			ang = 360/16;
+			instance_create(x + lengthdir_x(65, ang*i), y + lengthdir_y(65, ang*i), SmallExplosion);
 		}
 	}
 }
 
 //speed
 //TODO: purist
-en = instance_nearest(x,y,enemy);
-if(instance_exists(en)){
-	x += lengthdir_x(1*current_time_scale, point_direction(x,y,en.x,en.y));
-	y += lengthdir_y(1*current_time_scale, point_direction(x,y,en.x,en.y));
-}
+// en = instance_nearest(x,y,enemy);
+// if(instance_exists(en)){
+// 	x += lengthdir_x(1*current_time_scale, point_direction(x,y,en.x,en.y));
+// 	y += lengthdir_y(1*current_time_scale, point_direction(x,y,en.x,en.y));
+// }
 
 if(my_health <= 0 and died = false){
 	instance_create(x,y,Explosion);
+	sound_play_pitchvol(sndExplosion, random_range(0.9,1.1), 0.65);
 	died = true;
 } else {
 	died = false;
@@ -125,7 +129,7 @@ return "EXPLO FREAK";
 
 #define race_text
 // return passive and active for character selection screen
-return "@yQUESTIONABLE @wSTRATEGY#@yEXPLOSION @wIMMUNITY";
+return "@yQUESTIONABLE @wSTRATEGY#@yEXPLOSION @wIMMUNITY#@yEXPLODE @wAT WILL";
 
 
 #define race_portrait
