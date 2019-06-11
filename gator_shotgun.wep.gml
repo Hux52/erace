@@ -39,8 +39,12 @@ if(weapon_custom_delay = 0){
 			image_angle = direction;
 			friction = random_range(0.8,1.2);
 			speed = 15 + other.blts;
-			damage = 1 + ultra_get("gator", 2);
-			wallbounce = other.blts;
+			if(other.proj = UltraShell){
+				damage = 6;
+			} else {
+				damage = 2;
+			}
+			wallbounce = other.boom * 5;
 		}
 	}
 	motion_add(gunangle+180, blts)
@@ -89,7 +93,11 @@ weapon_custom_delay = ceil(5 / (smoke_buff_bullets+1));
 boom = smoke_buff_bullets > 0 ? true : false;
 
 if(ultra_get("gator", 2) == 1 && boom = true){
-	proj = FlameShell;
+	if (blts > 3){
+		proj = UltraShell;
+	} else {
+		proj = FlameShell;
+	}
 } else {
 	proj = Bullet2;
 }

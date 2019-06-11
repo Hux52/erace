@@ -133,7 +133,7 @@ for (i = 0; i < smoke_buff_bullets; i++){
 	draw_set_color(c_yellow);
 	draw_rectangle(x - smoke_buff_offsetx + 8*i, y - smoke_buff_offsety, x - smoke_buff_offsetx + 8*i + 4, y - 22, false);
 	} else {
-		draw_set_color(c_red);
+		draw_set_color(c_lime);
 		draw_rectangle(x - smoke_buff_offsetx + 8*i - 20, y - smoke_buff_offsety - 12, x - smoke_buff_offsetx + 8*i - 20 + 4, y - 28 - 12, false);
 
 		draw_set_color(c_yellow);
