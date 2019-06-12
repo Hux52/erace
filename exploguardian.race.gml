@@ -163,7 +163,7 @@ if(explo_timer >= 60 || button_released(index,"spec")){
 		sound_stop(chargesound);
 
 		for(i = 0; i < bullets; i++){
-			with(instance_create(x, y, HorrorBullet)){
+			with(instance_create(x, y, EnemyBullet2)){
 				creator = other;
 				team = creator.team;
 				sprite_index = sprExploGuardianBullet;
@@ -177,7 +177,7 @@ if(explo_timer >= 60 || button_released(index,"spec")){
 		
 
 		for (i = -2; i < 3; i++) { 
-			with(instance_create(x, y, HorrorBullet)){
+			with(instance_create(x, y, EnemyBullet2)){
 					creator = other;
 					team = creator.team;
 					sprite_index = sprExploGuardianBullet;
@@ -213,7 +213,7 @@ if(my_health <= 0){
 	if(died = 0 and is_exploding == true){
 		sound_dead = snd_cgdd;
 		for(i = 0; i < bullets; i++){
-			with(instance_create(x, y, HorrorBullet)){
+			with(instance_create(x, y, EnemyBullet2)){
 				creator = other;
 				team = creator.team;
 				sprite_index = sprExploGuardianBullet;
