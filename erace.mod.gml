@@ -306,7 +306,7 @@ with(Player){
 		erace_maxspeed_bonus = -0.75;
 		erace_prevh = my_health;
 	}
-}
+
 // Boiling Veins' HP from 4 up to half of max hp
 	boilcap = floor(maxhealth/2);
 	if(melee == 1){
