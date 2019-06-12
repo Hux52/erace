@@ -398,6 +398,7 @@ if(my_health > 0){
 	}
 
 	if(instance_exists(creator)){
+		var _p = creator;
 		if(instance_is(creator, Player)){
 			if(creator.race != "spider"){
 				with(instance_create(x,y,InvSpider)){
@@ -412,7 +413,6 @@ if(my_health > 0){
 
 	// targeting
 	var _e = instance_nearest(x, y, enemy);
-	var _p = instance_nearest(x, y, Player);
 	if(instance_exists(_e) and distance_to_object(_e) < 100 and !collision_line(x, y, _e.x, _e.y, Wall, true, true)){
 		if(target == _p or target == noone){instance_create(x,y-8,AssassinNotice)}
 		maxspeed = 4.6;
