@@ -62,6 +62,7 @@ palace
 
 secret
 /loadrace turtle
+/loadrace junglefly
 
 /loadrace molefish
 /loadrace molesarge
