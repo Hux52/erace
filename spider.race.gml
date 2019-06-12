@@ -111,6 +111,7 @@ lightning_timer = 0;
 
 // vars
 melee = 1;	// can melee or not
+chase = false;
 
 #define level_start
 with(instances_matching(Player, "race", "spider")){
@@ -131,7 +132,7 @@ footstep = choose(1,3);
 
 //update stats for muts
 maxspeed_base = 2.6 + (skill_get(mut_extra_feet) * 0.5); //original wandering speed
-maxspeed_close = 4.9 + (skill_get(mut_extra_feet));
+maxspeed_close = 4.6 + (skill_get(mut_extra_feet));
 
 //passive - normal movement on all terrain
 friction = 0.45
@@ -222,16 +223,6 @@ with(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 	}
 }
 
-with(collision_rectangle(x + 12, y + 10, x - 12, y - 10, prop, 0, 1)){
-	if(sprite_index != spr_hurt){
-		sprite_index = spr_hurt;
-		my_health -= 6;
-		sound_play(snd_hurt);
-		sound_play_pitchvol(other.snd_melee, random_range(0.9, 1.1), 0.6);
-		direction = other.direction;
-	}
-}
-
 //speed changes
 e = instance_nearest(x,y,enemy);
 if(instance_exists(e)){
@@ -239,16 +230,19 @@ if(instance_exists(e)){
 		//line of sight to enemy
 		if(collision_line(x,y,e.x,e.y,Wall,false, true) == noone){
 			maxspeed = lerp(maxspeed, maxspeed_close, 0.25 * current_time_scale);
+			chase = true;
 		}
 	} else {
 		maxspeed = lerp(maxspeed, maxspeed_base, 0.05 * current_time_scale);
+		chase = false;
 		}
 } else {
+	chase = false;
 	maxspeed = lerp(maxspeed, maxspeed_base, 0.05 * current_time_scale);
 }
-maxspeed *= 10;
-maxspeed = floor(maxspeed);
-maxspeed /= 10;
+// maxspeed *= 10;
+// maxspeed = floor(maxspeed);
+// maxspeed /= 10;
 
 //ultra A: splitting
 if(u1 == 1){

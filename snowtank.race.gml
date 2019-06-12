@@ -296,4 +296,4 @@ switch(argument0){
 
 #define race_ttip
 // return character-specific tooltips
-return choose("BUFF AS HELL", "FLEX FLEX", "LOOK AT MY MUSCLES");
+return choose("MOW THEM DOWN");

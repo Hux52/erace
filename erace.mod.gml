@@ -279,19 +279,24 @@ with(enemy){
 with(Player){
 	//erace_maxspeed_bonus = lerp(erace_maxspeed_bonus, 0.5, 0.005*current_time_scale);
 	erace_maxspeed_bonus += 1/room_speed;
-	if(race != "spider"){
-		if(race == "sniper"){
-			if(!isDashing){
-				maxspeed = min(erace_maxspeed_orig + (min(erace_maxspeed_orig * logn(2, max(1,(erace_maxspeed_bonus/8)+1)), erace_maxspeed_orig/2)), 4);
-			}
-		} else {
+	if(race == "spider" || race == "junglefly"){
+		if(chase) {erace_maxspeed_orig = maxspeed_close;}
+		else {erace_maxspeed_orig = maxspeed_base;}
+		maxspeed = min(erace_maxspeed_orig + (min(erace_maxspeed_orig * logn(2, max(1,(erace_maxspeed_bonus/8)+1)), erace_maxspeed_orig/2)), maxspeed_close);
+	} else if(race == "sniper"){
+		if(!isDashing){
 			maxspeed = min(erace_maxspeed_orig + (min(erace_maxspeed_orig * logn(2, max(1,(erace_maxspeed_bonus/8)+1)), erace_maxspeed_orig/2)), 4);
+		}
+	} else {
+		maxspeed = min(erace_maxspeed_orig + (min(erace_maxspeed_orig * logn(2, max(1,(erace_maxspeed_bonus/8)+1)), erace_maxspeed_orig/2)), 4);
+	}		
 		}		
-	}
+	}		
+	
 	if(array_length(instances_matching(projectile, "creator", self)) > 0){
 		erace_maxspeed_bonus = -0.75;
 	}
-	if(button_pressed(index,"fire") or button_pressed(index,"spec")){
+	if(button_check(index,"fire") or button_check(index,"spec")){
 		erace_maxspeed_bonus = -0.75;
 	}
 	if(my_health > erace_prevh){
@@ -743,7 +748,7 @@ switch(command){
 				//list commands
 				trace_color("List of ERACE commands:", c_white);
 				trace_color("/ehelp [command] - only use this in case of severe confusion", c_gray);
-				trace_color("/echance [%] - chance for small ammo pickups to become health pickups", c_red);
+				trace_color("/echance [%] - chance for small ammo pickups to become health pickups", c_white);
 				trace_color("/erads [number] - change how many additional rads the enemies drop", c_green);
 				trace_color("/ehealth - toggle whether small health pickups should despawn or not", c_red);
 			break;
@@ -760,13 +765,13 @@ switch(command){
 			break;
 			
 			case "ERADS":
-				trace_color("/erads:", c_white)
+				trace_color("/erads:", c_green)
 				trace_color("Sets how many additional rads the enemies drop on death. (Default: 1)", c_white);
 				trace_color("Use this if you just feel like the enemies don't drop enough rads to suit your liking.", c_gray);
 			break;
 			
 			case "EHEALTH":
-				trace_color("/erads:", c_white)
+				trace_color("/ehealth:", c_red)
 				trace_color("Toggles whether or not health pickups despawn.", c_white)
 			break;
 
