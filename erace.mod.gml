@@ -33,9 +33,11 @@ global.race_names = ["maggotspawn", MaggotSpawn, "bigmaggot", BigMaggot, "bandit
 					Scorpion, "rat", Rat, "ratking", Ratking, "exploder", Exploder, "gator", Gator, 
 					"assassin", MeleeBandit, "raven", Raven, "salamander", Salamander, "sniper", 
 					Sniper, "spider", Spider, "lasercrystal", LaserCrystal, "snowbot", SnowBot, "wolf", 
-					Wolf, "bandit_snow", Bandit, "snowtank", SnowTank, "freak", Freak, "explofreak", ExploFreak, "rhinofreak", RhinoFreak, "turret", Turret,
-					"necromancer", Necromancer, "guardian", Guardian, "exploguardian", ExploGuardian, "dogguardian", DogGuardian,
-					"turtle", Turtle, "molefish", Molefish, "molesarge", Molesarge, "jock", Jock, "fireballer", FireBaller, "grunt", Grunt, "inspector", Inspector, "shielder", Shielder, "van", Van];	// piss off
+					Wolf, "bandit_snow", Bandit, "snowtank", SnowTank, "freak", Freak, "explofreak", 
+					ExploFreak, "rhinofreak", RhinoFreak, "turret", Turret,	"necromancer", Necromancer,
+					 "guardian", Guardian, "exploguardian", ExploGuardian, "dogguardian", DogGuardian,
+					"turtle", Turtle, "molefish", Molefish, "molesarge", Molesarge, "jock", Jock, "fireballer", 
+					FireBaller, "grunt", Grunt, "inspector", Inspector, "shielder", Shielder, "van", Van];	// piss off
 
 global.deselect_color = make_color_hsv(0, 0, 80);	// dimmnessss :)
 global.hover_color = make_color_hsv(0, 0, 190);	// same
@@ -290,9 +292,7 @@ with(Player){
 	} else {
 		maxspeed = min(erace_maxspeed_orig + (min(erace_maxspeed_orig * logn(2, max(1,(erace_maxspeed_bonus/8)+1)), erace_maxspeed_orig/2)), 4);
 	}		
-		}		
-	}		
-	
+				
 	if(array_length(instances_matching(projectile, "creator", self)) > 0){
 		erace_maxspeed_bonus = -0.75;
 	}
@@ -306,6 +306,7 @@ with(Player){
 		erace_maxspeed_bonus = -0.75;
 		erace_prevh = my_health;
 	}
+}
 // Boiling Veins' HP from 4 up to half of max hp
 	boilcap = floor(maxhealth/2);
 	if(melee == 1){
