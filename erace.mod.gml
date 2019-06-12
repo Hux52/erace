@@ -271,7 +271,7 @@ with(enemy){
 						canmelee = 1;
 					}
 				}
-			}
+			} else {_p.melee = 0;}
         }
     }
 }
@@ -280,7 +280,13 @@ with(Player){
 	//erace_maxspeed_bonus = lerp(erace_maxspeed_bonus, 0.5, 0.005*current_time_scale);
 	erace_maxspeed_bonus += 1/room_speed;
 	if(race != "spider"){
-		maxspeed = min(erace_maxspeed_orig + (min(erace_maxspeed_orig * logn(2, max(1,(erace_maxspeed_bonus/8)+1)), erace_maxspeed_orig/2)), 4);
+		if(race == "sniper"){
+			if(!isDashing){
+				maxspeed = min(erace_maxspeed_orig + (min(erace_maxspeed_orig * logn(2, max(1,(erace_maxspeed_bonus/8)+1)), erace_maxspeed_orig/2)), 4);
+			}
+		} else {
+			maxspeed = min(erace_maxspeed_orig + (min(erace_maxspeed_orig * logn(2, max(1,(erace_maxspeed_bonus/8)+1)), erace_maxspeed_orig/2)), 4);
+		}		
 	}
 	if(array_length(instances_matching(projectile, "creator", self)) > 0){
 		erace_maxspeed_bonus = -0.75;
@@ -674,11 +680,11 @@ if(custom = true){
 	_req = instances_matching(CustomHitme, "name", requires_what);
 	if(array_length(_req) > 0){
 		_b = _req[0];
-	}
+	} else {_b = noone;}
 } else {
 	if(instance_exists(requires_what)){
 		_b = instance_nearest(x,y,requires_what);
-	} 
+	} else {_b = noone;}
 }	
 
 if(instance_exists(_b)){

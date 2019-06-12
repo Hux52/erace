@@ -581,6 +581,7 @@ else{
 
 #define spood_draw
 draw_sprite_ext(sprite_index, image_index, x, y, image_xscale, image_yscale, sprite_angle, image_blend, 1);
+draw_sprite(sprStrongSpirit, 0, x, y);
 
 #define spood_destroy
 sound_play(snd_dead);
@@ -664,7 +665,7 @@ if(abs(number_of_spoods)>0){
 			size = 1;
 			image_speed = 0.4;
 			sprite_angle = 0; //for portal animation
-			image_blend = make_color_hsv(0, 0, 200);
+			image_blend = make_color_hsv(0, 0, 225);
 			depth = -1.9;
 			spr_shadow = shd24;
 			direction = random(360);

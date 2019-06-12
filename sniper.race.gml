@@ -30,6 +30,7 @@ firing = false;
 cooldown_base = 45;
 cooldown = 0;
 dash_speed = 7;
+isDashing = false;
 
 // vars
 melee = 0;	// can melee or not
@@ -57,21 +58,24 @@ if (cooldown > 0){
 if(firing == true){
 	canwalk = false;
 } else {
-	if(cooldown < cooldown_base - 5){ //can't walk for 5 frames
+	if(cooldown < cooldown_base - 7){ //can't walk for 7 frames
+		isDashing = false;
 		canwalk = true;
 	} else {
+		isDashing = true;
 		canwalk = false;
 	}
 }
 
 //fixing speed
-if(maxspeed > maxspeed_base){
-	maxspeed = lerp(maxspeed,1.1, 0.2 * current_time_scale);
-} else {maxspeed = maxspeed_base;}
+if(isDashing){
+	maxspeed = dash_speed;
+}
 
 //dash event
 if(button_pressed(index, "spec")){
 	if(canspec = true && firing = false){
+		isDashing = true;
 		instance_create(x,y,Dust);
 		maxspeed = dash_speed;
 		motion_add(direction, dash_speed);
