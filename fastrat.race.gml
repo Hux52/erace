@@ -38,6 +38,7 @@ snd_wrld = sndFastRatSpawn;
 
 // stats
 maxspeed = 4;
+erace_maxspeed_orig = maxspeed;
 team = 2;
 maxhealth = 7;
 spr_shadow_y = 0;

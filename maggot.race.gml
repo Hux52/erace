@@ -36,6 +36,7 @@ snd_dead = sndEnemyDie;
 
 // stats
 maxspeed = 2.5;
+erace_maxspeed_orig = maxspeed;
 team = 2;
 maxhealth = 2;
 spr_shadow = shd16;
