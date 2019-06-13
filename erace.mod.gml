@@ -16,6 +16,7 @@ global.erace_health_despawn = true;
 global.select_exists = false;	// checks for character select
 global.sprAreaSelect = sprite_add("/sprites/sprAreaSelect.png", 8, 8, 12);	// area buttons sprite strip
 global.sprAreaSelected = sprite_add("/sprites/sprAreaSelected.png", 8, 8, 12);	// area buttons sprite strip
+global.sprArrow = sprite_add("/sprites/arrow.png", 1, 5, 5);
 global.races = [
 					["maggotspawn", "bigmaggot", "bandit", "scorpion"],
 					["rat", "ratking", "exploder", "gator", "assassin"],
@@ -267,15 +268,19 @@ with(enemy){
 		if(instance_exists(_p)){
 			if("melee" in _p){
 				if(_p.melee = true){
-					if(point_distance(x, y, _p.x, _p.y) < 80){
 						canmelee = 0;
 					} else {
 						canmelee = 1;
 					}
-				}
+				
 			} else {_p.melee = 0;}
         }
     }
+}
+
+// to initiate the throne fight
+with(NothingIntroMask){
+	my_health = 0;
 }
 
 with(Player){
@@ -289,8 +294,8 @@ with(Player){
 		if(!isDashing){
 			maxspeed = min(erace_maxspeed_orig + (min(erace_maxspeed_orig * logn(2, max(1,(erace_maxspeed_bonus/8)+1)), erace_maxspeed_orig/2)), 4);
 		}
-	} else {
-		maxspeed = min(erace_maxspeed_orig + (min(erace_maxspeed_orig * logn(2, max(1,(erace_maxspeed_bonus/8)+1)), erace_maxspeed_orig/2)), 4);
+	} else if (race != "van"){
+		maxspeed = min(erace_maxspeed_orig + (min(erace_maxspeed_orig * logn(2, max(1,(erace_maxspeed_bonus/8)+1)), erace_maxspeed_orig/2)), 4 + skill_get(mut_extra_feet)/2);
 	}		
 				
 	if(array_length(instances_matching(projectile, "creator", self)) > 0){
@@ -671,6 +676,14 @@ if(mouse_over){
 	draw_text_nt(x, y + 13, string(ttip));
 }
 
+if(selected){
+	draw_set_alpha(1);
+	draw_sprite(global.sprArrow, 0, x,y-10);
+	// draw_set_color(c_black);
+	// draw_triangle(x - 5, y - 10, x + 5, y - 10, x, y - 15,true);
+}
+
+draw_set_color(c_white);
 draw_set_alpha(shine);
 draw_rectangle(_x1, _y1, _x2, _y2,false);
 
