@@ -7,20 +7,20 @@ global.sprPortrait = sprite_add("/sprites/portrait/sprPortraitFireBaller.png", 1
 global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_FireBaller.png", 1, 10, 10);
 
 // character select sounds
-// global.sndSelect = sound_add("sounds/sndBanditSelect.ogg");
-// var _race = [];
-// for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
-// while(true){
-// 	//character selection sound
-// 	for(var i = 0; i < maxp; i++){
-// 		var r = player_get_race(i);
-// 		if(_race[i] != r && r = "bandit"){
-// 			sound_play(global.sndSelect);
-// 		}
-// 		_race[i] = r;
-// 	}
-// 	wait 1;
-// }
+global.sndSelect = sound_add("sounds/sndFireballerSelect.ogg");
+var _race = [];
+for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
+while(true){
+ 	//character selection sound
+ 	for(var i = 0; i < maxp; i++){
+ 		var r = player_get_race(i);
+ 		if(_race[i] != r && r = "fireballer"){
+ 			sound_play(global.sndSelect);
+ 		}
+ 		_race[i] = r;
+ 	}
+	wait 1;
+}
 
 
 #define create

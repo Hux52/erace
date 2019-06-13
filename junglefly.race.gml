@@ -5,20 +5,20 @@ global.sprMenuButton = sprite_add("sprites/selectIcon/sprJungleFlySelect.png", 1
 global.sprPortrait = sprite_add("/sprites/portrait/sprPortraitJungleFly.png", 1, 25, 225);
 
 // character select sounds
-// global.sndSelect = sound_add("sounds/sndBanditSelect.ogg");
-// var _race = [];
-// for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
-// while(true){
-// 	//character selection sound
-// 	for(var i = 0; i < maxp; i++){
-// 		var r = player_get_race(i);
-// 		if(_race[i] != r && r = "bandit"){
-// 			sound_play(global.sndSelect);
-// 		}
-// 		_race[i] = r;
-// 	}
-// 	wait 1;
-// }
+global.sndSelect = sound_add("sounds/sndFlySelect.ogg");
+var _race = [];
+for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
+while(true){
+ 	//character selection sound
+ 	for(var i = 0; i < maxp; i++){
+ 		var r = player_get_race(i);
+ 		if(_race[i] != r && r = "junglefly"){
+ 			sound_play(global.sndSelect);
+ 		}
+ 		_race[i] = r;
+ 	}
+	wait 1;
+}
 
 
 #define create
@@ -340,7 +340,7 @@ if(sprite_index != spr_hurt){
 
 #define race_name
 // return race name for character select and various menus
-return "JUNGLE FLY";
+return "JUNGLEFLY";
 
 
 #define race_text
