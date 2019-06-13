@@ -115,6 +115,10 @@ with(ChestOpen){
 	instance_destroy();
 }
 
+with(Player){
+	erace_maxspeed_bonus = 0;
+}
+
 #define step
 if(global.t < 10){
 	global.t += 1;
@@ -149,9 +153,7 @@ with(Player){
 	if("erace_maxspeed_orig" not in self){
 		erace_maxspeed_orig = maxspeed;
 	}
-	if("erace_maxspeed_bonus" not in self){
-		erace_maxspeed_bonus = 0;
-	}
+		
 	if("erace_prevh" not in self){
 		erace_prevh = my_health;
 	}
