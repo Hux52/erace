@@ -214,7 +214,7 @@ if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 	with(instance_nearest(x, y, enemy)){
 		if(sprite_index != spr_hurt){
 			my_health -= 6;
-			sound_play(snd_hurt);
+			sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.6);
 			sound_play(other.snd_mele);
 			sprite_index = spr_hurt;
 			direction = other.direction;

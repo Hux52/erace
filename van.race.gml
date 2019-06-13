@@ -291,7 +291,7 @@ if(want_van <= 0){
 	with(collision_rectangle(x + 37, y + 22, x - 37, y - 22, enemy, 0, 1)){
 		if(sprite_index != spr_hurt){
 			my_health -= 20;
-			sound_play(snd_hurt);
+			sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.6);
 			sprite_index = spr_hurt;
 			direction = other.direction;
 		}
@@ -300,7 +300,7 @@ if(want_van <= 0){
 	with(collision_rectangle(x + 37, y + 22, x - 37, y - 22, prop, 0, 1)){
 		if(sprite_index != spr_hurt){
 			my_health -= 20;
-			sound_play(snd_hurt);
+			sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.6);
 			sprite_index = spr_hurt;
 			direction = other.direction;
 		}
@@ -992,7 +992,7 @@ if(my_health > 0){
 			if(iframes = 0){
 				my_health -= _ce.meleedamage;
 				sprite_index = spr_hurt;
-				sound_play(snd_hurt);
+				sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.6);
 			}
 		}
 	}
@@ -1228,7 +1228,7 @@ if(my_health > 0){
 			if(iframes = 0){
 				my_health -= _ce.meleedamage;
 				sprite_index = spr_hurt;
-				sound_play(snd_hurt);
+				sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.6);
 			}
 		}
 	}
@@ -1484,7 +1484,7 @@ if(my_health > 0){
 			if(iframes = 0){
 				my_health -= _ce.meleedamage;
 				sprite_index = spr_hurt;
-				sound_play(snd_hurt);
+				sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.6);
 			}
 		}
 	}

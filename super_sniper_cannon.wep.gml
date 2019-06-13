@@ -235,7 +235,7 @@ with(_e){
 		my_health -= _b.damage;
 		_b.damage -= takeAway;
 		//trace(_b.damage);
-		sound_play(snd_hurt);
+		sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.6);
 		sprite_index = spr_hurt;
 	}
 }

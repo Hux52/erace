@@ -83,10 +83,11 @@ with(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 	if(sprite_index != spr_hurt){
 		sprite_index = spr_hurt;
 		my_health -= 5;
-		sound_play(snd_hurt);
+		sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.6);
 		sound_play_pitchvol(other.snd_melee, random_range(0.9, 1.1), 0.6);
 		direction = other.direction;
 	}
+}
 
 //speed changes
 e = instance_nearest(x,y,enemy);
@@ -131,7 +132,6 @@ if(firing){
 					image_angle = direction;
 					friction = 0;
 					speed = 10;
-					on_step = script_ref_create(proj_step, depth);
 					on_hit = script_ref_create(proj_hit);
 					on_wall = script_ref_create(proj_wall);
 				}
@@ -151,8 +151,6 @@ if(cooldown >= 0){
 	canfire = true;
 	maggot_count = maggot_count_base;
 }
-
-#define proj_step
 
 #define proj_hit
 SpawnMaggot(2, "normal");

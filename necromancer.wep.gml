@@ -187,7 +187,7 @@ if(my_health > 0){
 		with(instance_nearest(x, y, enemy)){
 			if(sprite_index != spr_hurt){
 				my_health -= other.my_damage;
-				sound_play(snd_hurt);
+				sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.6);
 				sound_play(sndFreakMelee);
 				sprite_index = spr_hurt;
 				if(meleedamage > 0){
