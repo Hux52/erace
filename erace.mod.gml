@@ -153,6 +153,10 @@ with(Player){
 	if("erace_maxspeed_orig" not in self){
 		erace_maxspeed_orig = maxspeed;
 	}
+	
+	if("erace_maxspeed_bonus" not in self){
+		erace_maxspeed_bonus = 0;
+	}
 		
 	if("erace_prevh" not in self){
 		erace_prevh = my_health;
@@ -447,9 +451,10 @@ if(global.select_exists != instance_number(CharSelect) and instance_number(CharS
 			sprite_index = global.sprAreaSelect;	// all in one sprite
 			image_index = area;	// specific frame of sprite
 			image_speed = 0;	// no anim
-			depth = -9999;	// draw on top of ui
+			depth = -1003;	// draw on top of ui
 			my_bg = array_create(9, noone);
 			shine = 0;
+			splat = 0;
 			
 			//draw stuff
 			t = global.t;
@@ -500,7 +505,7 @@ if(global.select_exists != instance_number(CharSelect) and instance_number(CharS
 					image_index = irandom(sprite_get_number(sprite_index));	// specific frame of sprite
 					image_speed = 0;	// no anim
 					image_blend = global.deselect_color;
-					depth = -1003;	// draw on top of ui
+					depth = -1002;	// draw on top of ui
 					other.my_bg[other.j] = self;
 				}
 			}
@@ -560,6 +565,7 @@ for(i = 0; i < maxp; i++){
 		}
 		if(button_pressed(i, "fire")){	// if clicked
 			shine = 1;
+			splat = 0;
 			if(selected = 0){
 			sound_play_pitchvol(sndSlider,1.5,1);
 			sound_play_pitchvol(sndMenuOptions,2.5,0.2);
@@ -597,6 +603,8 @@ with(instances_matching(CustomObject, "name", "AreaSelect")){
 
 // brightness and child button positioning
 if(selected = 1){
+	trace(splat)
+	if(splat < 3) {splat += current_time_scale;}
 	image_blend = c_white;	// bright
 	// move buttons relative to parent of same area
 	with(instances_matching(CharSelect, "area", area)){
@@ -681,6 +689,13 @@ if(mouse_over){
 if(selected){
 	draw_set_alpha(1 - shine);
 	draw_sprite(global.sprArrow, 0, x,y-12);
+	draw_set_alpha(1);
+	if(area == 7){
+		// draw_sprite_ext(sprCharSplat, splat-1, x, y - 20);
+		draw_sprite_ext(sprUnlockPopupSplat, splat-1, x+25, y-16, 1.5, 1, 0, image_blend, image_alpha);
+	} else {
+		draw_sprite(sprGameOverCenterSplat, splat-1, x, y - 20);
+	}
 	// draw_set_color(c_black);
 	// draw_triangle(x - 5, y - 10, x + 5, y - 10, x, y - 15,true);
 }
