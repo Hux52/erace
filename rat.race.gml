@@ -3,6 +3,10 @@ global.sprMenuButton = sprite_add("sprites/selectIcon/sprRatSelect.png", 1, 0, 0
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitRat.png",1 , 15, 185);
 global.sprCheese = sprite_add("sprites/sprCheese.png", 7, 5, 5);
 
+// for level start
+global.newLevel = instance_exists(GenCont);
+global.hasGenCont = false;
+
 // character select sounds
 global.sndSelect = sound_add("sounds/sndRatSelect.ogg");
 var _race = [];
@@ -16,25 +20,16 @@ while(true){
 		}
 		_race[i] = r;
 	}
-	wait 1;
-}
 
-// for level start
-global.newLevel = instance_exists(GenCont);
-global.hasGenCont = false;
-
-// level start init- MUST GO AT END OF INIT
-while(true){
-	// first chunk here happens at the start of the level, second happens in portal
 	if(instance_exists(GenCont)) global.newLevel = 1;
-	else if(global.newLevel){
-		global.newLevel = 0;
-		level_start();
-	}
-	var hadGenCont = global.hasGenCont;
-	global.hasGenCont = instance_exists(GenCont);
-	if (!hadGenCont && global.hasGenCont) {
-		// nothing yet
+		else if(global.newLevel){
+			global.newLevel = 0;
+			level_start();
+		}
+		var hadGenCont = global.hasGenCont;
+		global.hasGenCont = instance_exists(GenCont);
+		if (!hadGenCont && global.hasGenCont) {
+			// nothing yet
 	}
 	wait 1;
 }
@@ -72,14 +67,12 @@ previousHealth = maxhealth;
 melee = 1;	// can melee or not
 
 #define level_start
-trace("lol")
 with(instances_matching(Player, "race", "rat")){
-	trace("here");
-	// if(u1 == 1){
-	// 	repeat(5 + max(0, floor((GameCont.hard - 10)/4))){
-	// 		SpawnRat();
-	// 	}
-	// }
+	if(u1 == 1){
+		repeat(5 + max(0, floor((GameCont.hard - 10)/4))){
+			SpawnRat();
+		}
+	}
 }
 
 #define game_start
