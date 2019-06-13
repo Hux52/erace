@@ -16,7 +16,7 @@ global.erace_health_despawn = true;
 global.select_exists = false;	// checks for character select
 global.sprAreaSelect = sprite_add("/sprites/sprAreaSelect.png", 8, 8, 12);	// area buttons sprite strip
 global.sprAreaSelected = sprite_add("/sprites/sprAreaSelected.png", 8, 8, 12);	// area buttons sprite strip
-global.sprArrow = sprite_add("/sprites/arrow.png", 1, 5, 5);
+global.sprArrow = sprite_add("/sprites/arrow.png", 1, 6, 5);
 global.races = [
 					["maggotspawn", "bigmaggot", "bandit", "scorpion"],
 					["rat", "ratking", "exploder", "gator", "assassin"],
@@ -677,8 +677,8 @@ if(mouse_over){
 }
 
 if(selected){
-	draw_set_alpha(1);
-	draw_sprite(global.sprArrow, 0, x,y-10);
+	draw_set_alpha(1 - shine);
+	draw_sprite(global.sprArrow, 0, x,y-12);
 	// draw_set_color(c_black);
 	// draw_triangle(x - 5, y - 10, x + 5, y - 10, x, y - 15,true);
 }
