@@ -1,6 +1,6 @@
 #define init
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprLaserCrystalSelect.png", 1, 0, 0);
-global.sprPortrait = sprite_add("sprites/portrait/sprPortraitLaserCrystal.png",1 , 40, 185);
+global.sprPortrait = sprite_add("sprites/portrait/sprPortraitLaserCrystal.png",1 , 30, 195);
 
 // character select sounds
 // global.sndSelect = sound_add("sounds/sndRatSelect.ogg");
@@ -195,7 +195,7 @@ return "LASER CRYSTAL";
 
 #define race_text
 // return passive and active for character selection screen
-return "CONTACT DAMAGE#SHOOTS @gLASERS";
+return "CONTACT DAMAGE#SHOOTS @rLASERS";
 
 
 #define race_portrait

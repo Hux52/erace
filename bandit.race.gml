@@ -74,8 +74,11 @@ if(u1 == 1){
 	if(button_pressed(index, "spec") and reload <= weapon_get_load(wep)/2){
 		has_bandit = true;
 	}
+
 	if(has_bandit and can_shoot){
-	weapon_post(10, 30, 10);	// weapon kick and screen shake
+		if(my_health > 1){
+			my_health -= 1;
+			weapon_post(10, 30, 10);	// weapon kick and screen shake
 			sound_play_pitchvol(sndBloodGamble,0.5,0.6);
 			sound_play_pitchvol(sndBloodHurt,0.5,0.6);
 			with(instance_create(x + lengthdir_x(6,gunangle), y + lengthdir_y(6,gunangle), BloodGamble)){
@@ -93,8 +96,21 @@ if(u1 == 1){
 				direction = other.gunangle;
 				speed = other.maxspeed * 3;
 			}
-			
-		has_bandit = false;
+				
+			has_bandit = false;
+		} else {
+			has_bandit = false;
+			sound_play_pitchvol(sndEmpty, random_range(0.9,1.1), 0.65);
+			with(instance_create(x,y,PopupText)){
+				xstart = x;
+				ystart = y;
+				text = "not enough health!";
+				mytext = "not enough health!";
+				time = 10;
+				target = 0;
+			}
+		}
+		
 	}
 }
 
@@ -352,7 +368,7 @@ draw_sprite_ext(weapon_get_sprite(wep), 0, x - lengthdir_x(wkick, gunangle), y -
 draw_self();
 
 #define bandit_destroy
-sound_play(snd_dead);
+sound_play_pitchvol(snd_dead,random_range(0.9,1.1), 0.65);
 // make corpse
 with (instance_create(x, y, Corpse)){
 	sprite_index = other.spr_dead;
@@ -366,7 +382,7 @@ with (instance_create(x, y, Corpse)){
 // incoming damage
 if(sprite_index != spr_hurt){
 	if(nexthurt <= current_frame){		
-		sound_play_pitchvol(snd_hurt,1,0.6);
+		sound_play_pitchvol(snd_hurt,random_range(0.9,1.1), 0.65);
 		my_health -= argument0;
 		motion_add(argument2, argument1);
 		nexthurt = current_frame + 3;
