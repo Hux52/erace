@@ -603,7 +603,6 @@ with(instances_matching(CustomObject, "name", "AreaSelect")){
 
 // brightness and child button positioning
 if(selected = 1){
-	trace(splat)
 	if(splat < 3) {splat += current_time_scale;}
 	image_blend = c_white;	// bright
 	// move buttons relative to parent of same area
@@ -685,6 +684,8 @@ if(mouse_over){
 	draw_set_valign(fa_top);
 	draw_text_nt(x, y + 13, string(ttip));
 }
+
+draw_set_font(fntM0);
 
 if(selected){
 	draw_set_alpha(1 - shine);
