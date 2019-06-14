@@ -40,7 +40,7 @@ snd_dead = sndBigMaggotDie;
 // stats
 maxspeed = 3;
 team = 2;
-maxhealth = 22;
+maxhealth = 16 + GameCont.level * 1 + skill_get(mut_rhino_skin) * 4;
 spr_shadow = shd32;
 mask_index = mskPlayer;
 
@@ -65,7 +65,7 @@ maggotType = "normal";
 
 u1 = ultra_get(player_get_race(index), 1);
 u2 = ultra_get(player_get_race(index), 2);
-maggot_health = 2 + (skill_get(mut_rhino_skin) * 4) + max(0, floor(GameCont.hard / 2));	// get +1 max hp every 2 levels
+maggot_health = 2 + (skill_get(mut_rhino_skin) * 4) + ceil(0.5 * GameCont.level);
 
 if(u2 == 1){
 	maggotType = "meat";
@@ -81,6 +81,14 @@ if(u1 == 1){
 		TakenDamage(previousHealth - my_health, maggotType); //took damage. i know, complicated stuff
 		previousHealth = my_health;
 	}
+}
+
+// health scale
+if(maxhealth != 16 + (GameCont.level * 1 + skill_get(mut_rhino_skin) * 4)){
+	var _d = (16 + (GameCont.level * 1) + skill_get(mut_rhino_skin) * 4) - maxhealth;
+	maxhealth = 16 + (GameCont.level * 1 + skill_get(mut_rhino_skin) * 4);
+	my_health += _d;
+	
 }
 
 // no weps
@@ -160,11 +168,7 @@ if(cooldown > 0){
 if(collision_rectangle(x + 20, y + 10, x - 20, y - 10, enemy, 0, 1)){
 	with(instance_nearest(x, y, enemy)){
 		if(sprite_index != spr_hurt){
-			my_health -= 1;
-			sound_play_hit(snd_hurt, 0.1);
-			sound_play_pitch(sndBigMaggotBite, random_range(0.9, 1.1));
-			sprite_index = spr_hurt;
-			direction = other.direction;
+			projectile_hit_push(self, 3 + min(4, 0.4 * GameCont.level), 4);
 		}
 	}
 }
@@ -276,9 +280,7 @@ if(my_health > 0){
 	if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
 		with(instance_nearest(x, y, enemy)){
 			if(sprite_index != spr_hurt){
-				my_health -= 1;
-				sound_play_hit(snd_hurt, 0.1);
-				sprite_index = spr_hurt;
+				projectile_hit_push(self, 1 + min(2.3, 0.23 * GameCont.level), 2);
 			}
 		}
 	}

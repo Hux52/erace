@@ -37,7 +37,7 @@ snd_dead = sndScorpionDie;
 // stats
 maxspeed = 5;
 team = 2;
-maxhealth = 15;
+maxhealth = 8 + GameCont.level * 1 + skill_get(mut_rhino_skin) * 4;
 spr_shadow = shd32;
 spr_shadow_y = 5;
 mask_index = mskPlayer;
@@ -68,6 +68,14 @@ u2 = ultra_get("scorpion",2);
 // no weps
 canswap = 0;
 canpick = 0;
+
+// health scale
+if(maxhealth != 8 + GameCont.level * 1 + skill_get(mut_rhino_skin) * 4){
+	var _d = 8 + GameCont.level * 1 + skill_get(mut_rhino_skin) * 4 - maxhealth;
+	maxhealth = 8 + GameCont.level * 1 + skill_get(mut_rhino_skin) * 4;
+	my_health += _d;
+	
+}
 
 // special- venom
 if(button_pressed(index, "fire")){
@@ -117,7 +125,7 @@ if(venom > 0){
 				image_angle = direction;
 				friction = 0;
 				speed = 3.5;
-				damage = 2;
+				damage = 3 + min(2.5, 0.25 * GameCont.level);
 			}
 		}
 	}
@@ -139,11 +147,7 @@ if(cooldown > 0){
 if(collision_rectangle(x + 20, y + 10, x - 20, y - 10, enemy, 0, 1)){
 	with(instance_nearest(x, y, enemy)){
 		if(sprite_index != spr_hurt){
-			my_health -= 5;
-			sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.6);
-			sprite_index = spr_hurt;
-			sound_play(sndScorpionMelee);
-			direction = other.direction;
+			projectile_hit_push(self, 3 + min(4, 0.4 * GameCont.level), 4);
 		}
 	}
 }
