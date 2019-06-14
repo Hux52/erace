@@ -42,7 +42,7 @@ snd_dead = sndBanditDie;
 // stats
 maxspeed = 3;
 team = 2;
-maxhealth = 4;
+maxhealth = 10;
 melee = 0;	// can melee or not
 
 has_bandit = false; //input bubber

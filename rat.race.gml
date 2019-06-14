@@ -103,11 +103,7 @@ else{
 if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 	with(instance_nearest(x, y, enemy)){
 		if(sprite_index != spr_hurt){
-			my_health -= other.damage;
-			sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.65);
-			sound_play_pitchvol(sndRatMelee,random_range(0.9,1.1), 0.65);
-			sprite_index = spr_hurt;
-			direction = other.direction;
+			projectile_hit_push(self, other.damage, 4);
 		}
 	}
 }
@@ -301,10 +297,7 @@ if(my_health > 0){
 	if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
 		with(instance_nearest(x, y, enemy)){
 			if(sprite_index != spr_hurt){
-				my_health -= 2;
-				sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.65);
-				sound_play_pitchvol(sndRatMelee, random_range(0.9, 1.1), 0.65);
-				sprite_index = spr_hurt;
+				projectile_hit_push(self, 2, 4);
 			}
 		}
 	}

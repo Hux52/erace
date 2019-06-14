@@ -290,19 +290,13 @@ if(want_van <= 0){
 	// outgoing contact damage
 	with(collision_rectangle(x + 37, y + 22, x - 37, y - 22, enemy, 0, 1)){
 		if(sprite_index != spr_hurt){
-			my_health -= 20;
-			sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.6);
-			sprite_index = spr_hurt;
-			direction = other.direction;
+			projectile_hit_push(self, 2, 4);
 		}
 	}
 	// outgoing contact damage PROP
 	with(collision_rectangle(x + 37, y + 22, x - 37, y - 22, prop, 0, 1)){
 		if(sprite_index != spr_hurt){
-			my_health -= 20;
-			sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.6);
-			sprite_index = spr_hurt;
-			direction = other.direction;
+			projectile_hit_push(self, 20, 0);
 		}
 	}
 	

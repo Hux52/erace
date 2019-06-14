@@ -17,7 +17,7 @@ return 1;
 return true;
 
 #define weapon_load
-return 21 - GameCont.level;
+return 20 - + min(10, 1 * GameCont.level);
 
 #define weapon_cost
 return 0;
@@ -47,5 +47,5 @@ with instance_create(x + lengthdir_x(8, gunangle), y + lengthdir_y(8, gunangle),
 	image_angle = direction;
 	friction = 0;
 	speed = 6;
-	damage = 2.5 + (0.5 * GameCont.level) + (GameCont.loops * 0.33);
+	damage = 3 + min(8, 0.8 * GameCont.level);
 }
