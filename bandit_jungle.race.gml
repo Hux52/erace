@@ -44,7 +44,7 @@ if(wep != "bandit_popgun"){
 
 #define race_name
 // return race name for character select and various menus
-return "Jungle Bandit";
+return "JUNGLE BANDIT";
 
 
 #define race_text

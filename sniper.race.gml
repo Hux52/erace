@@ -111,7 +111,7 @@ else{
 
 #define race_name
 // return race name for character select and various menus
-return "Sniper";
+return "SNIPER";
 
 
 #define race_text

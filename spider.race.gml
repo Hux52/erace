@@ -280,7 +280,7 @@ if(u1 == 1){
 
 #define race_name
 // return race name for character select and various menus
-return "Crystal Spider";
+return "CRYSTAL SPIDER";
 
 
 #define race_text

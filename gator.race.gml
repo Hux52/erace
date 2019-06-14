@@ -145,7 +145,7 @@ draw_set_alpha(origalpha);
 
 #define race_name
 // return race name for character select and various menus
-return "Gator";
+return "GATOR";
 
 
 #define race_text

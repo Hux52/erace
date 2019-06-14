@@ -116,7 +116,7 @@ instance_delete(RainSplash);
 
 #define race_name
 // return race name for character select and various menus
-return "Snow Bandit";
+return "SNOW BANDIT";
 
 
 #define race_text
