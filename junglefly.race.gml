@@ -70,6 +70,7 @@ cooldown = cooldown_base;
 
 //passive: can fly over terrain
 friction = 0.45;
+footstep = 10;
 
 // no weps
 canswap = 0;
