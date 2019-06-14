@@ -186,10 +186,8 @@ if(my_health > 0){
 	if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
 		with(instance_nearest(x, y, enemy)){
 			if(sprite_index != spr_hurt){
-				my_health -= other.my_damage;
-				sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.6);
+				projectile_hit_push(self, other.my_damage, 4);
 				sound_play(sndFreakMelee);
-				sprite_index = spr_hurt;
 				if(meleedamage > 0){
 					other.my_health -= meleedamage;
 				}

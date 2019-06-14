@@ -70,11 +70,8 @@ else{
 // outgoing contact damage
 with(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 	if(sprite_index != spr_hurt){
-		my_health -= 3;
-		sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.6);
+		projectile_hit_push(self, 3, 4);
 		sound_play_pitchvol(sndFreakMelee,random_range(0.9,1.1),0.6);
-		sprite_index = spr_hurt;
-		direction = other.direction;
 	}
 }
 

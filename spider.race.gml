@@ -200,12 +200,8 @@ else{
 with(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 	_p = other;
 	if(sprite_index != spr_hurt){
-		sprite_index = spr_hurt;
-		my_health -= 3;
-		sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.6);
+		projectile_hit_push(self, 3, 4);
 		sound_play_pitchvol(other.snd_melee, random_range(0.9, 1.1), 0.6);
-		direction = other.direction;
-
 		//ultra B:
 		if(_p.u2 == 1){
 			with(instance_create(x, y, Lightning)){
@@ -533,11 +529,8 @@ if(my_health > 0){
 	// incoming/outgoing contact damage
 	with(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 		if(sprite_index != spr_hurt){
-			my_health -= other.my_damage;
-			sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.6);
+			projectile_hit_push(self, other.my_damage, 4);
 			sound_play(sndMaggotBite);
-			sprite_index = spr_hurt;
-			motion_add(other.direction, 2);
 			if(meleedamage > 0){
 				other.my_health -= meleedamage;
 			}

@@ -174,11 +174,7 @@ if(laserFiring){
 if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 	with(instance_nearest(x, y, enemy)){
 		if(sprite_index != spr_hurt){
-			my_health -= 20;
-			sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.6);
-			//has no melee sound
-			sprite_index = spr_hurt;
-			direction = other.direction;
+			projectile_hit_push(self, 20, 4);
 		}
 	}
 }
