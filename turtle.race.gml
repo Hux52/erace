@@ -20,12 +20,7 @@ while(true){
  		}
  		_race[i] = r;
  	}
-	wait 1;
-}
-
-// level start init- MUST GO AT END OF INIT
-while(true){
-	// first chunk here happens at the start of the level, second happens in portal
+	
 	if(instance_exists(GenCont)) global.newLevel = 1;
 	else if(global.newLevel){
 		global.newLevel = 0;
@@ -70,11 +65,20 @@ spin_angle = 0;	// delayed angle
 spinning = false;
 myWhirl = noone;
 spinDuration = 0;
+popDelay_base = 0;
+popDelay_count = 0;
+popDelay = 0;
+shotgun_base = 20;
+shotgun = 0;
 
 #define level_start
 with(instances_matching(Player, "race", "turtle")){
 	myWhirl = noone;
 	spinDuration = 0;
+}
+
+with(instances_matching(CustomObject, "name", "Whirlwind")){
+	instance_destroy();
 }
 
 #define game_start
@@ -87,6 +91,7 @@ with(instances_matching(Player, "race", "turtle")){
 // most actives and passives handled here
 
 u1 = ultra_get(player_get_race(index), 1);
+u2 = ultra_get(player_get_race(index), 2);
 
 // no weps
 canswap = 0;
@@ -109,6 +114,9 @@ else{
 
 if(button_pressed(index,"fire")){
 	spin_angle = gunangle;
+	popDelay_base = 1;
+	popDelay = 0;
+	popDelay_count = 0;
 }
 
 spinning = button_check(index,"fire");
@@ -131,7 +139,6 @@ if(u1 = 1){ //ultra A
 
 // spinning
 if(spinning){
-	move_bounce_solid(false);
 	spinDuration += current_time_scale;
 	// angle
 	var _pd = gunangle;
@@ -143,10 +150,48 @@ if(spinning){
 	if(sprite_index != spr_hurt){
 		sprite_index = spr_fire;
 	}
+
+	if(u2 == 1){
+		popDelay -= current_time_scale;
+			if(popDelay <= 0){
+			//fire thing
+			snd = popDelay_base/5;
+			sound_play_pitchvol(sndPopgun, random_range(1.7 - snd,1.5 - snd), 0.35);
+			with(instance_create(x,y,Bullet2)){
+				team = other.team;
+				direction = other.spin_angle + 180 + random_range((1/other.popDelay_base) * 32, (1/other.popDelay_base) * -32);
+				friction = 0.6;
+				speed = 10 + random(2);
+			}
+			popDelay_count += 1;
+			if(popDelay_count >= 4){
+				popDelay_base = min(4, popDelay_base + 1);
+				popDelay_count = 0;
+			}
+			popDelay = popDelay_base;
+		}
+
+		if(shotgun <= 0){
+			shotgun = shotgun_base;
+			sound_play_pitchvol(sndFireShotgun, random_range(1.5, 1.7), 0.45);
+			sound_play_pitchvol(sndSuperFireballerHurt, random_range(1.6, 1.4), 0.35);
+			for(i = -2; i <= 2; i++){
+				with(instance_create(x,y,FlameShell)){
+				team = other.team;
+				friction = 0.4;
+				speed = 12 + random(2);
+				direction = other.direction + 180 + (other.i * (45/5));
+				wallbounce = 30;
+				}
+			}
+		}
+	}
 }
 else{
-	spinDuration = lerp(spinDuration, 0, 0.01);
+	spinDuration = lerp(spinDuration, 0, 0.05 * current_time_scale);
 }
+
+shotgun -= current_time_scale * u2;
 
 // outgoing contact damage
 if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
@@ -162,7 +207,7 @@ if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 if("creator" in self){
 	if (instance_exists(creator)){
 		flipTimer += current_time_scale;
-		flipThreshold = scl * 10;
+		flipThreshold = max(3, scl * 5);
 		if(flipTimer >= flipThreshold){			
 			flip *= -1;
 			flipTimer = 0;
@@ -187,7 +232,7 @@ if("creator" in self){
 				factor_absolute = random_range(0.4,1);
 			}
 			dist = point_distance(x,y,other.x,other.y);
-			if(dist < other.forceRadius){
+			if(dist < other.forceRadius and other.scl > 0.5){
 				factor_a = 1-(dist/other.forceRadius);
 				factor_p = (dist/other.forceRadius) * 2;
 				f = other.force;
@@ -197,14 +242,14 @@ if("creator" in self){
 				motion_add(a, f * factor_a * factor_absolute);
 			}
 			speed = clamp(speed, 0, 15);
-			if(speed > 12){
+			if(speed > 9){
 				with(instance_place(x,y,enemy)){
-					if(sprite_index != spr_hurt){
+					if(nexthurt <= current_frame){
 						projectile_hit_push(self, floor(other.speed / 10), 4);
 					}
 				}
 			}
-			if(speed == 15){
+			if(speed >= 15 and size > 1){
 				if(place_meeting(x + hspeed, y + vspeed, Wall)){
 					_w = instance_nearest(x + hspeed, y + vspeed, Wall);
 					with(_w){
@@ -285,7 +330,8 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "@qV@qO@qR@qT@qE@qX";
+	case 1: return "VORTEX";
+	case 2: return "AFTERBURNER";
 	default: return "";
 }
 
@@ -293,7 +339,8 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "@qS@qU@qC@qC";
+	case 1: return "@sGENERATE LOTS OF @wWIND";
+	case 2: return "@rFIRE @wBEHIND YOU";
 	default: return "";
 }
 
