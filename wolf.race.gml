@@ -308,4 +308,4 @@ switch(argument0){
 
 #define race_ttip
 // return character-specific tooltips
-return choose("WOOF", "BARK", "STRAY MODE ENGAGED", "AWOO.WAV");
+return choose("WOOF", "BARK", "STRAY MODE ENGAGED", "AWOO.WAV", "ARF!", "POODLE BITES");

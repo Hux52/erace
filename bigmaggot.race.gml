@@ -108,7 +108,9 @@ else{
 // constant movement
 if(canwalk = 1){
 	move_bounce_solid(true);
-	motion_add(direction, maxspeed / 4);
+	if(speed < 2){
+		motion_add(direction, maxspeed / 4);
+	}
 }
 
 // special - burrow

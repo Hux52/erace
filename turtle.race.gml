@@ -200,7 +200,7 @@ if("creator" in self){
 			if(speed > 12){
 				with(instance_place(x,y,enemy)){
 					if(sprite_index != spr_hurt){
-						projectile_hit_push(self, floor(other.speed / 10, 4);
+						projectile_hit_push(self, floor(other.speed / 10), 4);
 					}
 				}
 			}

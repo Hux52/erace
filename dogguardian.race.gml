@@ -356,4 +356,4 @@ switch(argument0){
 
 #define race_ttip
 // return character-specific tooltips
-return choose("WOOF", "HOPS", "RADICAL", "POUNCE");
+return choose("WOOF", "HOPS", "RADICAL", "POUNCE", "ARF!", "POODLE CHEWS IT", "FRUNOBULAX");
