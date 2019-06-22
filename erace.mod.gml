@@ -77,7 +77,7 @@ sprite_replace_base64(sprSkillIcon, "iVBORw0KGgoAAAANSUhEUgAAAtAAAAAgCAMAAAAMhL+
 sprite_replace_base64(sprSkillIconHUD, "iVBORw0KGgoAAAANSUhEUgAAAeAAAAAQCAMAAAD571wKAAAABGdBTUEAALGPC/xhBQAAAwBQTFRFAAAAHhYiHCMmNTc7IjZZJE4JM3sEQjBLSk5USFVbTFZdW2BneF5GbGFCaW53IVSMAHj8W3ePbECCALgAAKgmNpwRAP8AMdJVSJwRSP0IfYKMQpz/zAAA/DgA22oArVC5ircGvv0IgdJV14wU0Z0Ay6c6/LgAyZ936sga//8AoKSrmbXMs7rBu77D35bU8Ne+297h7OjU////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAjRXNjwAAAQB0Uk5T////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////AFP3ByUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuNWRHWFIAAAlySURBVFhHvZiNVtw4EkZFOttN4+zA0LskeCCEwAaYjEPT7/9u7P2+Ksl2A5nZc/ZMAbJKKpV+rkqWKc//JymSzP9MqpXt/5feZ9bk326bln/dvUYiSTVkT/upr1eav2gx1cN62mTP+oW7PXWmy1jqtFEte22ZplaZ+VMpZRiG/qX7l1K6C9WVngZjiz37V5qXrh+t0eQj1T0pXeea+nwp4XzsogwaTT9MOy3/mmlj527oATaDcnp6enV1OrFXi6bKrpTNRB+2Wzp7eHhoHoZh0rpodfpZ/5PFlUzty+6SH9TJhL28bjJrZinr6rmQjZzy45o7P28ovo2Xac8HOEq5uOguLoJvV1GUw647nPifqZZSFo0wnXcd+dFiNqLSLZRXi5mLJuX+Uub3960Fo+379ZpVS3bie3bWfLLi43SU1+gb9OC7R7i1JbthRZYVsHxtt2XbP+x2u0p4CowOjhgOyehBAxwN5vYAvpwAjuELQKhpNUpZV6xjzg2qzzH46iQ05tGgrFb9wJz3N11Ykw5ABrPwGoF4Sg7T22HoIB4dlB6+4VDRWzpYRGu57Iedes/qhcnWp8tmu+GeBel7kkpY419LCOJnwEKW+C1CHPXUYJAKG1N9xUMFK8tpA6xx669K2SyHBrhst12nCO4edrcJWBMYAwK+R+fX1+dHjTCzBXCdjOzlsNkL8HeUBKz9LUCdZvN6BJN4gBnBUib8gqXmmAGY+BGpZQXcA/6CcBsGB5KnI8CFY9qEPKLkm4Thu0CkT0MQBjHFWAwA+5kFBAPuQj3R8a1M6U6ifXko5VtjXFiPAHwZBcxTESPCBhx4Ne0ADF8D9mqYLAseqVeJCTuAV1dhfnd3p/Y2VgLcpf6iCLQhLYK9fyY76Ojo+vrfJkwBnuqKswXC4WazGYZNOnwu379ffv+V8bKaauClk8T622YiClvOZk1HD5loJd2DjRvNT9dddx7t6xCkFbbywerKhNX6Fw2LFw7TyfmMIsAC2nUfP8LzUITZgQwOOCfH7xfh3lK+xHagK2o7JSZMQSkBWITL8UliBfXJsbNUf4NxOw/Fl9WaAv5j+4cR4kAnM51Ejkq0XoDVhMJYvCoUaEML8OrKgMuHu8dSHt1S42G9lsvNDsCOYU065Lbu+HCuX6t9T/yWawjryNL5z3Zndy8WZOV2CWBkscgtE9IAJ2GYaflsMpXy7h3zfIeAlyTgLZd6Cai9AJ+fd+fXHYAZiNtg0dtACsNwACfg8svvyMPt7Ug4fnNIBO6i+/j160cAhy4RnPfvk4+H/wXAWk8FMjm9YfRWNosq2uSNLw0jX77R8cPugSB26VqngV7B3r9yv+55Ke4ScDmLDR18mRxLD3wFmagrdD/fI58dwjqhE/BpAH788KhfDwiV4BVgIfGLkiN6axlub6XrphP+yaj/oQeuAF+7P44G1pYJDz3dyKn8wXe95ix2jyFentR0Bi7iKkLRTEp5twaxMJNxh3qBbJaas4kRu+efPp0X0mt34D2gOIruKuCVAROhIjwFTKey5VUcQEuBL4Qjb7zl5Jif5PMFKUo1A6KC7vrFgkQh4s0ld4hZvwJYcMXXCxAnInxF2NV4WBPBvIENrAxB+EwnHNUQ9llWOMBdLb66o33WRUARHK9gONOgEL93j3cfGI5aU7Bcmq4ZY84RzSsYzhHBZZAz+8el+g/AhUPagH/8+FHnSzbxLsV3vV7mKc2oum7HoRZ5AVaqIaTBKCqugNNEfPEpwOqxHzrY/iNAuInXI4zRmO2BptwA67ZUj2iX6ALaX/gSHRtPfL9+ddbJb78B9+SEB/0tBfjLogLmDnEeMzjXPVlUR3klgrHgdfegAMwFWCzW/eUcMIjhG2cQg4PwcMYB4WqtflhohhpgA6wFALDi94r5ujWxe/eI3Lkz7DcA3u62AN4Swp4ghOEbCzLc32gskhsD9hEtqUf0yqtEoi0EDRMGsO5a7sQ+d6US1pBDlHfJTKjQCc3xHBb9HuDS/46/EAzsyVem2rwSljW63qzU+pLlJaAdi809Wg0ZXFlEBC98P0ZEVgEswFiL8BLA7i/YakfXfSoskmHn3AvAIiu88HWNCtZcoflYqke0jwHvFI1PGe/Y3BBUq3lOUcOvR7Tnn4DNAVVnM4T5jdZchzihi+KXVMPV7LsewLpFs1PKTQpZTdCX6LhkoXIWcjxrBB1ZjUUn6pK5E8EeL1cMgoXtUkN4x1AHvQ+kON0TRuFgUKXCU9c2NC2DWWmJWMycYHxnj45KOegPEJ2hUh3BbqYnBaA1iviPB1LfwcpToLPZBzQiwAv2bN6rbd+D14dW7ocUpiR5GcE6yFNcisQdmhhIXVOLe6X0gK12ss97p1IpwBlFIabjWYDdmCOa592d38K4UoN+6QjeKNXoy8CjRTBUn57++aS/BDz5TPLwaWLAOQ1tP1aEZdMY6YB9s9vpQmAeKuCjkVun8q8DjlMrDRyc8ifXdjgVuWOtpoA1JWr8jpQWZu1J5iIsQifNjyIBVsGx4CqAA7BqwyI2lNZfF2h959EgGlHui7Ru0aEjvMljhapEaQhXaVLU/9iJCUdBzF69ZIO1/lWxyXhXBOalR/u0vYN9QFPP0SzCeglri+As7y+SnHaIj7TnclNg6x+y8jD+o8OjYQkCsPez2aQ/0MgevASv+DbAEuffAmwZswpgZZO6yzQPae07u4nn5SS09FRFBTDmWQviqCUNFcLHx+8Vv8cqD7QhsuDzSGus36ljAdbDVKME1lEU+kTkV0JOfJUCOA2Zp34Iz9TXawHOCCaEVS0LbVMKIoJXtbGKCOG8R/NRwyeIbkQSbcmYOU996km5uXH8PnFGRw/0kXshXWo/tzcM/RaC/ulJo3CB+BLGdpcF2u3KvwHYnbRs0yalo9Tv7InI7FXbENUCuAlsZU1S9cIXEiEsF6pJuvCVhVeGz6Q6nxQZ+nE8AmaDRPYVafakohxrn1WKkqbHBo9N7mZTUYEAZwDLgN8AHHkYTyI4jCQGrKcQ+xWcLtQkxOq+zjOcZYEqOKD14m0FcZpZcfonUo3HzEQok6RmsbZXNpd5pbVJEdmUmSLZK7B5SmiT4kn2bZm5jKKmTv1YRm187ltLJgWZbeJ6S1OdsbgcmWvNYE+tBalIpgWZj8ffLZPRS6TOiqZDTMWyp1vdk7H8LYuXgt3cVE3HAmtIqvvySu2swEpKFllG9WXdz2XfPvSxoCnPz/8FO3SxREhyzxEAAAAASUVORK5CYII=", 30);
 
 trace_color ("Welcome to Erace!",c_white);
-trace_color ("Type '/ehelp list' for a list of available commands!",c_white);
+trace_color ("Type '/erace help' for a list of available commands!",c_white);
 
 //oldPick = array_create(4, 0);
 //global.e = array_create(4, 0);
@@ -768,107 +768,92 @@ if(instance_exists(_b)){
 // chat commands
 var command = string_upper(argument0);
 var parameter = string_upper(argument1);
-switch(command){
-	case "EHELP":
-		//help command for BABIES. go read a book
-		switch (parameter){
-			case "":
-				trace_color("Type '/ehelp list' to see a list of commands.", c_orange);
-			break;
-			
-			case "LIST":
-				//list commands
-				trace_color("List of ERACE commands:", c_white);
-				trace_color("/ehelp [command] - only use this in case of severe confusion", c_gray);
-				trace_color("/echance [%] - chance for small ammo pickups to become health pickups", c_white);
-				trace_color("/erads [number] - change how many additional rads the enemies drop", c_green);
-				trace_color("/ehealth - toggle whether small health pickups should despawn or not", c_red);
-			break;
-			
-			case "EHELP":
-				trace_color("If you need help with getting help, you are truly lost.", c_white);
-				//I mean, you can't argue there
-			break;
-			
-			case "ECHANCE":
-				trace_color("/echance:", c_white)
-				trace_color("Sets the chance, in percent, for an ammo pickup to transform into a health pickup. Otherwise, the ammo pickup despawns.", c_white);
-				trace_color("/echance default to return to the industry standard of 30.438164%.", c_gray)
-			break;
-			
-			case "ERADS":
-				trace_color("/erads:", c_green)
-				trace_color("Sets how many additional rads the enemies drop on death. (Default: 1)", c_white);
-				trace_color("Use this if you just feel like the enemies don't drop enough rads to suit your liking.", c_gray);
-			break;
-			
-			case "EHEALTH":
-				trace_color("/ehealth:", c_red)
-				trace_color("Toggles whether or not health pickups despawn.", c_white)
-			break;
 
-			default:
-				trace_color(choose("Wrong.", "Incorrect.", "Are you sure about that?", "Think again.") + " Command not found.", c_red);
-			break;
-		}
-	return true;
-	break;
-	
-	case "ECHANCE":
-		switch(parameter){
-		case "DEFAULT":
-			global.healthChance = 30;
-			trace_color("Health pickup transform reverted to normal. (" + string(global.healthChance) + "%)", c_white);
-		break;
-		
-		case "":
-			trace_color("You forgot to type in a number.", c_red);
-		break;
-		
-		default:
-			global.healthChance = real(parameter);
-			trace_color("Chance to transform into a health pickup now " + string(global.healthChance) + "%", c_white);
-		break;
-		}
-	return true;
-	break;
-	
-	case "ERADS":
-		switch(parameter){
-			case "":
-				if(global.erace_raddrop == 1){
-					trace_color("Enemies now drop " + string(global.erace_raddrop) + " more rad on death.", c_green);
-				}else if (global.erace_raddrop == 0){
-					trace_color("Enemies drop their normal amount of rads on death.", c_green);
-				}else{
-					trace_color("Enemies now drop " + string(global.erace_raddrop) + " more rads on death.", c_green);
-				}
-			break;
-			
-			default:
-			if (real(parameter) < 0){
-				trace_color("Enter a non-negative number, please.", c_red);
-			} else if (real(parameter) > 200) {
-				trace_color("That number's too high even for me.", c_red);
-			} else if (real(parameter) > 0) {
-				global.erace_raddrop = real(parameter);
-				
-				if(real(parameter) == 1){
-					trace_color("Enemies now drop " + string(global.erace_raddrop) + " more rad on death.", c_green);
+if(command = "ERACE"){
+	if(argument1 != ""){
+        var _args = string_split(string_rtrim(argument1), " ");
+        cmd = string_upper(_args[0]);
+        switch(cmd){
+            case "HELP":
+				if(array_length(_args) < 2){
+					//list commands
+					trace_color("List of ERACE commands:", c_white);
+					trace_color("/erace help <command> - only use this in case of severe confusion", c_gray);
+					trace_color("/erace chance <%> - chance for small ammo pickups to become health pickups", c_white);
+					trace_color("/erace rads <number> - change how many additional rads the enemies drop", c_green);
+					trace_color("/erace health - toggle whether small health pickups should despawn or not", c_red);						
 				} else {
-					trace_color("Enemies now drop " + string(global.erace_raddrop) + " more rads on death.", c_green);
-				}
-			} else {
-				global.erace_raddrop = 0;
-				trace_color("Enemies drop their normal amount of rads on death.", c_green);
-			}
-		}
-	return true;
-	break;
+					switch(string_upper(_args[1])){
+						case "HELP":
+							trace_color("If you need help with getting help, you are truly lost.", c_white);
+							//I mean, you can't argue there
+						break;
+						
+						case "CHANCE":
+							trace_color("Health drop chance", c_white)
+							trace_color("Sets the chance, in percent, for an ammo pickup to transform into a health pickup. Otherwise, the ammo pickup despawns.", c_white);
+							trace_color("/echance default to return to the industry standard of 30.438164%.", c_gray)
+						break;
+						
+						case "RADS":
+							trace_color("Extra rads", c_green)
+							trace_color("Sets how many additional rads the enemies drop on death. (Default: 1)", c_white);
+							trace_color("Use this if you just feel like the enemies don't drop enough rads to suit your liking.", c_gray);
+						break;
+						
+						case "HEALTH":
+							trace_color("Infinite health pickup duration", c_red)
+							trace_color("Toggles whether or not health pickups despawn.", c_white)
+						break;
 
-	case "EHEALTH":
-		switch(parameter){
-			default:
+						default:
+							trace_color(choose("Sorry, nope.", "Wrong.", "Incorrect.", "Are you sure about that?", "Think again.") + " Command not found.", c_red);
+						break;
+
+					}
+				}
+            break;
+
+			case("CHANCE"):
+				if(array_length(_args) < 2){
+					global.healthChance = 30;
+					trace_color("Health pickup transform reverted to normal. (" + string(global.healthChance) + "%)", c_white);
+				} else {				
+					global.healthChance = real(_args[1]);
+					trace_color("Chance to transform into a health pickup now " + string(global.healthChance) + "%", c_white);
+				}
+			break;
+
+			case("RADS"):
+				if(array_length(_args) < 2){
+					if(global.erace_raddrop == 1){
+						trace_color("Enemies drop " + string(global.erace_raddrop) + " more rad on death.", c_green);
+					}else if (global.erace_raddrop == 0){
+						trace_color("Enemies drop their normal amount of rads on death.", c_green);
+					}else{
+						trace_color("Enemies drop " + string(global.erace_raddrop) + " more rads on death.", c_green);
+					}
+				} else {
+					if (real(_args[1]) < 0){
+						trace_color("Enter a non-negative number, please.", c_red);
+					} else if (real(_args[1]) > 200) {
+						trace_color("That number's too high even for me.", c_red);
+					} else if (real(_args[1]) > 0) {
+						global.erace_raddrop = real(_args[1]);
+						
+						if(real(_args[1]) == 1){
+							trace_color("Enemies now drop " + string(global.erace_raddrop) + " more rad on death.", c_green);
+						} else {
+							trace_color("Enemies now drop " + string(global.erace_raddrop) + " more rads on death.", c_green);
+						}
+					} else {
+						global.erace_raddrop = 0;
+						trace_color("Enemies drop their normal amount of rads on death.", c_green);
+					}
+				}
+			break;
+
+			case("HEALTH"):
 				global.erace_health_despawn = !global.erace_health_despawn;
 
 				if(global.erace_health_despawn == true){
@@ -877,10 +862,127 @@ switch(command){
 					trace_color("Health pickups will no longer despawn.", c_red);
 				}
 			break;
-		}
-	return true;
-	break;
-	}
+        }
+    } else {
+        trace_color("Looks like something went wrong. Try again!", c_red);
+    }
+    return true;
+}
+
+// old commends
+// switch(command){
+// 	case "EHELP":
+// 		//help command for BABIES. go read a book
+// 		switch (parameter){
+// 			case "":
+// 				trace_color("Type '/ehelp list' to see a list of commands.", c_orange);
+// 			break;
+			
+// 			case "LIST":
+// 				//list commands
+// 				trace_color("List of ERACE commands:", c_white);
+// 				trace_color("/ehelp [command] - only use this in case of severe confusion", c_gray);
+// 				trace_color("/echance [%] - chance for small ammo pickups to become health pickups", c_white);
+// 				trace_color("/erads [number] - change how many additional rads the enemies drop", c_green);
+// 				trace_color("/ehealth - toggle whether small health pickups should despawn or not", c_red);
+// 			break;
+			
+// 			case "EHELP":
+// 				trace_color("If you need help with getting help, you are truly lost.", c_white);
+// 				//I mean, you can't argue there
+// 			break;
+			
+// 			case "ECHANCE":
+// 				trace_color("/echance:", c_white)
+// 				trace_color("Sets the chance, in percent, for an ammo pickup to transform into a health pickup. Otherwise, the ammo pickup despawns.", c_white);
+// 				trace_color("/echance default to return to the industry standard of 30.438164%.", c_gray)
+// 			break;
+			
+// 			case "ERADS":
+// 				trace_color("/erads:", c_green)
+// 				trace_color("Sets how many additional rads the enemies drop on death. (Default: 1)", c_white);
+// 				trace_color("Use this if you just feel like the enemies don't drop enough rads to suit your liking.", c_gray);
+// 			break;
+			
+// 			case "EHEALTH":
+// 				trace_color("/ehealth:", c_red)
+// 				trace_color("Toggles whether or not health pickups despawn.", c_white)
+// 			break;
+
+// 			default:
+// 				trace_color(choose("Wrong.", "Incorrect.", "Are you sure about that?", "Think again.") + " Command not found.", c_red);
+// 			break;
+// 		}
+// 	return true;
+// 	break;
+	
+// 	case "ECHANCE":
+// 		switch(parameter){
+// 		case "DEFAULT":
+// 			global.healthChance = 30;
+// 			trace_color("Health pickup transform reverted to normal. (" + string(global.healthChance) + "%)", c_white);
+// 		break;
+		
+// 		case "":
+// 			trace_color("You forgot to type in a number.", c_red);
+// 		break;
+		
+// 		default:
+// 			global.healthChance = real(parameter);
+// 			trace_color("Chance to transform into a health pickup now " + string(global.healthChance) + "%", c_white);
+// 		break;
+// 		}
+// 	return true;
+// 	break;
+	
+// 	case "ERADS":
+// 		switch(parameter){
+// 			case "":
+// 				if(global.erace_raddrop == 1){
+// 					trace_color("Enemies now drop " + string(global.erace_raddrop) + " more rad on death.", c_green);
+// 				}else if (global.erace_raddrop == 0){
+// 					trace_color("Enemies drop their normal amount of rads on death.", c_green);
+// 				}else{
+// 					trace_color("Enemies now drop " + string(global.erace_raddrop) + " more rads on death.", c_green);
+// 				}
+// 			break;
+			
+// 			default:
+// 			if (real(parameter) < 0){
+// 				trace_color("Enter a non-negative number, please.", c_red);
+// 			} else if (real(parameter) > 200) {
+// 				trace_color("That number's too high even for me.", c_red);
+// 			} else if (real(parameter) > 0) {
+// 				global.erace_raddrop = real(parameter);
+				
+// 				if(real(parameter) == 1){
+// 					trace_color("Enemies now drop " + string(global.erace_raddrop) + " more rad on death.", c_green);
+// 				} else {
+// 					trace_color("Enemies now drop " + string(global.erace_raddrop) + " more rads on death.", c_green);
+// 				}
+// 			} else {
+// 				global.erace_raddrop = 0;
+// 				trace_color("Enemies drop their normal amount of rads on death.", c_green);
+// 			}
+// 		}
+// 	return true;
+// 	break;
+
+// 	case "EHEALTH":
+// 		switch(parameter){
+// 			default:
+// 				global.erace_health_despawn = !global.erace_health_despawn;
+
+// 				if(global.erace_health_despawn == true){
+// 					trace_color("Health pickups will now despawn as normal.", c_dkgray);
+// 				} else {
+// 					trace_color("Health pickups will no longer despawn.", c_red);
+// 				}
+// 			break;
+// 		}
+// 	return true;
+// 	break;
+// 	}
 
 
 #define draw_outline(playerColor, toDraw)
