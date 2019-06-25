@@ -61,6 +61,7 @@ skill_set_active(mut_laser_brain, 0);
 skill_set_active(mut_shotgun_shoulders, 0);
 skill_set_active(mut_lucky_shot, 0);
 skill_set_active(mut_back_muscle, 0);
+skill_set_active(mut_long_arms, 0);
 
 // disable boiling veins for new boiling veins
 skill_set_active(mut_boiling_veins, 0);
@@ -115,11 +116,24 @@ with(ChestOpen){
 	instance_destroy();
 }
 
+#define step
+script_bind_step(custom_step, 0);
+
+#define custom_step
 with(Player){
-	erace_maxspeed_bonus = 0;
+	if("erace_maxspeed_orig" not in self){
+		erace_maxspeed_orig = maxspeed;
+	}
+	
+	if("erace_maxspeed_bonus" not in self){
+		erace_maxspeed_bonus = 0;
+	}
+		
+	if("erace_prevh" not in self){
+		erace_prevh = my_health;
+	}
 }
 
-#define step
 if(global.t < 10){
 	global.t += 1;
 }
@@ -149,19 +163,6 @@ with(ProtoStatue){
 	}
 }
 
-with(Player){
-	if("erace_maxspeed_orig" not in self){
-		erace_maxspeed_orig = maxspeed;
-	}
-	
-	if("erace_maxspeed_bonus" not in self){
-		erace_maxspeed_bonus = 0;
-	}
-		
-	if("erace_prevh" not in self){
-		erace_prevh = my_health;
-	}
-}
 
 // global.pNum = 0;
 
@@ -455,6 +456,7 @@ if(global.select_exists != instance_number(CharSelect) and instance_number(CharS
 			my_bg = array_create(9, noone);
 			shine = 0;
 			splat = 0;
+			mouse_over = false;
 			
 			//draw stuff
 			t = global.t;
@@ -538,6 +540,8 @@ else if(global.select_exists != instance_number(CharSelect) and instance_number(
 // manage check
 global.select_exists = instance_number(CharSelect);
 
+instance_destroy();
+
 #define draw
 drawAlpha = draw_get_alpha();
 drawColor = draw_get_color();
@@ -553,6 +557,7 @@ draw_set_color(drawColor);
 #define area_select_step
 t += 1/room_speed;
 shine -= 6/room_speed;
+shine = clamp(shine, 0, 1);
 // check for player click
 image_blend = global.deselect_color;	// dimmest
 	mouse_over = false; //is not being moused over
@@ -634,11 +639,13 @@ if(selected = 1){
 		// my_bg[i].x = -96 + (i*32);
 		
 		//version B:
-		my_bg[i].y = ystart - 15;
-		my_bg[i].x = lerp(my_bg[i].x, -96 + (i*32), 0.2 * current_time_scale);
+		if(instance_exists(my_bg[i])){
+			my_bg[i].y = ystart - 15;
+			my_bg[i].x = lerp(my_bg[i].x, -96 + (i*32), 0.2 * current_time_scale);
 
-		my_bg[i].d = abs(xstart - (my_bg[i].x+16));
-		my_bg[i].image_blend = make_color_hsv(0, 0, clamp(game_width/(my_bg[i].d+1)*10,0,255));
+			my_bg[i].d = abs(xstart - (my_bg[i].x+16));
+			my_bg[i].image_blend = make_color_hsv(0, 0, clamp(game_width/(my_bg[i].d+1)*10,0,255));
+		}
 	}
 
 }else{
@@ -654,8 +661,10 @@ if(selected = 1){
 		// my_bg[i].y = ystart + random_range(100,600)
 
 		//version B:
+		if(instance_exists(my_bg[i])){
 		my_bg[i].x = other.xstart-20;
 		my_bg[i].y = -1000;		
+		}
 	}
 }
 
@@ -688,8 +697,6 @@ if(mouse_over){
 draw_set_font(fntM0);
 
 if(selected){
-	draw_set_alpha(1 - shine);
-	draw_sprite(global.sprArrow, 0, x,y-12);
 	draw_set_alpha(1);
 	if(area == 7){
 		// draw_sprite_ext(sprCharSplat, splat-1, x, y - 20);
@@ -697,6 +704,10 @@ if(selected){
 	} else {
 		draw_sprite(sprGameOverCenterSplat, splat-1, x, y - 20);
 	}
+	// draw_set_alpha(1 - shine);
+	draw_sprite(global.sprArrow, 0, x, y - 12 + (12*power(shine,2)));
+	// draw_sprite(global.sprArrow, 0, x, y - 12);
+	draw_set_alpha(1);
 	// draw_set_color(c_black);
 	// draw_triangle(x - 5, y - 10, x + 5, y - 10, x, y - 15,true);
 }
