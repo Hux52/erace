@@ -270,8 +270,8 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "RAPID BURST";
-	case 2: return "RADIAL BURST";
+	case 1: return "CURSED";
+	case 2: return "LIGHTNING";
 	default: return "";
 }
 
@@ -279,8 +279,8 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "FIRE LASERS RAPIDLY";
-	case 2: return "LASERS EVERYWHERE";
+	case 1: return "WIP";
+	case 2: return "WIP";
 	default: return "";
 }
 
