@@ -1,6 +1,6 @@
 #define init
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprLaserCrystalSelect.png", 1, 0, 0);
-global.sprPortrait = sprite_add("sprites/portrait/sprPortraitLaserCrystal.png",1 , 30, 195);
+global.sprPortrait = sprite_add("sprites/portrait/sprPortraitCursedLaserCrystal.png",1 , 30, 195);
 
 // character select sounds
 // global.sndSelect = sound_add("sounds/sndRatSelect.ogg");
@@ -41,25 +41,22 @@ global.deathSounds = [
 	sndSalamanderDead
 ];
 
-global.snd_hurt_current = sndLaserCrystalHit;
-global.snd_dead_current = sndLaserCrystalDeath;
-
 #define create
 // player instance creation of this race
 // https://bitbucket.org/YellowAfterlife/nuclearthronetogether/wiki/Scripting/Objects/Player
 
 // sprites
-spr_idle = sprLaserCrystalIdle;
-spr_walk = sprLaserCrystalIdle;
-spr_hurt = sprLaserCrystalHurt;
-spr_dead = sprLaserCrystalDead;
-spr_fire = sprLaserCrystalFire; //for when it's firing lol good explanation right
+spr_idle = sprInvLaserCrystalIdle;
+spr_walk = sprInvLaserCrystalIdle;
+spr_hurt = sprInvLaserCrystalHurt;
+spr_dead = sprInvLaserCrystalDead;
+spr_fire = sprInvLaserCrystalFire; //for when it's firing lol good explanation right
 spr_sit1 = sprMutant15GoSit;
 spr_sit2 = sprMutant15Sit;
 
 // sounds
-snd_hurt = sndLaserCrystalHit;
-snd_dead = sndLaserCrystalDeath;
+snd_hurt = global.hitSounds[irandom(array_length(global.hitSounds) - 1)];
+snd_dead = global.deathSounds[irandom(array_length(global.deathSounds) - 1)];
 snd_charge = sndLaserCrystalCharge; //no idea what this is for
 snd_laser = sndLaser;
 
@@ -85,6 +82,9 @@ laserDamage = 2;
 laserFiring = false;
 canLaser = true;
 
+teleportAlarm = 0;
+myFloor = noone;
+
 // vars
 melee = false;	// can melee or not
 
@@ -109,17 +109,6 @@ friction = 0.2;
 
 // sprite always faces the same way and doesn't flip
 right = -1;
-
-//changing sounds
-snd_hurt = global.snd_hurt_current;
-snd_dead = global.snd_dead_current;
-
-if (ultra_get(player_get_race(index),1) = 1){
-	if (player_get_race(index) == "lasercrystal"){
-		player_set_race(index, "invlasercrystal");
-		race = "invlasercrystal";
-	}
-}
 
 // constant movement
 if(canwalk = 1){
@@ -159,7 +148,8 @@ if(laserFiring){
 				destY = other.y;
 			}
 		}
-		laserCharge -= current_time_scale;
+		
+		laserCharge -= 1 * current_time_scale;
 	} else {
 		if(laserCount > 0){
 			if(laserDelay <= 0){
@@ -190,6 +180,15 @@ if(laserFiring){
 	laserCount = laserCountBase;
 }
 
+//cursy particles
+if(random(100) < 50 * current_time_scale){
+	instance_create(x + random_range(-16,16), y + random_range(-16,16),Curse);
+}
+
+if(random(100) < 5 * current_time_scale){
+	repeat(5){instance_create(x + random_range(-12,12), y + random_range(-16,16),Curse);}
+}
+
 // outgoing contact damage
 if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 	with(instance_nearest(x, y, enemy)){
@@ -199,6 +198,23 @@ if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 	}
 }
 
+//'portation
+teleportAlarm -= current_time_scale;
+
+if(teleportAlarm <= 0){
+	//find floor
+	radius = random_range(32, 64);
+	ang = random(360);
+	searchX = cos(ang) * radius;
+	searchY = sin(ang) * radius;
+	myFloor = instance_nearest(x + searchX - 16, y + searchY - 16, Floor);
+
+	x = myFloor.x + sprite_get_width(myFloor.sprite_index)/2;
+	y = myFloor.y + sprite_get_height(myFloor.sprite_index)/2;
+	teleportAlarm = random_range(25, 75);
+	myFloor = noone;
+}
+
 #define laser_charge_step
 if(point_distance(x,y,destX,destY) <= 5){
 	instance_destroy();
@@ -206,12 +222,12 @@ if(point_distance(x,y,destX,destY) <= 5){
 
 #define race_name
 // return race name for character select and various menus
-return "LASER CRYSTAL";
+return "CURSED LASER CRYSTAL";
 
 
 #define race_text
 // return passive and active for character selection screen
-return "CONTACT DAMAGE#SHOOTS @rLASERS";
+return "CONTACT DAMAGE#SHOOTS @rLASERS#@wTELEPORTS";
 
 
 #define race_portrait
@@ -297,12 +313,6 @@ switch(argument0){
 // recieves ultra mutation index
 // called when ultra for race is picked
 // player of race may not be alive at the time
-switch(argument0){
-	case 1: 
-		global.snd_dead_current = global.hitSounds[irandom(array_length(global.hitSounds))];
-		global.snd_hurt_current = global.deathSounds[irandom(array_length(global.deathSounds))];
-	break;
-}
 
 #define race_ttip
 // return character-specific tooltips
