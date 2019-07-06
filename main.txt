@@ -76,6 +76,7 @@ secret
 /loadrace fastrat
 /loadrace superfrog
 /loadrace buffgator
+/loadrace invlasercrystal
 
 /loadrace grunt
 /loadrace inspector
