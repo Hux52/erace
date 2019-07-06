@@ -244,11 +244,7 @@ if("creator" in self){
 			speed = clamp(speed, 0, 15);
 			if(speed > 9){
 				with(instance_place(x,y,enemy)){
-<<<<<<< HEAD
-					if(sprite_index != spr_hurt){
-=======
 					if(nexthurt <= current_frame){
->>>>>>> master
 						projectile_hit_push(self, floor(other.speed / 10), 4);
 					}
 				}
