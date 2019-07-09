@@ -320,7 +320,7 @@ with(Player){
 	}
 
 // Boiling Veins' HP from 4 up to half of max hp
-	boilcap = floor(maxhealth/2);
+	if(race != "explofreak") boilcap = floor(maxhealth/2);
 	if(melee == 1){
 		// Boiling Veins automaticall given to melee races
 		skill_set(mut_boiling_veins, 1);
@@ -1000,10 +1000,10 @@ if(command = "ERACE"){
 d3d_set_fog(1,playerColor,0,0);
 if(instance_exists(toDraw)){
     with(toDraw){
-        draw_sprite_ext(sprite_index, -1, x - 1, y, 1 * right, 1, 0, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x + 1, y, 1 * right, 1, 0, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x, y - 1, 1 * right, 1, 0, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x, y + 1, 1 * right, 1, 0, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x - 1, y, image_xscale, image_yscale, 0, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x + 1, y, image_xscale, image_yscale, 0, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x, y - 1, image_xscale, image_yscale, 0, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x, y + 1, image_xscale, image_yscale, 0, playerColor, 1);
     }
 }
 d3d_set_fog(0,c_lime,0,0);

@@ -134,6 +134,14 @@ if(my_health <= 0){
 	sound_stop(loop);
 }
 
+// outgoing contact damage
+with(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
+	if(sprite_index != spr_hurt){
+		projectile_hit_push(self, 1, 4);
+		sound_play_pitchvol(sndScorpionMelee,random_range(0.9,1.1),0.6);
+	}
+}
+
 #define draw
 //center coords
 xx = x - 10;

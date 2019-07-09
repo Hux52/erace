@@ -94,8 +94,9 @@ if(button_pressed(index, "spec")){
 		instance_create(x,y,Explosion);
 		
 		for(i = 0; i < 16; i++){
+			radius = random_range(45,55);
 			ang = 360/16;
-			instance_create(x + lengthdir_x(65, ang*i), y + lengthdir_y(65, ang*i), SmallExplosion);
+			instance_create(x + lengthdir_x(radius, ang*i), y + lengthdir_y(radius, ang*i), SmallExplosion);
 		}
 	}
 }
@@ -108,10 +109,12 @@ if(button_pressed(index, "spec")){
 // 	y += lengthdir_y(1*current_time_scale, point_direction(x,y,en.x,en.y));
 // }
 
-if(my_health <= 0 and died = false){
-	instance_create(x,y,Explosion);
-	sound_play_pitchvol(sndExplosion, random_range(0.9,1.1), 0.65);
-	died = true;
+if(my_health <= 0){
+	if(died == false){
+		instance_create(x,y,Explosion);
+		sound_play_pitchvol(sndExplosion, random_range(0.9,1.1), 0.65);
+		died = true;
+	}
 } else {
 	died = false;
 }
