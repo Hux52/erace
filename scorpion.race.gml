@@ -148,18 +148,312 @@ if(collision_rectangle(x + 20, y + 10, x - 20, y - 10, enemy, 0, 1)){
 	with(instance_nearest(x, y, enemy)){
 		if(sprite_index != spr_hurt){
 			projectile_hit_push(self, 3 + min(4, 0.4 * GameCont.level), 4);
+			sound_play_pitchvol(sndScorpionMelee,random_range(0.9,1.1),0.6);
 		}
 	}
 }
 
 // on death
-if(my_health = 0){
-	// effect
-	for(i = 0; i < 360; i += 120){
-		with(instance_create(x, y, AcidStreak)){
-			speed = 8;
-			direction = other.i + random_range(-30, 30);
+if(my_health <= 0){
+	if(died == false){
+		// effect
+		for(i = 0; i < 360; i += 120){
+			with(instance_create(x, y, AcidStreak)){
+				speed = 8;
+				direction = other.i + random_range(-30, 30);
+			}
 		}
+	died = true;
+	}
+} else {
+	died = false;
+}
+
+//active
+if(button_pressed(index, "spec") && my_health > 3){
+	projectile_hit_push(self, 3, 0);
+	egg = instance_create(x, y, CustomHitme);
+	with(egg){
+		creator = other;
+		team = creator.team;
+		name = "ScorpionEgg";
+		right = choose(-1, 1);
+		my_health = creator.maxhealth;
+		maxhealth = my_health;
+		friction = 1;
+		alarm = [12, 150];
+		hatch = false; //to spawn or not to spawn
+		
+		spr_idle = sprFrogEgg;
+		spr_hurt = sprFrogEggHurt;
+		spr_spwn = sprFrogEggSpawn;
+		spr_dead = sprFrogEggDead;
+		
+		snd_hurt = sndFrogEggHurt;
+		snd_spwn = choose(sndFrogEggSpawn1, sndFrogEggSpawn2, sndFrogEggSpawn3);
+		snd_open = choose(sndFrogEggOpen1, sndFrogEggOpen2);
+		snd_dead = sndFrogEggDead;
+		
+		sound_play_pitch(snd_spwn, random_range(0.9, 1.1));
+		
+		sprite_index = spr_spwn;
+		mask_index = mskFrogEgg;
+		image_speed = 0.4;
+		
+		on_step = script_ref_create(egg_step);
+		on_hurt = script_ref_create(egg_hurt);
+		on_destroy = script_ref_create(egg_destroy);
+		
+		playerColor = player_get_color(creator.index);
+		toDraw = self;
+		with(script_bind_draw(0, 0)){
+			script = script_ref_create_ext("mod", "erace", "draw_outline", other.playerColor, other);
+		}
+	}
+}
+
+
+
+#define egg_step
+if(my_health > 0){
+	// don't move
+	speed = 0;
+	
+	// sprite stuff
+	if(sprite_index != spr_hurt){
+		if(alarm[0] <= 0){
+			sprite_index = spr_idle;
+		}
+		else{
+			sprite_index = spr_spwn;
+		}
+	} // put else here
+
+	if(right = 1){
+		image_xscale = 1;
+	}
+	else{
+		image_xscale = -1;
+	}
+
+	// stop showing hurt sprite
+	if(sprite_index = spr_hurt and image_index >= 2){
+		if(alarm[0] <= 0){
+			sprite_index = spr_idle;
+		}
+		else{
+			sprite_index = spr_spwn;
+			image_index = round(alarm[0] / 3);
+		}
+	}
+	
+	// alarm management
+	for(i = 0; i < array_length(alarm); i++){
+		if(alarm[i] > 0){
+			alarm[i]-= current_time_scale;
+		}
+	}
+	
+	if(alarm[1] <= 0){
+		my_health = 0;
+		hatch = true;
+	}
+}
+else{
+	instance_destroy();
+}
+
+
+#define egg_hurt(damage, kb_vel, kb_dir)
+// incoming damage
+if(sprite_index != spr_hurt){
+	if(nexthurt <= current_frame){
+		sound_play_hit(snd_hurt, 0.1);
+		my_health -= argument0;
+		nexthurt = current_frame + 3;
+		sprite_index = spr_hurt;
+		image_index = 0;
+	}
+}
+
+#define egg_destroy
+sound_play_pitchvol(snd_dead, random_range(0.9,1.1), 0.6);
+// create corpse
+with(instance_create(x, y, Corpse)){
+	sprite_index = other.spr_dead;
+	size = 1;
+}
+
+// spawn
+if(hatch){
+	repeat(2){
+		SpawnScorp(maxhealth / 4);
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#define SpawnScorp(hp)
+with(instance_create(x, y, CustomHitme)){
+	creator = other.creator;
+	team = creator.team;
+	name = "BabyScorpDooDooDooDooDooDoo";
+	spr_idle = sprScorpionIdle;
+	spr_walk = sprScorpionWalk;
+	spr_hurt = sprScorpionHurt;
+	spr_dead = sprScorpionDead;
+
+	// sounds
+	snd_hurt = sndScorpionHit;
+	snd_dead = sndScorpionDie;
+	my_health = hp;
+	maxspeed = 3.5;
+	sprite_index = spr_idle;
+	mask_index = mskScorpion;
+	size = 1;
+	image_speed = 0.3;
+	spr_shadow = shd16;
+	direction = random(360);
+	move_bounce_solid(true);
+	my_damage = 1;
+	right = choose(-1, 1);
+	alarm = [0];	// movement alarm
+	on_step = script_ref_create(scorp_step);
+	on_hurt = script_ref_create(scorp_hurt);
+	on_destroy = script_ref_create(scorp_destroy);
+	
+	// friendly player outline
+	playerColor = other.playerColor;
+	toDraw = self;
+	with(script_bind_draw(0, 0)){
+		script = script_ref_create_ext("mod", "erace", "draw_outline", other.playerColor, other);
+	}
+}
+
+
+#define scorp_step
+if(my_health > 0){
+	// speed management
+	if(speed > maxspeed){
+		speed = maxspeed;
+	}
+	
+	// collision stuff
+	move_bounce_solid(true);
+	
+	// sprite stuff
+	if(speed > 0 and sprite_index != spr_hurt){
+		sprite_index = spr_walk;
+	}
+	else if(sprite_index != spr_hurt){
+		sprite_index = spr_idle;
+	}
+	// face direction...
+	if(direction > 90 and direction <= 270){
+		right = -1;
+	}
+	else{
+		right = 1;
+	}
+	// ...cont
+	image_xscale = 0.75 * right;
+
+	image_yscale = 0.75;
+
+
+	// targeting
+	var _e = instance_nearest(x, y, enemy);
+	var _p = creator;
+	if(instance_exists(_e) and distance_to_object(_e) < 100 and !collision_line(x, y, _e.x, _e.y, Wall, true, true)){
+		target = _e;
+	} else if(instance_exists(_p) and player_get_race(_p.index) == "scorpion" and distance_to_object(_p) < 100 and !collision_line(x, y, _p.x, _p.y, Wall, true, true)){
+		target = _p;
+	} else {
+		target = noone;
+	}
+	
+	// movement
+	if(target = noone){	// no target- random movement
+		if(alarm[0] = 0){
+			direction = random(360);
+			move_bounce_solid(true);
+			motion_add(direction, maxspeed);
+			friction = 0.05;
+			alarm[0] = irandom_range(20, 40);
+		}
+	}
+	else{
+		if(alarm[0] = 0){	// target- go for it!
+			direction = point_direction(x, y, target.x, target.y) + random_range(-20, 20);
+			move_bounce_solid(true);
+			motion_add(direction, maxspeed);
+			friction = 0.075;
+			alarm[0] = irandom_range(10, 15);
+		}
+	}
+
+	// stop showing hurt sprite
+	if(sprite_index = spr_hurt and image_index >= 2){
+		sprite_index = spr_idle;
+	}
+	
+	// alarm management
+	for(i = 0; i < array_length_1d(alarm); i++){
+		if(alarm[i] > 0){
+			alarm[i]-= current_time_scale;
+		}
+	}
+	
+	// outgoing/incoming contact damage
+	with(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
+		if(sprite_index != spr_hurt){
+			projectile_hit_push(self, 3, 4);
+			sound_play_pitchvol(sndScorpionMelee,random_range(1.3,1.5),0.6);
+		}
+	}
+}
+else{
+	instance_destroy();
+}
+
+#define scorp_destroy
+sound_play_pitchvol(snd_dead, random_range(1.3,1.5), 0.6);
+// create corpse
+with(instance_create(x, y, Corpse)){
+	sprite_index = other.spr_dead;
+	size = 1;
+}
+
+for(i = 0; i < 360; i += 120){
+	with(instance_create(x, y, AcidStreak)){
+		speed = 8;
+		direction = other.i + random_range(-30, 30);
+		image_xscale = 0.75;
+		image_yscale = 0.75;
+	}
+}
+
+
+#define scorp_hurt(damage, kb_vel, kb_dir)
+// incoming damage
+if(sprite_index != spr_hurt){
+	if(nexthurt <= current_frame){
+		sound_play_hit(snd_hurt, 0.1);
+		my_health -= argument0;
+		motion_add(argument2, argument1);
+		nexthurt = current_frame + 3;
+		sprite_index = spr_hurt;
 	}
 }
 
