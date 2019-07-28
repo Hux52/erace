@@ -46,8 +46,6 @@ global.hover_color = make_color_hsv(0, 0, 190);	// same
 global.backgrounds_A = [sprFloor1,sprFloor2,sprFloor3,sprFloor4,sprFloor5,sprFloor6,sprFloor7,sprFloor100];
 global.backgrounds_B = [sprFloor1B,sprFloor2B,sprFloor3B,sprFloor4B,sprFloor5B,sprFloor6B,sprFloor7B,sprFloor100B];
 
-vault = noone;
-
 // disable default races
 for(i = 1; i < 16; i++){
 	race_set_active(i, 0);
@@ -151,14 +149,14 @@ with(ProtoStatue){
 	p = instance_nearest(x,y, Player);
 		if(instance_exists(p)){
 			if(point_distance(x,y,p.x,p.y) < 35){
-			other.vault = self;
+			p.vault = self;
 			if(button_pressed(p.index,"pick")){
 				my_health -= 60;
 				sprite_index = spr_hurt;
 				sound_play_pitchvol(snd_hurt, random_range(0.9,1.1), 0.65);
 			}
 		} else {
-			other.vault = noone;
+			p.vault = noone;
 		}
 	}
 }
@@ -545,10 +543,13 @@ instance_destroy();
 #define draw
 drawAlpha = draw_get_alpha();
 drawColor = draw_get_color();
-
-with(vault){
-	draw_tooltip(x,y-20,"USE VAULT");
-	draw_sprite(sprEPickup,0,x,y-10);
+with(Player){
+	if("vault" in self){
+		if(instance_exists(vault)){
+			draw_tooltip(vault.x,vault.y-20,"USE VAULT");
+			draw_sprite(sprEPickup,0,vault.x,vault.y-10);
+		}
+	}
 }
 
 draw_set_alpha(drawAlpha);
