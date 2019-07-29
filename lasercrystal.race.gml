@@ -191,7 +191,7 @@ if(laserFiring){
 }
 
 // outgoing contact damage
-if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
+if(collision_rectangle(x + 4, y + 6, x - 5, y - 5, enemy, 0, 1)){
 	with(instance_nearest(x, y, enemy)){
 		if(sprite_index != spr_hurt){
 			projectile_hit_push(self, 20, 4);
@@ -297,12 +297,12 @@ switch(argument0){
 // recieves ultra mutation index
 // called when ultra for race is picked
 // player of race may not be alive at the time
-switch(argument0){
-	case 1: 
-		global.snd_dead_current = global.hitSounds[irandom(array_length(global.hitSounds))];
-		global.snd_hurt_current = global.deathSounds[irandom(array_length(global.deathSounds))];
-	break;
-}
+// switch(argument0){
+// 	case 1: 
+// 		global.snd_dead_current = global.hitSounds[irandom(array_length(global.hitSounds))];
+// 		global.snd_hurt_current = global.deathSounds[irandom(array_length(global.deathSounds))];
+// 	break;
+// }
 
 #define race_ttip
 // return character-specific tooltips
