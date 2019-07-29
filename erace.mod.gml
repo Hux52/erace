@@ -130,6 +130,46 @@ with(Player){
 	if("erace_prevh" not in self){
 		erace_prevh = my_health;
 	}
+
+	//using crown vaults
+	vault = instance_nearest(x,y, ProtoStatue);
+	if(instance_exists(vault)){
+		if(point_distance(x,y,vault.x,vault.y) < 35){
+			if(button_pressed(index,"pick")){
+				vault.my_health -= 60;
+				vault.sprite_index = spr_hurt;
+				sound_play_pitchvol(snd_hurt, random_range(0.9,1.1), 0.65);
+			}
+		} else {
+			vault = noone;
+		}
+	}
+
+	gen = instance_nearest(x,y, Generator);
+	if(instance_exists(gen)){
+		if(point_distance(x,y,gen.x + (20*gen.image_xscale),gen.y + 16) < 75){
+			if(button_pressed(index,"pick")){
+				gen.my_health = 0;
+				// gen.sprite_index = spr_hurt;
+				sound_play_pitchvol(snd_hurt, random_range(0.9,1.1), 0.65);
+			}
+		} else {
+			gen = noone;
+		}
+	}
+
+	sorry = instance_nearest(x,y, NothingInactive);
+	if(instance_exists(sorry)){
+		if(collision_rectangle(sorry.x - 100, sorry.y + 75, sorry.x + 100, sorry.y + 125, self, false, false) and sorry.sprite_index = sprNothingOn and sorry.image_index < 1){
+			if(button_pressed(index, "pick")){
+				sorry.my_health = 0;
+				// gen.sprite_index = spr_hurt;
+				sound_play_pitchvol(snd_hurt, random_range(0.9,1.1), 0.65);
+			}
+		} else {
+			sorry = noone;
+		}
+	}
 }
 
 if(global.t < 10){
@@ -144,23 +184,6 @@ with(Mimic){
 	instance_create(x,y,SuperMimic);
 	instance_delete(self);
 }
-
-with(ProtoStatue){
-	p = instance_nearest(x,y, Player);
-		if(instance_exists(p)){
-			if(point_distance(x,y,p.x,p.y) < 35){
-			p.vault = self;
-			if(button_pressed(p.index,"pick")){
-				my_health -= 60;
-				sprite_index = spr_hurt;
-				sound_play_pitchvol(snd_hurt, random_range(0.9,1.1), 0.65);
-			}
-		} else {
-			p.vault = noone;
-		}
-	}
-}
-
 
 // global.pNum = 0;
 
@@ -283,10 +306,6 @@ with(enemy){
     }
 }
 
-// to initiate the throne fight
-with(NothingIntroMask){
-	my_health = 0;
-}
 
 with(Player){
 	//erace_maxspeed_bonus = lerp(erace_maxspeed_bonus, 0.5, 0.005*current_time_scale);
@@ -548,6 +567,20 @@ with(Player){
 		if(instance_exists(vault)){
 			draw_tooltip(vault.x,vault.y-20,"USE VAULT");
 			draw_sprite(sprEPickup,0,vault.x,vault.y-10);
+		}
+	}
+
+	if("gen" in self){
+		if(instance_exists(gen)){
+			draw_tooltip(gen.x + (5*gen.image_xscale),gen.y,"DESTROY");
+			draw_sprite(sprEPickup,0,gen.x + (5*gen.image_xscale),gen.y+10);
+		}
+	}
+
+	if("sorry" in self){
+		if(instance_exists(sorry)){
+			draw_tooltip(sorry.x, sorry.y+55,"CHALLENGE");
+			draw_sprite(sprEPickup,0,sorry.x,sorry.y+65);
 		}
 	}
 }
