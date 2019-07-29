@@ -427,6 +427,7 @@ if(instance_exists(CharSelect)){
 if(instance_exists(CampChar)){
 	instance_delete(TV);
 	with(CampChar){
+		if("lol" not in self){with(instance_create(x,y,BubblePop)){image_index = 1;} lol = true;}
 		x = 64;
 		y = 64;
 		lastx = 64;
