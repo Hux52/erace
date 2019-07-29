@@ -94,16 +94,6 @@ if(venom > 0){
 	// lose control and slide
 	canwalk = 0;
 	move_bounce_solid(true);
-	if (u2 = 1){
-		if(place_meeting(x + (hspeed*5.5), y + (vspeed*5.5), Wall)){
-			with(instance_nearest(x + hspeed, y + vspeed, Wall)){
-				if(random(10) < 5) sound_play_pitchvol(sndHammerHeadEnd, 2, 0.6);
-				sound_play_pitch(sndHammerHeadProc, random_range(0.8,1.2));
-				instance_create(x, y, FloorExplo);
-				instance_destroy();
-			}
-		}
-	}
 	move_towards_point(x + lengthdir_x(maxspeed, direction), y + lengthdir_y(maxspeed, direction), maxspeed * current_time_scale);
 	// face direction as you are not in control of wep
 	if(dir > 90 and dir <= 270){
@@ -329,6 +319,10 @@ with(instance_create(x, y, CustomHitme)){
 	my_damage = 1;
 	right = choose(-1, 1);
 	alarm = [0];	// movement alarm
+	ultra = creator.u2;
+	firing = false;
+	shoot_timer = random(15);
+
 	on_step = script_ref_create(scorp_step);
 	on_hurt = script_ref_create(scorp_hurt);
 	on_destroy = script_ref_create(scorp_destroy);
@@ -344,6 +338,22 @@ with(instance_create(x, y, CustomHitme)){
 
 #define scorp_step
 if(my_health > 0){
+	if(ultra == true && firing == true){
+		shoot_timer -= current_time_scale;
+		if(shoot_timer <= 0){//shoot
+			sound_play_pitchvol(sndScorpionFire, random_range(1.5,1.7), 0.3);
+			with(instance_create(x, y, EnemyBullet2)){
+				speed = random_range(5,6);
+				team = other.team;
+				direction = other.direction + (random(30) - 15);
+				image_angle = direction;
+				image_xscale = 0.75;
+				image_yscale = 0.75;
+				damage = 1;
+			}
+			shoot_timer = random(15);
+		}
+	}
 	// speed management
 	if(speed > maxspeed){
 		speed = maxspeed;
@@ -377,10 +387,13 @@ if(my_health > 0){
 	var _p = creator;
 	if(instance_exists(_e) and distance_to_object(_e) < 100 and !collision_line(x, y, _e.x, _e.y, Wall, true, true)){
 		target = _e;
+		firing = true;
 	} else if(instance_exists(_p) and player_get_race(_p.index) == "scorpion" and distance_to_object(_p) < 100 and !collision_line(x, y, _p.x, _p.y, Wall, true, true)){
 		target = _p;
+		firing = false;
 	} else {
 		target = noone;
+		firing = false;
 	}
 	
 	// movement
@@ -409,11 +422,7 @@ if(my_health > 0){
 	}
 	
 	// alarm management
-	for(i = 0; i < array_length_1d(alarm); i++){
-		if(alarm[i] > 0){
-			alarm[i]-= current_time_scale;
-		}
-	}
+	alarm[0] -= current_time_scale;
 	
 	// outgoing/incoming contact damage
 	with(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
@@ -432,6 +441,8 @@ sound_play_pitchvol(snd_dead, random_range(1.3,1.5), 0.6);
 // create corpse
 with(instance_create(x, y, Corpse)){
 	sprite_index = other.spr_dead;
+	image_xscale = 0.75 * other.right;
+	image_yscale = 0.75;
 	size = 1;
 }
 
@@ -524,7 +535,7 @@ return "DOES NOTHING";
 // determines how many ultras are shown
 switch(argument0){
 	case 1: return "EVOLVE";
-	case 2: return "HAMMER STINGER";
+	case 2: return "OVERCOME";
 	default: return "";
 }
 
@@ -533,7 +544,7 @@ switch(argument0){
 // recieves ultra mutation index and returns description
 switch(argument0){
 	case 1: return "YOUR SCORPION IS EVOLVING!";
-	case 2: return "FUCK WALLS";
+	case 2: return "@sFIRE @wFASTER#EMPOWERED ALLIES";
 	default: return "";
 }
 
