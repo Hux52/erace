@@ -419,6 +419,8 @@ sound_play_pitchvol(snd_dead, random_range(1.3,1.5), 0.6);
 with(instance_create(x, y, Corpse)){
 	sprite_index = other.spr_dead;
 	size = 1;
+	image_xscale = 0.75 * other.right;
+	image_yscale = 0.75;
 }
 
 for(i = 0; i < 360; i += 120){
