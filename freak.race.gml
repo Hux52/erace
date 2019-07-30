@@ -2,6 +2,7 @@
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprFreakSelect.png", 1, 0,0);
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitFreak.png",1 , 15, 210);
 
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_Freak.png", 1, 10, 10);
 // character select sounds
 // global.sndSelect = sound_add("sounds/sndRatSelect.ogg");
 // var _race = [];
@@ -91,7 +92,7 @@ return global.sprPortrait;
 
 #define race_mapicon
 // return sprite for loading/pause menu map
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_swep
@@ -119,7 +120,7 @@ return 1;
 
 #define race_skin_button
 // return skin switch button sprite
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_soundbank

@@ -1,7 +1,7 @@
 #define init
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprLaserCrystalSelect.png", 1, 0, 0);
-global.sprPortrait = sprite_add("sprites/portrait/sprPortraitCursedLaserCrystal.png",1 , 30, 195);
-global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_CursedCrystal.png", 1, 10, 10);
+global.sprPortrait = sprite_add("sprites/portrait/sprPortraitLightningCrystal.png",1 , 30, 195);
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_LightningCrystal.png", 1, 10, 10);
 
 // character select sounds
 // global.sndSelect = sound_add("sounds/sndRatSelect.ogg");
@@ -19,47 +19,24 @@ global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_CursedCrystal.png", 1, 10, 
 // 	wait 1;
 // }
 
-global.hitSounds = [
-	sndBanditHit,
-	sndSniperHit,
-	sndRavenHit,
-	sndScorpionHit,
-	sndRatHit,
-	sndGatorHit,
-	sndBuffGatorHit,
-	sndBigMaggotHit,
-	sndSalamanderHurt
-];
-
-global.deathSounds = [
-	sndBanditDie,
-	sndRavenDie,
-	sndScorpionDie,
-	sndRatDie,
-	sndGatorDie,
-	sndBuffGatorDie,
-	sndBigMaggotDie,
-	sndSalamanderDead
-];
-
 #define create
 // player instance creation of this race
 // https://bitbucket.org/YellowAfterlife/nuclearthronetogether/wiki/Scripting/Objects/Player
 
 // sprites
-spr_idle = sprInvLaserCrystalIdle;
-spr_walk = sprInvLaserCrystalIdle;
-spr_hurt = sprInvLaserCrystalHurt;
-spr_dead = sprInvLaserCrystalDead;
-spr_fire = sprInvLaserCrystalFire; //for when it's firing lol good explanation right
+spr_idle = sprLaserCrystalIdle;
+spr_walk = sprLaserCrystalIdle;
+spr_hurt = sprLaserCrystalHurt;
+spr_dead = sprLaserCrystalDead;
+spr_fire = sprLaserCrystalFire; //for when it's firing lol good explanation right
 spr_sit1 = sprMutant15GoSit;
 spr_sit2 = sprMutant15Sit;
 
 // sounds
-snd_hurt = global.hitSounds[irandom(array_length(global.hitSounds) - 1)];
-snd_dead = global.deathSounds[irandom(array_length(global.deathSounds) - 1)];
+snd_hurt = sndLaserCrystalHit;
+snd_dead = sndLaserCrystalDeath;
 snd_charge = sndLaserCrystalCharge; //no idea what this is for
-snd_laser = sndLaser;
+snd_fire = sndLightningPistol;
 
 // stats
 maxspeed = 1.1;
@@ -67,24 +44,21 @@ team = 2;
 maxhealth = 45;
 spr_shadow_y = 8;
 
-//laser stuff
-laserCountBase = 4;
-laserChargeBase = 24;
-laserDelayBase = 5;
-laserCooldownBase = 30;
+//attack
+lightningCountBase = 4;
+lightningChargeBase = 24;
+lightningDelayBase = 5;
+lightningCooldownBase = 30;
 
-laserCount = 4;
-laserCharge = 24;
-laserDelay = 5;
-laserCooldown = 30;
+lightningCount = 4;
+lightningCharge = 24;
+lightningDelay = 5;
+lightningCooldown = 30;
 
-laserDamage = 2;
+lightningDamage = 2;
 
-laserFiring = false;
-canLaser = true;
-
-teleportAlarm = 0;
-myFloor = noone;
+lightningFiring = false;
+canlightning = true;
 
 // vars
 melee = false;	// can melee or not
@@ -117,45 +91,30 @@ if(canwalk = 1){
 	motion_add(direction, maxspeed/2);
 }
 
-if(laserCooldown > 0){
-	canLaser = false;
+if(lightningCooldown > 0){
+	canlightning = false;
 } else {
-	canLaser = true;
+	canlightning = true;
 }
 
 if(button_pressed(index,"fire")){
-	if(canLaser){
-		laserFiring = true;
+	if(canlightning){
+		lightningFiring = true;
 		sound_play(snd_charge);
 	}
 }
 
-if(laserFiring){
+if(lightningFiring){
 	canwalk = false;
 	sprite_index = spr_fire;
-	laserCooldown = laserCooldownBase;
-	if(laserCharge > 0){
-		rand = random(360);
-		if(random(100) < 100 * current_time_scale){
-			with(instance_create(x + lengthdir_x(random_range(40,50),rand),y + lengthdir_y(random_range(40,50),rand),CustomObject)){
-				name = "CustomLaserCharge";
-				sprite_index = sprLaserCharge;
-				image_index = (other.laserCharge / other.laserChargeBase)*4 +2;
-				image_speed = 0;
-				speed = random_range(2,3);
-				direction = point_direction(x,y,other.x,other.y);
-				on_step = script_ref_create(laser_charge_step);
-				destX = other.x;
-				destY = other.y;
-			}
-		}
-		
-		laserCharge -= 1 * current_time_scale;
+	lightningCooldown = lightningCooldownBase;
+	if(lightningCharge > 0){
+		lightningCharge -= current_time_scale;
 	} else {
-		if(laserCount > 0){
-			if(laserDelay <= 0){
-				//spawn laser
-				sound_play_pitchvol(snd_laser, random_range(0.9,1.1), 0.6);
+		if(lightningCount > 0){
+			if(lightningDelay <= 0){
+				//spawn lightning
+				sound_play_pitchvol(snd_fire, random_range(0.9,1.1), 0.6);
 				d = point_direction(x,y,mouse_x[index],mouse_y[index]);
 				with(instance_create(x,y,EnemyLaser)){
 					damage = 2;
@@ -165,55 +124,29 @@ if(laserFiring){
 					image_angle = direction;
 					alarm0 = 1;
 				}
-				laserCount -= 1;
-				laserDelay = laserDelayBase;
+				lightningCount -= 1;
+				lightningDelay = laserDelayBase;
 			}
-			laserDelay -= 1 * current_time_scale;
+			lightningDelay -= 1 * current_time_scale;
 		} else {
-			laserFiring = false; //stop firing
+			lightningFiring = false; //stop firing
 		}
 	}
 } else {
 	//reset everything
 	canwalk = true;
-	laserCooldown -= 1 * current_time_scale;
-	laserCharge = laserChargeBase;
-	laserCount = laserCountBase;
-}
-
-//cursy particles
-if(random(100) < 50 * current_time_scale){
-	instance_create(x + random_range(-16,16), y + random_range(-16,16),Curse);
-}
-
-if(random(100) < 5 * current_time_scale){
-	repeat(5){instance_create(x + random_range(-12,12), y + random_range(-16,16),Curse);}
+	lightningCooldown -= 1 * current_time_scale;
+	lightningCharge = laserChargeBase;
+	lightningCount = laserCountBase;
 }
 
 // outgoing contact damage
-if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
+if(collision_rectangle(x + 4, y + 6, x - 5, y - 5, enemy, 0, 1)){
 	with(instance_nearest(x, y, enemy)){
 		if(sprite_index != spr_hurt){
 			projectile_hit_push(self, 20, 4);
 		}
 	}
-}
-
-//'portation
-teleportAlarm -= current_time_scale;
-
-if(teleportAlarm <= 0){
-	//find floor
-	radius = random_range(32, 64);
-	ang = random(360);
-	searchX = cos(ang) * radius;
-	searchY = sin(ang) * radius;
-	myFloor = instance_nearest(x + searchX - 16, y + searchY - 16, Floor);
-
-	x = myFloor.x + sprite_get_width(myFloor.sprite_index)/2;
-	y = myFloor.y + sprite_get_height(myFloor.sprite_index)/2;
-	teleportAlarm = random_range(25, 75);
-	myFloor = noone;
 }
 
 #define laser_charge_step
@@ -223,12 +156,12 @@ if(point_distance(x,y,destX,destY) <= 5){
 
 #define race_name
 // return race name for character select and various menus
-return "CURSED LASER CRYSTAL";
+return "LASER CRYSTAL";
 
 
 #define race_text
 // return passive and active for character selection screen
-return "CONTACT DAMAGE#SHOOTS @rLASERS#@wTELEPORTS";
+return "CONTACT DAMAGE#SHOOTS @rLASERS";
 
 
 #define race_portrait
@@ -248,12 +181,12 @@ return 0;
 
 #define race_avail
 // return if race is unlocked
-return false;
+return 1;
 
 
 #define race_menu_button
 // return race menu button icon
-return mskNone;
+sprite_index = global.sprMenuButton;
 
 #define race_skins
 // return number of skins the race has
@@ -287,8 +220,8 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "RAPID BURST";
-	case 2: return "RADIAL BURST";
+	case 1: return "CURSED";
+	case 2: return "LIGHTNING";
 	default: return "";
 }
 
@@ -296,8 +229,8 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "FIRE LASERS RAPIDLY";
-	case 2: return "LASERS EVERYWHERE";
+	case 1: return "WIP";
+	case 2: return "WIP";
 	default: return "";
 }
 
@@ -314,6 +247,12 @@ switch(argument0){
 // recieves ultra mutation index
 // called when ultra for race is picked
 // player of race may not be alive at the time
+// switch(argument0){
+// 	case 1: 
+// 		global.snd_dead_current = global.hitSounds[irandom(array_length(global.hitSounds))];
+// 		global.snd_hurt_current = global.deathSounds[irandom(array_length(global.deathSounds))];
+// 	break;
+// }
 
 #define race_ttip
 // return character-specific tooltips

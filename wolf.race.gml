@@ -1,6 +1,7 @@
 #define init
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprWolfSelect.png", 1, 0, 0);
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitWolf.png",1 , 5, 190);
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_Robotwolf.png", 1, 10, 10);
 
 // character select sounds
 global.sndSelect = sndHalloweenWolf;
@@ -230,7 +231,7 @@ return global.sprPortrait;
 
 #define race_mapicon
 // return sprite for loading/pause menu map
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_swep
@@ -258,7 +259,7 @@ return 1;
 
 #define race_skin_button
 // return skin switch button sprite
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_soundbank

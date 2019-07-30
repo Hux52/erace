@@ -4,6 +4,8 @@ global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAA
 
 global.sprPortrait = sprite_add("/sprites/portrait/sprPortraitJungleBandit.png", 1, 22, 210);
 
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_JungleBandit.png", 1, 10, 10);
+
 #define create
 // player instance creation of this race
 // https://bitbucket.org/YellowAfterlife/nuclearthronetogether/wiki/Scripting/Objects/Player
@@ -59,7 +61,7 @@ return sprBigPortraitChickenHeadless;
 
 #define race_mapicon
 // return sprite for loading/pause menu map
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_swep

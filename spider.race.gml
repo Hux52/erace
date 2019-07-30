@@ -319,7 +319,7 @@ return 1;
 
 #define race_skin_button
 // return skin switch button sprite
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_soundbank

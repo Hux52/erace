@@ -1,6 +1,7 @@
 #define init
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprTurtleSelect.png", 1, 0, 0);
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitTurtle.png",1 , 0, 200);
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_Turtle.png", 1, 10, 10);
 global.sprWhirlwind = sprite_add("sprites/boom.png", 1, 200, 150);
 
 // for level start
@@ -281,7 +282,7 @@ return global.sprPortrait;
 
 #define race_mapicon
 // return sprite for loading/pause menu map
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_swep
@@ -309,7 +310,7 @@ return 1;
 
 #define race_skin_button
 // return skin switch button sprite
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_soundbank

@@ -4,6 +4,8 @@ global.sprMenuButton = sprite_add("sprites/selectIcon/sprTurretSelect.png", 1, 0
 // character select portrait
 global.sprPortrait = sprite_add("/sprites/portrait/sprPortraitTurret.png", 1, 30, 197);
 
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_Turret.png", 1, 10, 10);
+
 global.sprDisappear = sprite_add("/sprites/sprTurretDisappear.png", 11, 12, 12);
 
 // level start init- MUST GO AT END OF INIT
@@ -422,7 +424,7 @@ return global.sprPortrait;
 
 #define race_mapicon
 // return sprite for loading/pause menu map
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_swep
@@ -450,7 +452,7 @@ return 1;
 
 #define race_skin_button
 // return skin switch button sprite
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_soundbank

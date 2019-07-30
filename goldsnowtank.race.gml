@@ -4,6 +4,8 @@ global.sprMenuButton = sprite_add("sprites/selectIcon/sprSnowTankSelect.png", 1,
 // character select portrait
 global.sprPortrait = sprite_add("/sprites/portrait/sprPortraitGoldSnowTank.png", 1, 5, 198);
 
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_GoldenSnowTank.png", 1, 10, 10);
+
 global.laser_color = make_color_rgb(250, 54, 0);
 
 // character select sounds
@@ -214,7 +216,7 @@ return global.sprPortrait;
 
 #define race_mapicon
 // return sprite for loading/pause menu map
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_swep
@@ -242,7 +244,7 @@ return 1;
 
 #define race_skin_button
 // return skin switch button sprite
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_soundbank

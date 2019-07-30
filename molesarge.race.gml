@@ -4,6 +4,8 @@ global.sprMenuButton = sprite_add("sprites/selectIcon/sprMolesargeSelect.png", 1
 // character select portrait
 global.sprPortrait = sprite_add("/sprites/portrait/sprPortraitMolesarge.png", 1, 15, 198);
 
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_MoleSarge.png", 1, 10, 10);
+
 // character select sounds
 global.sndSelect = sound_add("sounds/sndMolesargeSelect.ogg");
 var _race = [];
@@ -73,7 +75,7 @@ return global.sprPortrait;
 
 #define race_mapicon
 // return sprite for loading/pause menu map
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_swep
@@ -101,7 +103,7 @@ return 1;
 
 #define race_skin_button
 // return skin switch button sprite
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_soundbank

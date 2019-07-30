@@ -8,6 +8,8 @@ global.sprMenuButton = sprite_add("sprites/selectIcon/sprSnowBotSelect.png", 1, 
 
 global.sprPortrait = sprite_add("/sprites/portrait/sprPortraitSnowbot.png", 1, 22, 198);
 
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_SnowBot.png", 1, 10, 10);
+
 // level start init- MUST GO AT END OF INIT
 while(true){
 	// first chunk here happens at the start of the level, second happens in portal
@@ -298,7 +300,7 @@ return global.sprPortrait;
 
 #define race_mapicon
 // return sprite for loading/pause menu map
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_swep
@@ -326,7 +328,7 @@ return 1;
 
 #define race_skin_button
 // return skin switch button sprite
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_soundbank
