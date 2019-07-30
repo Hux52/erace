@@ -14,7 +14,7 @@ return sprPopoHeavyGun;
 return 1;
 
 #define weapon_auto
-return false;
+return true;
 
 #define weapon_load
 return 40;
@@ -39,19 +39,37 @@ return "MANY SHOTS";
 
 #define weapon_fire
 // create burst distance from gun
-var _x = x + lengthdir_x(7, gunangle);
-var _y = y + lengthdir_y(7, gunangle);
-with instance_create(_x, _y, CustomObject){
-	name = "shielderBurst";
-	creator = other;
-	team = creator.team;
-	mask_index = mskNone;
-	spr_shadow = mskNone;
-	direction = other.gunangle + (random(other.accuracy) * choose(1, -1));
-	friction = 0;
-	on_step = script_ref_create(shielderBurst_step);
-	on_destroy = script_ref_create(shielderBurst_destroy);
-	alarm = [24];
+if(fork()){
+	var ammo = 8;
+	while instance_exists(self){
+		if instance_exists(GenCont) || instance_exists(menubutton) exit;
+		if ammo <= 0 exit;
+		if (button_check(index,"spec")){
+			exit;			
+		}
+		if !button_check(index,"fire") && ammo <= 3{
+			if wep = mod_current reload = 8;
+			exit;
+		}
+		with(instance_create(x, y, Bullet1)){
+			sprite_index = sprIDPDBullet;
+			spr_dead = sprIDPDBulletHit;
+			creator = other;
+			team = creator.team;
+			direction = creator.gunangle + random_range(-10,10);
+			image_angle = direction;
+			friction = 0;
+			speed = 8;
+			damage = 3;
+		}
+		sound_play_gun(sndGruntFire, 0.2, 0.6);
+		weapon_post(5, 30, 10);
+		ammo --;
+		var num = 3;
+		if skill_get(mut_stress) num = 1 + (2 * (my_health/maxhealth));
+		wait num;
+	}
+	exit;
 }
 
 #define shielderBurst_step

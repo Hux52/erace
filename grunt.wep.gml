@@ -51,3 +51,16 @@ with(instance_create(x, y, Bullet1)){
 	speed = 8;
 	damage = 3;
 }
+// The below will make it so that releasing the fire key resets the reload time 
+// In effect, this makes it so you can click to fire faster than by holding the fire key
+if(fork()){
+	while instance_exists(self){
+		if reload < 3 || wep != mod_current exit;
+		if !button_check(index,"fire") || (clicked){
+			reload = min(3,reload);
+			exit;
+		}
+		wait 0;
+	}
+	exit;
+}

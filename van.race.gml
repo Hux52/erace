@@ -10,6 +10,10 @@ global.sndmusBloop = sound_add("sounds/sndBloop.ogg");
 global.sndRecordA = sound_add("sounds/sndRecordScratch1.ogg");
 global.sndRecordB = sound_add("sounds/sndRecordScratch2.ogg");
 
+anime_sound_start = -1;
+
+global.anime_sound_loop = -1;
+
 // level start init- MUST GO AT END OF INIT
 global.newLevel = instance_exists(GenCont);
 global.hasGenCont = false;
@@ -29,6 +33,7 @@ while(true){
 	if(instance_exists(GenCont)) global.newLevel = 1;
 	else if(global.newLevel){
 		global.newLevel = 0;
+		level_start();
 	}
 	var hadGenCont = global.hasGenCont;
 	global.hasGenCont = instance_exists(GenCont);
@@ -39,6 +44,16 @@ while(true){
 }
 
 #define level_start
+with(instances_matching(Player, "race", "van")){
+	music_index = choose(0,1);
+	
+	if("anime_sound_start" not in self){
+		anime_sound_start = -1;
+	}
+}
+
+sound_stop(global.sndmusAloop);
+sound_stop(global.sndmusBloop);
 
 #define create
 // player instance creation of this race
@@ -209,8 +224,8 @@ if(want_van <= 0){
 
 	if(u1 == 1){
 		if(instance_exists(Portal)){			
-			if(audio_is_playing(anime_sound_loop)){
-				sound_stop(anime_sound_loop);
+			if(audio_is_playing(global.anime_sound_loop)){
+				sound_stop(global.anime_sound_loop);
 				sound_play(choose(global.sndRecordA,global.sndRecordB));
 			}
 			_port = instance_nearest(x,y,Portal);
@@ -221,19 +236,20 @@ if(want_van <= 0){
 				is_in_portal = false;
 			}
 		} else {
-			if(audio_is_playing(anime_sound_loop) == false){
-				anime_sound_loop = sound_loop(music_loop[music_index]);
+			if(audio_is_playing(global.anime_sound_loop) == false){
+				global.anime_sound_loop = sound_loop(music_loop[music_index]);
 			}
 		}
 		while(collision_rectangle(x + 42, y + 40, x - 42, y - 40, Wall, 0, 1) != noone){
-			with(collision_rectangle(x + 42, y + 40, x - 42, y - 40, Wall, 0, 1)){
-				if(mask_index == mskNone){
-					continue;
-				}
-				instance_create(x, y, FloorExplo);
-				instance_destroy();
-			}
-		}
+            // if(mask_index == mskNone){
+            //     continue;
+            // }
+            
+            with(collision_rectangle(x + 42, y + 40, x - 42, y - 40, Wall, 0, 1)){
+                instance_create(x, y, FloorExplo);
+                instance_destroy();
+            }
+        }
 		deploy_alarm = 20;
 		friction = 0.4;
 		if(instance_exists(my_anime) == false){
@@ -270,8 +286,8 @@ if(want_van <= 0){
 
 		if(button_pressed(index,"spec")){
 			deploy_alarm = -1;
-			if(audio_is_playing(anime_sound_loop)){
-				sound_stop(anime_sound_loop);
+			if(audio_is_playing(global.anime_sound_loop)){
+				sound_stop(global.anime_sound_loop);
 				sound_play(choose(global.sndRecordA,global.sndRecordB));
 			}
 		}
@@ -290,7 +306,7 @@ if(want_van <= 0){
 	// outgoing contact damage
 	with(collision_rectangle(x + 37, y + 22, x - 37, y - 22, enemy, 0, 1)){
 		if(sprite_index != spr_hurt){
-			projectile_hit_push(self, 2, 4);
+			projectile_hit_push(self, 12, 4);
 		}
 	}
 	// outgoing contact damage PROP
@@ -590,292 +606,330 @@ switch(argument0){
 // return character-specific tooltips
 return choose("OPEN UP", "POLICE", "PAGING ALL UNITS", "FREEZE!", "YES POPO");
 
-#define spawn_popo(popo_x, popo_y, daddy)
-var _c = random(3);
-if(_c >= 2){
-	with(instance_create(popo_x + random_range(-8, 8), popo_y + random_range(-8, 8), CustomHitme)){
-		name = "squad";
-		class = "grunt";	// type
-		creator = daddy;	//	player
-		team = creator.team;	// player team
-
-		//sprites
-		spr_idle = sprGruntIdle;
-		spr_walk = sprGruntWalk;
-		spr_hurt = sprGruntHurt;
-		spr_dead = sprGruntDead;
-
-		//sounds
-		if(random(2) < 1){
-			snd_hurt = sndGruntHurtM;
-			snd_dead = sndGruntDeadM;
-			snd_entr = sndGruntEnterM;
-			snd_nade = sndGruntThrowNadeM;
-		}
-		else{
-			snd_hurt = sndGruntHurtF;
-			snd_dead = sndGruntDeadF;
-			snd_entr = sndGruntEnterF;
-			snd_nade = sndGruntThrowNadeF;
-		}
-		
-		sound_play_pitch(snd_entr, 1 + random_range(-0.1, 0.1));	// enter sound
-		depth = -1.9;
-		sprite_index = spr_idle;	// current sprite
-		my_health = 8;	// health
-		iframes = 0;
-		maxspeed = 3.5;	// top speed before being limited
-		mask_index = mskPlayer;	// hitbox
-		size = 1;	// deals with collision
-		image_speed = 0.4;	// animation frame rate
-		spr_shadow = shd24;	// shadow sprite
-		direction = random(360);
-		move_bounce_solid(true);
-		friction = 0.01;
-		right = choose(-1, 1);	// facing right or left
-		target = [creator, -4];	// friendly, enemy
-		alarm = [
-					0,	// movement/targeting alarm
-					0,	// firing
-					0	// targeting
-				];
-		roll_time = 10;	// for rolling
-		wepangle = 0;
-		ammo = 0;
-		gunangle = random(360);
-		wkick = 0;
-		wep = "grunt";
-		accuracy = 8;
-		reload = 0;
-		on_step = script_ref_create(grunt_step);
-		on_hurt = script_ref_create(squad_hurt);
-		on_draw = script_ref_create(squad_draw);
-		on_destroy = script_ref_create(squad_destroy);
-		wall_stuck = 0;
-	}
-}
-else if(_c >= 1){
-	with(instance_create(popo_x + random_range(-8, 8), popo_y + random_range(-8, 8), CustomHitme)){
-		name = "squad";
-		class = "shielder";	// type
-		creator = daddy;	//	player
-		team = creator.team;	// player team
-
-		//sprites
-		spr_idle = sprShielderIdle;
-		spr_walk = sprShielderWalk;
-		spr_hurt = sprShielderHurt;
-		spr_dead = sprShielderDead;
-
-		//sounds
-		if(random(2) < 1){
-			snd_hurt = sndShielderHurtM;
-			snd_dead = sndShielderDeadM;
-			snd_entr = sndShielderEnterM;
-			snd_shld = sndShielderShieldM;
-		}
-		else{
-			snd_hurt = sndShielderHurtF;
-			snd_dead = sndShielderDeadF;
-			snd_entr = sndShielderEnterF;
-			snd_shld = sndShielderShieldF;
-		}
-		
-		sound_play_pitch(snd_entr, 1 + random_range(-0.1, 0.1));	// enter sound
-		depth = -1.9;
-		sprite_index = spr_idle;	// current sprite
-		my_health = 45;	// health
-		iframes = 0;
-		maxspeed = 3.5;	// top speed before being limited
-		mask_index = mskPlayer;	// hitbox
-		size = 1;	// deals with collision
-		image_speed = 0.4;	// animation frame rate
-		spr_shadow = shd24;	// shadow sprite
-		direction = random(360);
-		move_bounce_solid(true);
-		friction = 0.01;
-		right = choose(-1, 1);	// facing right or left
-		target = [creator, -4];	// friendly, enemy
-		alarm = [
-					0,	// movement/targeting alarm
-					0,	// firing
-					0,	// targeting
-				];
-		shieldCool = 0;
-		shielding = false;
-		wepangle = 0;
-		gunangle = random(360);
-		wkick = 0;
-		wep = "shielder";
-		accuracy = 8;
-		reload = 0;
-		ammo = 0;
-		on_step = script_ref_create(shielder_step);
-		on_hurt = script_ref_create(squad_hurt);
-		on_draw = script_ref_create(squad_draw);
-		on_destroy = script_ref_create(squad_destroy);
-		wall_stuck = 0;
-	}
-}
-else if(_c >= 0){
-	with(instance_create(popo_x + random_range(-8, 8), popo_y + random_range(-8, 8), CustomHitme)){
-		name = "squad";
-		class = "inspector";	// type
-		creator = daddy;	//	player
-		team = creator.team;	// player team
-
-		//sprites
-		spr_idle = sprInspectorIdle;
-		spr_walk = sprInspectorWalk;
-		spr_hurt = sprInspectorHurt;
-		spr_dead = sprInspectorDead;
-
-		//sounds
-		if(random(2) < 1){
-			snd_hurt = sndInspectorHurtM;
-			snd_dead = sndInspectorDeadM;
-			snd_entr = sndInspectorEnterM;
-			snd_strt = sndInspectorStartM;
-			snd_stop = sndInspectorEndM;
-		}
-		else{
-			snd_hurt = sndInspectorHurtF;
-			snd_dead = sndInspectorDeadF;
-			snd_entr = sndInspectorEnterF;
-			snd_strt = sndInspectorStartF;
-			snd_stop = sndInspectorEndF;
-		}
-		
-		sound_play_pitch(snd_entr, 1 + random_range(-0.1, 0.1));	// enter sound
-		depth = -1.9;
-		sprite_index = spr_idle;	// current sprite
-		my_health = 10;	// health
-		maxspeed = 3.5;	// top speed before being limited
-		iframes = 0;
-		mask_index = mskPlayer;	// hitbox
-		size = 1;	// deals with collision
-		image_speed = 0.4;	// animation frame rate
-		spr_shadow = shd24;	// shadow sprite
-		direction = random(360);
-		move_bounce_solid(true);
-		friction = 0.01;
-		right = choose(-1, 1);	// facing right or left
-		target = [creator, -4];	// friendly, enemy
-		alarm = [
-					0,	// movement/targeting alarm
-					0,	// firing
-					0,	// targeting
-					0,	// telekenesis duration
-					120 + irandom(100)	// telekenesis propt
-				];
-		pulling = 0;
-		pull_strength = 0.5;
-		wepangle = 0;
-		ammo = 0;
-		gunangle = random(360);
-		wkick = 0;
-		wep = "inspector";
-		accuracy = 8;
-		reload = 0;
-		on_step = script_ref_create(inspector_step);
-		on_hurt = script_ref_create(squad_hurt);
-		on_draw = script_ref_create(squad_draw);
-		on_destroy = script_ref_create(squad_destroy);
-		wall_stuck = 0;
-	}
-}
-
-
-#define inspector_step
-if(my_health > 0){
-	// speed management
-	if(speed > maxspeed){
-		speed = maxspeed;
-	}
-	
-	// collision
-	move_bounce_solid(true);
-	
-	// sprite facing based on direction
-	if(speed > 0 and sprite_index != spr_hurt){
-		sprite_index = spr_walk;
-	}
-	else if(sprite_index != spr_hurt){
-		sprite_index = spr_idle;
-	}
-	
-	if(gunangle > 90 and gunangle <= 270){
-		right = -1;
-	}
-	else{
-		right = 1;
-	}
-	// face right or left
-	if(right = 1){
-		image_xscale = 1;
-	}
-	else{
-		image_xscale = -1;
-	}
-
-	// targeting
+#define scr_target 
 	if(instance_exists(enemy)){
 		var _e = instance_nearest(x, y, enemy);
-		if(distance_to_object(_e) < 100 and !collision_line(x, y, _e.x, _e.y, Wall, true, true) and alarm[2] = 0){
+		if(distance_to_object(_e) < maxrange and !collision_line(x, y, _e.x, _e.y, Wall, true, true) && alarm[2] = 0){
 			target[@1] = _e;
 			var _t2 = target[1];
 			gunangle = point_direction(x, y, _t2.x, _t2.y);
 			alarm[2] = 5;
 		}
 		else{
-			target[@1] = -4;	// can't see
-		}
-	}
-
-	// movement
-	if(target[0] = noone){	// no target, random movement
-		if(alarm[0] = 0){
-			direction = random(360);
-			move_bounce_solid(true);
-			motion_set(direction, maxspeed);
-			alarm[0] = irandom_range(10, 30);
-		}
-	}
-	else if(target[0] = creator and instance_exists(creator)){	// follow player
-		if(distance_to_object(target[0]) <= 50){
-			if(alarm[0] = 0){
-				var _t1 = target[0];
-				speed = 0;
-				alarm[0] = irandom_range(10, 15);
+			if !instance_exists(target[1]){
+				target[@1] = -4;	// can't see
+			}else{
+				var _t2 = target[1];
+				gunangle = point_direction(x, y, _t2.x, _t2.y);
 			}
 		}
-		if(distance_to_object(target[0]) > 80){
-			if(alarm[0] = 0){
-				var _t1 = target[0];
-				direction = point_direction(x, y, _t1.x, _t1.y) + random_range(-50, 50);
-				move_bounce_solid(true);
-				motion_set(direction, maxspeed);
-				if(random(3) < 1){
-					if(ammo <= 0){
-						gunangle = random(360);
-					}
-				}
-				alarm[0] = irandom_range(10, 15);
-			}
-		}
-		else if(distance_to_object(target[0]) > 400){	// if too far away, teleport
-			_dir = point_direction(creator.x, creator.y, x, y);
-			_x = creator.x + lengthdir_x(350, _dir);
-			_y = creator.y + lengthdir_y(350, _dir);
-			_f = instance_nearest(_x, _y, Floor);
-			x = _f.x + 4;
-			y = _f.y + 4;
-		}
+	}
+#define spawn_popo(popo_x, popo_y, daddy)
+var _c = irandom(3);
+with(instance_create(popo_x + random_range(-8,8), popo_y + random_range(-8,8), CustomHitme)){
+	name = "squad";
+	creator = daddy;
+	team = creator.team;
+	// Inspectors have a few more things in their alarm, we set those individually below.
+	alarm = [
+		0,	// movement/targeting alarm
+		0,	// firing
+		0,	// targeting
+	];
+	maxrange = game_width/2;
+	// Unit-specific variables. Take this NEEDLESSLY COMPLEX FLEX
+	// Normal people can just state these variables in the switch:loop below, but I am not a normal person 
+	//                                                                 ~Sani
+	var tempT = random(2) < 1 ? "F" : "M";
+	var ar = ["Inspector","Shielder","Grunt","Grunt"];
+	var ar2 = [
+		["spr_","idle","spr","Idle",""],
+		["spr_","walk","spr","Walk",""],
+		["spr_","hurt","spr","Hurt",""],
+		["spr_","dead","spr","Dead",""],
+		["snd_","hurt","snd","Hurt",tempT],
+		["snd_","dead","snd","Dead",tempT],
+		["snd_","entr","snd","Enter",tempT]
+	];
+	for(var i = 0;i<array_length(ar2);i++){
+		variable_instance_set(self,ar2[i][0] + ar2[i][1],asset_get_index(ar2[i][2] + ar[_c] + ar2[i][3] + ar2[i][4]));
+	}
+	if (_c = 1){
+		snd_shld = asset_get_index("sndShielderShield" + tempT);
+	}else if (_c = 0){
+		snd_strt = asset_get_index("sndInspectorStart" + tempT);
+		snd_stop = asset_get_index("sndInspectorEnd" + tempT);
 	}
 	
+	// Unit-specific variables.
+	switch(_c){
+		case 3: // Grunt
+		case 2: // (Also Grunt)
+			class = "grunt";
+			wep = "grunt";
+			roll_time = 10;
+			maxhealth = 8;
+			on_step = script_ref_create(grunt_step);
+		break;
+		case 1: //Shielder
+			class = "shielder";
+			wep = "shielder";
+			shieldCool = 0;
+			shielding = false;
+			maxhealth = 45;
+			on_step = script_ref_create(shielder_step);
+		break;
+		case 0: // Inspector
+			class = "inspector";
+			wep = "inspector";
+			maxrange = 160;
+			alarm = [
+					0,	// movement/targeting alarm
+					0,	// firing
+					0,	// targeting
+					0,	// telekenesis duration
+					120 + irandom(100)	// telekenesis propt
+				];
+			pulling = 0;
+			pull_strength = 1;
+			maxhealth = 10;
+			on_step = script_ref_create(inspector_step);
+		break;
+	}
+	
+	on_hurt = script_ref_create(squad_hurt);
+	on_draw = script_ref_create(squad_draw);
+	on_destroy = script_ref_create(squad_destroy);
+	
+	// Game Maker variables
+	sprite_index = spr_idle;
+	mask_index = mskPlayer;
+	image_speed = 0.4;
+	direction = random(360);
+	depth = -1.9;
+	friction = 0.01;
+	move_bounce_solid(true);
+	
+	// Nuclear Throne/Misc variables
+	size = 1;
+	spr_shadow = shd24;
+	maxspeed = 3.5;
+	wall_stuck = 0;
+	
+	my_health = maxhealth;	// health
+	right = choose(-1, 1);	// facing right or left
+	target = [creator, -4];	// friendly, enemy
+	
+	wepangle = 0;
+	ammo = 0;
+	gunangle = random(360);
+	wkick = 0;
+	accuracy = 8;
+	reload = 0;
+	
+	// Variables/Actions set after the above is set
+	sound_play_pitch(snd_entr, 1 + random_range(-0.1, 0.1));
+	my_health = maxhealth;
+	iframes = 0;
+}
+
+#define squad_step
+	/* Handles all shared logic between IDPD members. Called in their individual step events 
+	   grunt/inspector/shielder_step now handle their own unique abilities individually, as well as their firing scripts 
+	   Refer to those for any changes you wish to make 
+	                                                                        ~Sani
+	*/
+	if instance_exists(GenCont) || instance_exists(menubutton){
+		if GameCont.area <= 1 && GameCont.subarea <= 1 && GameCont.hard = 1{
+			instance_delete(self);
+			exit;
+		}
+		x = 10016;
+		y = 10016;
+		my_health = maxhealth;
+	}
+	if(my_health > 0){
+		// speed management
+		if(speed > maxspeed){
+			speed = maxspeed;
+		}
+		
+		// collision
+		move_bounce_solid(true);
+		
+		// sprite facing based on direction
+		if(speed > 0 and sprite_index != spr_hurt){
+			sprite_index = spr_walk;
+		}
+		else if(sprite_index != spr_hurt){
+			sprite_index = spr_idle;
+		}
+		
+		if(gunangle > 90 and gunangle <= 270){
+			right = -1;
+		}
+		else{
+			right = 1;
+		}
+		// face right or left
+		if(right = 1){
+			image_xscale = 1;
+		}
+		else{
+			image_xscale = -1;
+		}
+
+		// targeting
+		scr_target();
+		// movement
+		if(target[0] = noone){	// no target, random movement
+			if(alarm[0] = 0){
+				direction = random(360);
+				move_bounce_solid(true);
+				motion_set(direction, maxspeed);
+				alarm[0] = irandom_range(10, 30);
+			}
+		}
+		else if(target[0] = creator and instance_exists(creator)){	// follow player
+			if(distance_to_object(target[0]) <= 50){
+				if(alarm[0] = 0){
+					var _t1 = target[0];
+					speed = 0;
+					alarm[0] = irandom_range(10, 15);
+				}
+			}
+			if(distance_to_object(target[0]) > 80){
+				if(alarm[0] = 0){
+					var _t1 = target[0];
+					direction = point_direction(x, y, _t1.x, _t1.y) + random_range(-50, 50);
+					move_bounce_solid(true);
+					motion_set(direction, maxspeed);
+					if(random(3) < 1){
+						if(ammo <= 0){
+							gunangle = random(360);
+						}
+					}
+					alarm[0] = irandom_range(10, 15);
+				}
+			}
+			else if(distance_to_object(target[0]) > 400){	// if too far away, teleport
+				_dir = point_direction(creator.x, creator.y, x, y);
+				_x = creator.x + lengthdir_x(350, _dir);
+				_y = creator.y + lengthdir_y(350, _dir);
+				_f = instance_nearest(_x, _y, Floor);
+				x = _f.x + 4;
+				y = _f.y + 4;
+			}
+		}
+		
+		if(ammo > 0){	// manage ammo
+			speed = clamp(speed,-maxspeed*0.5,maxspeed*0.5);
+		}
+		
+		if(reload > 0){	// manage reload
+			reload-= current_time_scale;
+		}
+		
+		if(wkick > 0){	// manage weapon kick
+			wkick-= current_time_scale;
+		}
+		
+		//getting unstuck from walls
+		_wStuck = instance_place(x,y,Wall);
+		if(instance_exists(_wStuck)){
+			if(place_meeting(x,y,_wStuck)){
+				wall_stuck += 1;
+				if(wall_stuck >= 15){
+					with(_wStuck){
+						instance_create(x,y,FloorExplo);
+						instance_destroy();
+					}
+				}
+			}
+		}
+		else{
+			wall_stuck = 0;
+		}
+
+		// stop hit sprite
+		if(sprite_index = spr_hurt and image_index >= 2){
+			sprite_index = spr_idle;
+		}
+		
+		// alarm management
+		for(i = 0; i < array_length(alarm); i++){
+			if(alarm[i] > 0){
+				alarm[i]-= current_time_scale;
+			}
+		}
+		
+		// incoming contact damage
+		// Modified this so that they don't take damage every frame ~Sani
+		if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)) && nexthurt < current_frame{
+			_ce = instance_nearest(x, y, enemy);
+			if(_ce.meleedamage > 0){
+				if(iframes = 0){
+					my_health -= _ce.meleedamage;
+					sprite_index = spr_hurt;
+					sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.6);
+					nexthurt = current_frame + 5;
+				}
+			}
+		}
+	}
+	else{
+		sound_play_pitchvol(snd_dead, random_range(0.9,1.1), 0.6);
+		instance_destroy();
+	}
+
+#define squad_destroy
+// make corpse
+with(instance_create(x, y, Corpse)){
+	sprite_index = other.spr_dead;
+	size = 1;
+}
+
+#define squad_hurt(damage, kb_vel, kb_dir)
+// incoming damage
+if(sprite_index != spr_hurt){
+	if(nexthurt <= current_frame){
+		sound_play_pitchvol(snd_hurt,1,0.6);
+		my_health -= argument0;
+		motion_add(argument2, argument1);
+		nexthurt = current_frame + 3;
+		sprite_index = spr_hurt;
+	}
+}
+
+#define squad_draw
+// friendly outline
+if(instance_exists(creator)){
+	playerColor = player_get_color(creator.index);
+} 
+d3d_set_fog(1, playerColor, 0, 0);
+draw_sprite_ext(sprite_index, -1, x - 1, y, 1 * right, 1, image_angle, playerColor, 1);
+draw_sprite_ext(sprite_index, -1, x + 1, y, 1 * right, 1, image_angle, playerColor, 1);
+draw_sprite_ext(sprite_index, -1, x, y - 1, 1 * right, 1, image_angle, playerColor, 1);
+draw_sprite_ext(sprite_index, -1, x, y + 1, 1 * right, 1, image_angle, playerColor, 1);
+// gun outline
+draw_sprite_ext(weapon_get_sprite(wep), -1, x - lengthdir_x(wkick, gunangle + wepangle) - 1, y - lengthdir_y(wkick, gunangle + wepangle), 1, right, gunangle, playerColor, 1);
+draw_sprite_ext(weapon_get_sprite(wep), -1, x - lengthdir_x(wkick, gunangle + wepangle) + 1, y - lengthdir_y(wkick, gunangle + wepangle), 1, right, gunangle, playerColor, 1);
+draw_sprite_ext(weapon_get_sprite(wep), -1, x - lengthdir_x(wkick, gunangle + wepangle), y - lengthdir_y(wkick, gunangle + wepangle) - 1, 1, right, gunangle, playerColor, 1);
+draw_sprite_ext(weapon_get_sprite(wep), -1, x - lengthdir_x(wkick, gunangle + wepangle), y - lengthdir_y(wkick, gunangle + wepangle) + 1, 1, right, gunangle, playerColor, 1);
+d3d_set_fog(0,c_lime,0,0);
+// draw gun
+draw_sprite_ext(weapon_get_sprite(wep), 0, x - lengthdir_x(wkick, gunangle + wepangle), y - lengthdir_y(wkick, gunangle + wepangle), 1, right, gunangle + wepangle, c_white, 1);
+draw_self();
+
+
+#define inspector_step 
+	// Handles Inspector powers and firing specifically
+	squad_step();
+	// Because squad_step has an instance_destroy() call, we do the below check to make sure it doesn't run the code afterwards
+	if !instance_exists(self) exit;
 	if(instance_exists(target[1])){	// fire
-		if(instance_exists(target[0])){
-			if(distance_to_object(target[0]) < 220){
+		if(instance_exists(target[0]) && !collision_line(x,y,target[1].x,target[1].y,Wall,0,1)){
+			if(distance_to_object(target[0]) < game_width){
 				if(reload <= 0 and pulling = false and ammo <= 0){
 					sound_play_gun(sndGruntFire, 0.2, 0.6);
 					with(instance_create(x, y, PopoSlug)){
@@ -895,20 +949,7 @@ if(my_health > 0){
 				}
 			}
 		}
-	}
-	
-	if(ammo > 0){	// manage ammo
-		speed = 0;
-	}
-	
-	if(reload > 0){	// manage reload
-		reload-= current_time_scale;
-	}
-	
-	if(wkick > 0){	// manage weapon kick
-		wkick-= current_time_scale;
-	}
-	
+	}else target[@1] = -4;
 	// start pulling
 	if(alarm[4] = 0 and alarm[3] = 0 and pulling = false){
 		alarm[3] = 60 + irandom(30);
@@ -949,164 +990,15 @@ if(my_health > 0){
 	if(alarm[4] = 0){
 		alarm[4] = 120 + irandom(100);
 	}
-	
-	//getting unstuck from walls
-	_wStuck = instance_place(x,y,Wall);
-	if(instance_exists(_wStuck)){
-		if(place_meeting(x,y,_wStuck)){
-			wall_stuck += 1;
-			if(wall_stuck >= 15){
-				with(_wStuck){
-					instance_create(x,y,FloorExplo);
-					instance_destroy();
-				}
-			}
-		}
-	}
-	else{
-		wall_stuck = 0;
-	}
-
-	// stop hit sprite
-	if(sprite_index = spr_hurt and image_index >= 2){
-		sprite_index = spr_idle;
-	}
-	
-	// alarm management
-	for(i = 0; i < array_length(alarm); i++){
-		if(alarm[i] > 0){
-			alarm[i]-= current_time_scale;
-		}
-	}
-	
-	// incoming contact damage
-	if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
-		_ce = instance_nearest(x, y, enemy);
-		if(_ce.meleedamage > 0){
-			if(iframes = 0){
-				my_health -= _ce.meleedamage;
-				sprite_index = spr_hurt;
-				sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.6);
-			}
-		}
-	}
-}
-else{
-	sound_play_pitchvol(snd_dead, random_range(0.9,1.1), 0.6);
-	instance_destroy();
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #define shielder_step
-if(my_health > 0){
-	// speed management
-	if(speed > maxspeed){
-		speed = maxspeed;
-	}
-	
-	// collision
-	move_bounce_solid(true);
-	
-	// sprite facing based on direction
-	if(speed > 0 and sprite_index != spr_hurt){
-		sprite_index = spr_walk;
-	}
-	else if(sprite_index != spr_hurt){
-		sprite_index = spr_idle;
-	}
-	
-	if(gunangle > 90 and gunangle <= 270){
-		right = -1;
-	}
-	else{
-		right = 1;
-	}
-	// face right or left
-	if(right = 1){
-		image_xscale = 1;
-	}
-	else{
-		image_xscale = -1;
-	}
-
-	// targeting
-	if(instance_exists(enemy)){
-		var _e = instance_nearest(x, y, enemy);
-		if(distance_to_object(_e) < 100 and !collision_line(x, y, _e.x, _e.y, Wall, true, true) and alarm[2] = 0){
-			target[@1] = _e;
-			var _t2 = target[1];
-			gunangle = point_direction(x, y, _t2.x, _t2.y);
-			alarm[2] = 5;
-		}
-		else{
-			target[@1] = -4;	// can't see
-		}
-	}
-
-	// movement
-	if(target[0] = noone){	// no target, random movement
-		if(alarm[0] = 0){
-			direction = random(360);
-			move_bounce_solid(true);
-			motion_set(direction, maxspeed);
-			alarm[0] = irandom_range(10, 30);
-		}
-	}
-	else if(target[0] = creator and instance_exists(creator)){	// follow player
-		if(distance_to_object(target[0]) <= 30){
-			if(alarm[0] = 0){
-				var _t1 = target[0];
-				speed = 0;
-				alarm[0] = irandom_range(10, 15);
-			}
-		}
-		if(distance_to_object(target[0]) > 50){
-			if(alarm[0] = 0){
-				var _t1 = target[0];
-				direction = point_direction(x, y, _t1.x, _t1.y) + random_range(-50, 50);
-				move_bounce_solid(true);
-				motion_set(direction, maxspeed);
-				if(random(3) < 1){
-					if(ammo <= 0){
-						gunangle = random(360);
-					}
-				}
-				alarm[0] = irandom_range(10, 15);
-			}
-		}
-		else if(distance_to_object(target[0]) > 400){	// if too far away, teleport
-			_dir = point_direction(creator.x, creator.y, x, y);
-			_x = creator.x + lengthdir_x(350, _dir);
-			_y = creator.y + lengthdir_y(350, _dir);
-			_f = instance_nearest(_x, _y, Floor);
-			x = _f.x + 4;
-			y = _f.y + 4;
-		}
-	}
-	
+	// Handles Shielder powers and firing specifically
+	squad_step();
+	// Because squad_step has an instance_destroy() call, we do the below check to make sure it doesn't run the code afterwards
+	if !instance_exists(self) exit;
 	if(instance_exists(target[1])){	// fire
-		if(instance_exists(target[0])){
-			if(distance_to_object(target[0]) < 220){
+		if(instance_exists(target[0]) && !collision_line(x,y,target[1].x,target[1].y,Wall,0,1)){
+			if(distance_to_object(target[0]) < game_width){
 				if(reload <= 0 and shielding = false and ammo <= 0){
 					me = id;
 					reload = 40 + irandom(20);
@@ -1115,7 +1007,7 @@ if(my_health > 0){
 				}
 			}
 		}
-	}
+	}else target[@1] = -4;
 	
 	if(alarm[1] = 0 and ammo > 0){
 		sound_play_gun(sndGruntFire, 0.2, 0.6);
@@ -1134,19 +1026,6 @@ if(my_health > 0){
 		alarm[1] = 3;
 		ammo-= current_time_scale;
 	}
-	
-	if(ammo > 0){	// manage ammo
-		speed = 0;
-	}
-	
-	if(reload > 0){	// manage reload
-		reload-= current_time_scale;
-	}
-	
-	if(wkick > 0){	// manage weapon kick
-		wkick-= current_time_scale;
-	}
-	
 	// start shielding
 	if(reload = 0){
 		if(array_length(instances_matching_ne(projectile, "team", team)) > 0){
@@ -1186,166 +1065,14 @@ if(my_health > 0){
 		shieldCool-= current_time_scale;
 	}
 	
-	//getting unstuck from walls
-	_wStuck = instance_place(x,y,Wall);
-	if(instance_exists(_wStuck)){
-		if(place_meeting(x,y,_wStuck)){
-			wall_stuck += 1;
-			if(wall_stuck >= 15){
-				with(_wStuck){
-					instance_create(x,y,FloorExplo);
-					instance_destroy();
-				}
-			}
-		}
-	}
-	else{
-		wall_stuck = 0;
-	}
-
-	// stop hit sprite
-	if(sprite_index = spr_hurt and image_index >= 2){
-		sprite_index = spr_idle;
-	}
-	
-	// alarm management
-	for(i = 0; i < array_length(alarm); i++){
-		if(alarm[i] > 0){
-			alarm[i]-= current_time_scale;
-		}
-	}
-	
-	// incoming contact damage
-	if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
-		_ce = instance_nearest(x, y, enemy);
-		if(_ce.meleedamage > 0){
-			if(iframes = 0){
-				my_health -= _ce.meleedamage;
-				sprite_index = spr_hurt;
-				sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.6);
-			}
-		}
-	}
-}
-else{
-	sound_play_pitchvol(snd_dead, random_range(0.9,1.1), 0.6);
-	instance_destroy();
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #define grunt_step
-if(my_health > 0){
-	// speed management
-	if(speed > maxspeed){
-		speed = maxspeed;
-	}
-	
-	// collision
-	move_bounce_solid(true);
-	
-	// sprite facing based on direction
-	if(speed > 0 and sprite_index != spr_hurt){
-		sprite_index = spr_walk;
-	}
-	else if(sprite_index != spr_hurt){
-		sprite_index = spr_idle;
-	}
-	
-	if(gunangle > 90 and gunangle <= 270){
-		right = -1;
-	}
-	else{
-		right = 1;
-	}
-	// face right or left
-	if(right = 1){
-		image_xscale = 1;
-	}
-	else{
-		image_xscale = -1;
-	}
-
-	// targeting
-	if(instance_exists(enemy)){
-		var _e = instance_nearest(x, y, enemy);
-		if(distance_to_object(_e) < 100 and !collision_line(x, y, _e.x, _e.y, Wall, true, true) and alarm[2] = 0){
-			target[@1] = _e;
-			var _t2 = target[1];
-			gunangle = point_direction(x, y, _t2.x, _t2.y);
-			alarm[2] = 5;
-		}
-		else{
-			target[@1] = -4;	// can't see
-		}
-	}
-
-	// movement
-	if(target[0] = noone){	// no target, random movement
-		if(alarm[0] = 0){
-			direction = random(360);
-			move_bounce_solid(true);
-			motion_set(direction, maxspeed);
-			alarm[0] = irandom_range(10, 30);
-		}
-	}
-	else if(target[0] = creator and instance_exists(creator)){	// follow player
-		if(distance_to_object(target[0]) > 50){
-			if(alarm[0] = 0){
-				var _t1 = target[0];
-				direction = point_direction(x, y, _t1.x, _t1.y) + random_range(-50, 50);
-				move_bounce_solid(true);
-				motion_set(direction, maxspeed);
-				if(random(3) < 1 and ammo <= 0){
-					gunangle = random(360);
-				}
-				alarm[0] = irandom_range(10, 15);
-			}
-		}
-		else if(distance_to_object(target[0]) < 400){	// if far enough away, roll
-			if(alarm[0] = 0){
-				speed = 0;
-				alarm[0] = irandom_range(10, 15);
-			}
-		}
-		else{	// if too far away, teleport
-			_dir = point_direction(creator.x, creator.y, x, y);
-			_x = creator.x + lengthdir_x(350, _dir);
-			_y = creator.y + lengthdir_y(350, _dir);
-			_f = instance_nearest(_x, _y, Floor);
-			x = _f.x + 4;
-			y = _f.y + 4;
-		}
-	}
-	
+	// Handles Grunt powers and firing specifically
+	squad_step();
+	// Because squad_step has an instance_destroy() call, we do the below check to make sure it doesn't run the code afterwards
+	if !instance_exists(self) exit;
 	if(instance_exists(target[1])){	// fire
-		if(instance_exists(target[0])){
-			if(distance_to_object(target[0]) < 220){
+		if(instance_exists(target[0])&& !collision_line(x,y,target[1].x,target[1].y,Wall,0,1)){
+			if(distance_to_object(target[0]) < game_width){
 				if(reload <= 0 and ammo <= 0){
 					me = id;
 					reload = 3 + irandom(10);
@@ -1354,7 +1081,7 @@ if(my_health > 0){
 				}
 			}
 		}
-	}
+	}else target[@1] = -4;
 	
 	if(alarm[1] = 0 and ammo > 0){
 		sound_play_gun(sndGruntFire, 0.2, 0.6);
@@ -1372,14 +1099,6 @@ if(my_health > 0){
 		wkick = 10;
 		alarm[1] = 3;
 		ammo-= current_time_scale;
-	}
-	
-	if(reload > 0){	// manage reload
-		reload-= current_time_scale;
-	}
-	
-	if(wkick > 0){	// manage weapon kick
-		wkick-= current_time_scale;
 	}
 	
 	// rolling
@@ -1407,8 +1126,7 @@ if(my_health > 0){
 					if(!roll_time){
 						if(instance_exists(creator)){
 							direction = creator.direction + random_range(-5, 5);
-						}
-						else{
+						}else{
 							direction = random(360);
 						}
 						roll_time = 10;		 // 10 Frame Roll
@@ -1422,16 +1140,15 @@ if(my_health > 0){
 	// rolling
 	if(roll_time > 0){
 		roll_time-= current_time_scale;
-
 		 // speed up
 		speed = maxspeed + 2;
-
+		
 		// roll
 		image_angle += 40 * right;	// rotate
 		with(instance_create(x + random_range(-3, 3), y + random(6), Dust)){	// dust
 			depth = other.depth + 1;
 		}
-
+		
 		 // bounce off walls
 		if(place_meeting(x + hspeed, y + vspeed, Wall)){
 			move_bounce_solid(true);
@@ -1441,91 +1158,6 @@ if(my_health > 0){
 	else{
 		image_angle = 0;
 	}
-	
-	//getting unstuck from walls
-	_wStuck = instance_place(x,y,Wall);
-	if(instance_exists(_wStuck)){
-		if(place_meeting(x,y,_wStuck)){
-			wall_stuck += 1;
-			if(wall_stuck >= 15){
-				with(_wStuck){
-					instance_create(x,y,FloorExplo);
-					instance_destroy();
-				}
-			}
-		}
-	}
-	else{
-		wall_stuck = 0;
-	}
-
-	// stop hit sprite
-	if(sprite_index = spr_hurt and image_index >= 2){
-		sprite_index = spr_idle;
-	}
-	
-	// alarm management
-	for(i = 0; i < array_length(alarm); i++){
-		if(alarm[i] > 0){
-			alarm[i]-= current_time_scale;
-		}
-	}
-	
-	// incoming contact damage
-	if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
-		_ce = instance_nearest(x, y, enemy);
-		if(_ce.meleedamage > 0){
-			if(iframes = 0){
-				my_health -= _ce.meleedamage;
-				sprite_index = spr_hurt;
-				sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.6);
-			}
-		}
-	}
-}
-else{
-	sound_play_pitchvol(snd_dead, random_range(0.9,1.1), 0.6);
-	instance_destroy();
-}
-
-#define squad_destroy
-// make corpse
-with(instance_create(x, y, Corpse)){
-	sprite_index = other.spr_dead;
-	size = 1;
-}
-
-#define squad_hurt(damage, kb_vel, kb_dir)
-// incoming damage
-if(sprite_index != spr_hurt){
-	if(nexthurt <= current_frame){
-		sound_play_pitchvol(snd_hurt,1,0.6);
-		my_health -= argument0;
-		motion_add(argument2, argument1);
-		nexthurt = current_frame + 3;
-		sprite_index = spr_hurt;
-	}
-}
-
-#define squad_draw
-// friendly outline
-if(instance_exists(creator)){
-	playerColor = player_get_color(creator.index);
-} 
-d3d_set_fog(1, playerColor, 0, 0);
-draw_sprite_ext(sprite_index, -1, x - 1, y, 1 * right, 1, image_angle, playerColor, 1);
-draw_sprite_ext(sprite_index, -1, x + 1, y, 1 * right, 1, image_angle, playerColor, 1);
-draw_sprite_ext(sprite_index, -1, x, y - 1, 1 * right, 1, image_angle, playerColor, 1);
-draw_sprite_ext(sprite_index, -1, x, y + 1, 1 * right, 1, image_angle, playerColor, 1);
-// gun outline
-draw_sprite_ext(weapon_get_sprite(wep), -1, x - lengthdir_x(wkick, gunangle + wepangle) - 1, y - lengthdir_y(wkick, gunangle + wepangle), 1, right, gunangle, playerColor, 1);
-draw_sprite_ext(weapon_get_sprite(wep), -1, x - lengthdir_x(wkick, gunangle + wepangle) + 1, y - lengthdir_y(wkick, gunangle + wepangle), 1, right, gunangle, playerColor, 1);
-draw_sprite_ext(weapon_get_sprite(wep), -1, x - lengthdir_x(wkick, gunangle + wepangle), y - lengthdir_y(wkick, gunangle + wepangle) - 1, 1, right, gunangle, playerColor, 1);
-draw_sprite_ext(weapon_get_sprite(wep), -1, x - lengthdir_x(wkick, gunangle + wepangle), y - lengthdir_y(wkick, gunangle + wepangle) + 1, 1, right, gunangle, playerColor, 1);
-d3d_set_fog(0,c_lime,0,0);
-// draw gun
-draw_sprite_ext(weapon_get_sprite(wep), 0, x - lengthdir_x(wkick, gunangle + wepangle), y - lengthdir_y(wkick, gunangle + wepangle), 1, right, gunangle + wepangle, c_white, 1);
-draw_self();
 
 #define tele_draw(to_draw_on)
 if(instance_exists(to_draw_on)){

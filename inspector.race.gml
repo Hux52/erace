@@ -2,6 +2,8 @@
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprInspectorSelect.png", 1, 0, 0);
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitIDPDInspector.png",1 , 15, 200);
 
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_IDPD_Inspector.png", 1, 10, 10);
+
 // character select sounds
 var _race = [];
 for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
@@ -70,7 +72,7 @@ _to = noone;
 canswap = 0;
 canpick = 0;
 
-pullStrength = 0.75 * current_time_scale + ultra_get(mod_current, 1);	// telekinesis strength
+pullStrength = 1 * current_time_scale + ultra_get(mod_current, 1);	// telekinesis strength
 
 // telekinesis
 if(canspec){
@@ -85,7 +87,7 @@ if(canspec){
 		script_bind_draw(draw_tele, depth, toDrawOn);
 		with(enemy){
 			var _p = other;
-			if(distance_to_object(_p) < 100){
+			if(distance_to_object(_p) < game_width/2){
 				var pdir = point_direction(x, y, _p.x, _p.y);
 				x += lengthdir_x(other.pullStrength, pdir); // hey pdir
 				y += lengthdir_y(other.pullStrength, pdir);
@@ -171,7 +173,7 @@ return global.sprPortrait;
 
 #define race_mapicon
 // return sprite for loading/pause menu map
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_swep

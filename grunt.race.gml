@@ -2,6 +2,7 @@
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprGruntSelect.png", 1, 0, 0);
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitIDPDGrunt.png", 1, 0, 205);
 
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_IDPD_Grunt.png", 1, 10, 10);
 // character select sounds
 var _race = [];
 for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
@@ -175,7 +176,7 @@ return global.sprPortrait;
 
 #define race_mapicon
 // return sprite for loading/pause menu map
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_swep

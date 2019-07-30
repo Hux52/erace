@@ -1,6 +1,7 @@
 #define init
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprShielderSelect.png", 1, 0, 0);
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitIDPDShielder.png", 1, 0, 205);
+global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_IDPD_Shielder.png", 1, 10, 10);
 
 // character select sounds
 var _race = [];
@@ -70,59 +71,50 @@ canpick = 0;
 
 if(canspec){
 	if!(instance_exists(GenCont)){
-		if(shield_cool <= 0){
-			if(button_pressed(index, "spec") and shield_time < 35 and reload <= 0){
-				if(shield_cool <= 0){
-					want_shield = true;
-					shield_cool = 15;
-					sound_play_pitch(snd_shld, random_range(0.9, 1.1));
-					with(instance_create(x, y, CrystalShield)){
-						creator = other;
-						team = creator.team;
-						time = creator.shield_time;
-						spr_shadow = shd24;
-					}
-				}
-			}
+		// Replacing original code with some of my own
+		if "lastTele" not in self{
+			lastTele = current_frame;
 		}
-		if(button_check(index, "spec")){
-			if(want_shield = true){
-				if(shield_time < 35){
-					canwalk = 0;
-					reload = max(2, reload);
-					can_shoot = 0;
-					bcan_shoot = 0;
-					clicked = 0;
-					if(array_length_1d(instances_matching(CrystalShield, "creator", self)) > 0){
-						var _shield = instances_matching(CrystalShield, "creator", self)[0];
-						with(_shield){
-							time = creator.shield_time;
-							spr_shadow = shd24;
-						}
+		if button_check(index, "spec") && lastTele < current_frame - 15{
+			speed = 0;
+			if array_length_1d(instances_matching(PopoShield,"creator", self)) = 0{
+				with(instance_create(x,y,PopoShield)){
+					creator = other;
+					team = other.team;
+					index = creator.index;
+					if ultra_get(mod_current,1) = 1{
+						sprite_index = sprEliteShielderShieldAppear;
+						spr_dead = sprEliteShielderShieldDisappear;
+					}else{
+						sprite_index = sprShielderShieldAppear;
+						spr_dead = sprShielderShieldDisappear;
 					}
-					shield_time += current_time_scale + (current_time_scale * ultra_get(mod_current, 1));
-					shield_cool = 15;
-				}
-				else{
-					if(ultra_get(mod_current, 1)){
-						if!(collision_point(mouse_x[index], mouse_y[index] - 8, Wall, false, true)){
-							if(collision_point(mouse_x[index], mouse_y[index] - 8, Floor, false, true)){
-								sound_play(sndEliteShielderTeleport);
-								x = mouse_x[index];
-								y = mouse_y[index] - 8;
+					image_index = 6;
+					mask_index = mskShield;
+					created = current_frame;
+					if(fork()){
+						while instance_exists(self){
+							if sprite_index = spr_dead{
+								creator = -4;
+								exit;
 							}
+							if !button_check(index,"spec") || created < current_frame - 45{
+								if ultra_get(mod_current,1) = 1 && created < current_frame - 45 with(creator) tele_perform();
+								creator = -4;
+								sprite_index = spr_dead;
+								image_index = 0;
+								image_speed = 0.4;
+								other.lastTele = current_frame - 5;
+								exit;
+							}
+							wait 0;
 						}
+						exit;
 					}
-					shield_time = 0;
-					want_shield = false;
 				}
 			}
+			reload = max(reload, weapon_get_load(wep) * 0.25);
 		}
-	}
-	else{
-		shield_time = 0;
-		want_shield = false;
-		shield_cool = 0;
 	}
 }
 
@@ -151,6 +143,38 @@ if(my_health <= 0){
 	}
 }
 
+#define tele_perform
+	var _r = 0;
+	if place_meeting(mouse_x[index],mouse_y[index],Floor){
+		if place_meeting(mouse_x[index],mouse_y[index],Wall){
+			_r = 1;
+		}
+	}else _r = 1;
+	if _r{
+		if(fork()){
+			var n = instance_nearest(mouse_x[index],mouse_y[index],Floor);
+			with(instance_create(n.x+16,n.y+16,PortalClear)){
+				image_xscale = 0.5;
+				image_yscale = 0.5;
+			}
+			wait 1;
+			x = n.x + 16;
+			y = n.y + 16;
+			exit;
+		}
+	}else{
+		x = mouse_x[index];
+		y = mouse_y[index];
+	}
+	with(instances_matching(PopoShield, "creator", self)){
+		x = other.x;
+		y = other.y;
+		sprite_index = spr_dead;
+		image_speed = 0.4;
+		image_index = 0;
+	}
+	sound_play(sndCrystalTB);
+	lastTele = current_frame;
 
 #define race_name
 // return race name for character select and various menus
@@ -169,7 +193,7 @@ return global.sprPortrait;
 
 #define race_mapicon
 // return sprite for loading/pause menu map
-return sprMapIconChickenHeadless;
+return global.sprIcon;
 
 
 #define race_swep
