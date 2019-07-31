@@ -61,6 +61,8 @@ palace
 /loadrace dogguardian
 
 secret
+/loadrace bonefish
+
 /loadrace turtle
 /loadrace junglefly
 
