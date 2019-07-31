@@ -25,7 +25,7 @@ global.races = [
 					[ "bandit_snow", "snowbot", "wolf","snowtank"],
 					["freak", "explofreak", "rhinofreak", "turret", "necromancer"],
 					["guardian", "exploguardian", "dogguardian"],
-					["molefish", "molesarge", "fireballer", "jock", "turtle", "junglefly", "bonefish", "grunt", "inspector", "shielder", "van"]
+					["molefish", "molesarge", "fireballer", "jock", "turtle", "junglefly", "bonefish", "crab", "grunt", "inspector", "shielder", "van"]
 				];	// please add races in the order and area you want them to be displayed
 
 global.player_races = ["unknown", "unknown", "unknown", "unknown"];
@@ -37,7 +37,7 @@ global.race_names = ["maggotspawn", MaggotSpawn, "bigmaggot", BigMaggot, "bandit
 					Wolf, "bandit_snow", Bandit, "snowtank", SnowTank, "freak", Freak, "explofreak", 
 					ExploFreak, "rhinofreak", RhinoFreak, "turret", Turret,	"necromancer", Necromancer,
 					 "guardian", Guardian, "exploguardian", ExploGuardian, "dogguardian", DogGuardian,
-					"turtle", Turtle, "junglefly", JungleFly, "bonefish", BoneFish, "molefish", Molefish, "molesarge", Molesarge, "jock", Jock, "fireballer", 
+					"turtle", Turtle, "junglefly", JungleFly, "bonefish", BoneFish, "crab", Crab, "molefish", Molefish, "molesarge", Molesarge, "jock", Jock, "fireballer", 
 					FireBaller, "grunt", Grunt, "inspector", Inspector, "shielder", Shielder, "van", Van];	// piss off
 
 global.deselect_color = make_color_hsv(0, 0, 80);	// dimmnessss :)
