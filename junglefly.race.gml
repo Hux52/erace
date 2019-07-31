@@ -41,16 +41,13 @@ snd_fire = sndFlyFire;
 snd_melee = sndFlyMelee;
 
 // stats
-maxspeed_base = 1.6; 
-maxspeed_close = 3.6;
-maxspeed = maxspeed_base;
+maxspeed = 3.6;
 team = 2;
 maxhealth = 40;
 melee = 0;	// can melee or not
 spr_shadow = shd48;
 spr_shadow_y = 4;
 
-chase = false;
 canfire = true;
 firing = false;
 fireDelay = 2;
@@ -86,24 +83,6 @@ with(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 		projectile_hit_push(self, 5, 4);
 		sound_play_pitchvol(other.snd_melee, random_range(0.9, 1.1), 0.6);
 	}
-}
-
-//speed changes
-e = instance_nearest(x,y,enemy);
-if(instance_exists(e)){
-	if (point_distance(x,y,e.x,e.y) < 125){
-		//line of sight to enemy
-		if(collision_line(x,y,e.x,e.y,Wall,false, true) == noone){
-			maxspeed = lerp(maxspeed, maxspeed_close, 0.25 * current_time_scale);
-			chase = true;
-		}
-	} else {
-		maxspeed = lerp(maxspeed, maxspeed_base, 0.05 * current_time_scale);
-		chase = false;
-		}
-} else {
-	maxspeed = lerp(maxspeed, maxspeed_base, 0.05 * current_time_scale);
-	chase = false;
 }
 
 if(button_pressed(index,"fire") && canfire){
@@ -237,8 +216,8 @@ if(my_health > 0){
 			}
 		}
 	} else {
-			wall_stuck = 0;
-		}
+		wall_stuck = 0;
+	}
 
 	// stop showing hurt sprite
 	if(sprite_index = spr_hurt and image_index >= 2){
@@ -432,4 +411,4 @@ switch(argument0){
 
 #define race_ttip
 // return character-specific tooltips
-return choose("BUZZ BUZZ", "FLY YOU FOOL");
+return choose("BUZZ BUZZ", "FLY YOU FOOL", "SIX SHOTS# MORE THAN ENOUGH TO KILL ANYTHING THAT MOVES");

@@ -310,7 +310,7 @@ with(enemy){
 with(Player){
 	//erace_maxspeed_bonus = lerp(erace_maxspeed_bonus, 0.5, 0.005*current_time_scale);
 	erace_maxspeed_bonus += 1/room_speed;
-	if(race == "spider" || race == "junglefly"){
+	if(race == "spider"){
 		if(chase) {erace_maxspeed_orig = maxspeed_close;}
 		else {erace_maxspeed_orig = maxspeed_base;}
 		maxspeed = min(erace_maxspeed_orig + (min(erace_maxspeed_orig * logn(2, max(1,(erace_maxspeed_bonus/8)+1)), erace_maxspeed_orig/2)), maxspeed_close);
