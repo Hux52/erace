@@ -117,7 +117,7 @@ footstep = 2;
 // outgoing contact damage
 if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 	with(instance_nearest(x, y, enemy)){
-		if(sprite_index != spr_hurt){
+		if(nexthurt < current_frame){
 			projectile_hit_push(self, 3, 4);
 			sound_play_pitchvol(other.snd_melee,random_range(0.9,1.1),1);
 		}
@@ -330,13 +330,17 @@ if(instance_exists(creator)){
 			}
 
 			with(instance_place(x,y,enemy)){
-				ball_sound("hit", 0.5);
-				projectile_hit(self, (other.creator.curdist/other.creator.maxdist) * 10, other.creator.amt, other.creator.ball_dir);
+				if(nexthurt < current_frame){
+					ball_sound("hit", 0.5);
+					projectile_hit(self, (other.creator.curdist/other.creator.maxdist) * 10, other.creator.amt, other.creator.ball_dir);
+				}
 			}
 
 			with(instance_place(x,y,prop)){
-				ball_sound("hit", 0.5);
-				projectile_hit(self, (other.creator.curdist/other.creator.maxdist) * 10, 0, 0);
+				if(nexthurt < current_frame){
+					ball_sound("hit", 0.5);
+					projectile_hit(self, (other.creator.curdist/other.creator.maxdist) * 10, 0, 0);
+				}
 			}
 		} else {
 			if(instance_exists(hitwall)){
@@ -354,13 +358,17 @@ if(instance_exists(creator)){
 
 			if(abs(creator.rotation_speed) > 20){
 				with(instance_place(x,y,prop)){
-					ball_sound("hit", 1);
-					projectile_hit(self, 5, 10);
+					if(nexthurt < current_frame){
+						ball_sound("hit", 1);
+						projectile_hit(self, 16, 0);
+					}
 				}
 
 				with(instance_place(x,y,enemy)){
-					ball_sound("hit", 1);
-					projectile_hit(self, 10, 5,other.creator.ball_dir + (90 * sign(other.creator.rotation_speed)));
+					if(nexthurt < current_frame){
+						ball_sound("hit", 1);
+						projectile_hit(self, 16, 8, other.creator.ball_dir + (90 * sign(other.creator.rotation_speed)));
+					}
 				}
 
 				armed = true;
@@ -384,7 +392,7 @@ if(instance_exists(creator)){
 				repeat(4){
 					with(instance_create(x,y,Debris)){
 					speed = random_range(2,4);
-					direction = other.direction + random_range(-45,45) - 180;
+					direction = other.direction + random_range(-45,45);
 					}
 				}
 			}
@@ -404,7 +412,7 @@ if(instance_exists(creator)){
 				repeat(4){
 					with(instance_create(x,y,Debris)){
 					speed = random_range(2,4);
-					direction = other.direction + random_range(-45,45) - 180;
+					direction = other.direction + random_range(-45,45);
 					}
 				}
 			}
@@ -414,12 +422,16 @@ if(instance_exists(creator)){
 		if(armed == true){
 			if(speed > 8){
 				with(instance_place(x,y,prop)){
-				ball_sound("hit", 1);
-					projectile_hit(self, 10, 0, 0);
+				if(nexthurt < current_frame){
+						ball_sound("hit", 1);
+						projectile_hit(self, 16, 0, 0);
+					}
 				}
 				with(instance_place(x,y,enemy)){
-				ball_sound("hit", 1);
-					projectile_hit(self, 10, 10, other.direction);
+					if(nexthurt < current_frame){
+						ball_sound("hit", 1);
+						projectile_hit(self, 16, 8, other.direction);
+					}
 				}
 			}
 			if(speed <= 1){
