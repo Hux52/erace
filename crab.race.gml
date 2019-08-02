@@ -5,7 +5,7 @@ global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_HermitCrab.png", 1, 10, 10)
 
 global.sprChain = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAFCAYAAABM6GxJAAAAAXNSR0IArs4c6QAAAFdJREFUGJVjZGBg+M+AChjR+CjyDg2o8oyBWlr/GRgYGJ59/szAwMDAcPLxYxTdgVpaDPjkGdFtCNTSYpCXk2NgYGBgePjoEcP6a9cwDESWp74LGEgMAwBAiCoorgvr/gAAAABJRU5ErkJggg==",1, 0, 2);
 global.sprMine = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABgAAAAVCAYAAABc6S4mAAAAAXNSR0IArs4c6QAAAitJREFUOI2dVTGLo0AU/gxWA1YKgYBjkS6B7US2swo2Flt4dX7Csb/AH3Bse/X+givShK3sQrATFK7YIgqBgYQrBNtckczs6IzJcV+jzpt57833vfc0ACBMoSBLceHvYQrjP+wAAFPn/J6zf0WYXoNM7m2a2zbmto2XxQKB6+J7FCFwXfx8fRW2RwmYY5nObRux7+NQ1ygYE+/PyyU+tlvx/XX2fLll3qPLlJ3zjADAIQSbPAcAxL6PXVlinST4XVXwKO3ZDnUNh5Cbn+YiBxEUhSmMz/O5d72n6VQcnFkWPrZbYYt9H7HvAwA8SjGzLOybRrmBooFDCBxCMLOsoQkepcraI5sIwCk6dZ2yaVeWWEVRj3MdXhYLRfBJpinTU9ehYEx8c2GHWW7yXGgxdgtTzh648s43b/JcaDDEJs+FwLuyFIlwf7dtxgToV88qikQmPJiOIjmRdZKI9cB1Ebhu7wbG5/ksgvBK8ShFwRgcQrQUFYzBo7R3AwDYN41KUZjCyNJrEM59wRieplMc21ZLUez7vV6QwUs1SwFDnkVcC7lMeYB1kmiFlnGoa/z5Vok+0M4inahjVTTEr6pS1pQAp67Dqeu01NzrgzGb0mgyCsZE4x3bFqsoEja5Bw51jWPbInBdpdEUDfi7PE0BiIoZPnlR8DkmzyJFZBnD5ju2LZ6XSzFVf7y/jzqWA5jDRRn8MH/yGt+/vfX26ZxzmFmq/yc/cvDoN8pn3F9wsyQSW+LhCAAAAABJRU5ErkJggg==", 1, 12, 10);
-global.sprChainLink = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAFCAYAAABM6GxJAAAAAXNSR0IArs4c6QAAAFdJREFUGJVjZGBg+M+AChjR+CjyDg2o8oyBWlr/GRgYGJ59/szAwMDAcPLxYxTdgVpaDPjkGdFtCNTSYpCXk2NgYGBgePjoEcP6a9cwDESWp74LGEgMAwBAiCoorgvr/gAAAABJRU5ErkJggg==", 4, 2, 4);
+global.sprChainLink = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAFCAYAAABM6GxJAAAAAXNSR0IArs4c6QAAAFdJREFUGJVjZGBg+M+AChjR+CjyDg2o8oyBWlr/GRgYGJ59/szAwMDAcPLxYxTdgVpaDPjkGdFtCNTSYpCXk2NgYGBgePjoEcP6a9cwDESWp74LGEgMAwBAiCoorgvr/gAAAABJRU5ErkJggg==", 4, 0, 4);
 
 if(sprite_exists(global.sprChain)){
 	global.tex = sprite_get_texture(global.sprChain, 0);
@@ -89,7 +89,7 @@ rotation_direction = 0; // 1 (cw) or -1 (ccw)
 
 extending = false;
 curdist = 0;
-maxdist = 50;
+maxdist = 65;
 my_ball = noone;
 nudge = false;
 canwoosh = false;
@@ -196,6 +196,7 @@ if(button_pressed(index,"spec")){
 	nudge = false;
 	rotation_direction = 0;
 	rotation_speed = 0;
+	reel_tick = 0;
 	
 	my_ball = instance_create(x,y,CustomObject);
 	with(my_ball){
@@ -208,7 +209,7 @@ if(button_pressed(index,"spec")){
 		armed = false;
 		done = false;
 		canthrow = false;
-		timer = 1.5;
+		timer = 30;
 		flash = false;
 
 		playerColor = player_get_color(creator.index);
@@ -222,11 +223,12 @@ if(ball){
 			amt = (ball * current_time_scale) * (1+(curdist/4));
 			curdist = max(curdist, min(curdist + amt, maxdist));
 			reel_pitch = random_range(1.3,1.7) + curdist/maxdist;
-			if(current_frame mod 2 == 0){
+			reel_tick += current_time_scale;
+			if(reel_tick mod 2 == 0){
 				sound_play_pitchvol(sndDiscBounce, reel_pitch, 0.15);
 			}
 			
-			if(current_frame mod 2 == 1){
+			if(reel_tick mod 2 == 1){
 				sound_play_pitchvol(sndChickenReturn, reel_pitch, 0.25);
 			}
 		}
@@ -254,11 +256,17 @@ if(ball){
 	// }
 	if(canwoosh){
 		if(abs(angle_difference(ball_dir, dir_orig)) < 10 and abs(rotation_speed) > 10){
-			ball_sound("woosh", 1);
+			speed_factor = abs(rotation_speed)/48;
+			woosh_pitch = speed_factor * 1.2 + 0.05;
+			woosh_vol = speed_factor * 0.35;
+			sound_play_pitchvol(sndEnemySlash, woosh_pitch - 0.1, 0.65);
+			sound_play_pitchvol(sndMeleeFlip, random_range(0.2,0.4), woosh_vol);
 			canwoosh = false;
 		}
-	} else {
-		if(abs(angle_difference(ball_dir, dir_orig)) > 90){
+	} 
+
+	if(abs(angle_difference(ball_dir, dir_orig)) > 90){
+		if(extending == false){
 			canwoosh = true;
 		}
 	}
@@ -273,14 +281,16 @@ if(button_released(index, "spec")){
 	if(my_ball != noone){
 		my_ball.speed = (abs(rotation_speed)/2) * (curdist/maxdist);
 		my_ball.direction = ball_dir + (90 * sign(rotation_speed));
-		my_ball.friction = 0.75;
+		my_ball.friction = 0.6;
 		my_ball.done = true;
 		if(my_ball.armed == true){
 			ball_sound("release", 1);
+			release_vol = abs(rotation_speed)/48;
+			sound_play_pitchvol(sndMeleeFlip, random_range(0.9,1.1) * 0.35, release_vol);
 		}
 		my_ball = noone;
 
-		chainsNum = round(curdist/7) * 2;
+		chainsNum = round(curdist/7.5) * 2;
 
 		for(i = 0; i < chainsNum; i++){
 			with(instance_create(x + lengthdir_x(curdist/chainsNum * i, ball_dir), y + lengthdir_y(curdist/chainsNum * i, ball_dir), CustomObject)){
@@ -296,6 +306,7 @@ if(button_released(index, "spec")){
 				fade = 1.5;
 				isfading = false;
 				on_step = script_ref_create(chainLink_step);
+				rot_amt = random_range(-90,90);
 			}
 		}
 
@@ -377,7 +388,7 @@ if(instance_exists(creator)){
 					}
 				}
 			}
-			speed *= 0.2;
+			speed *= 0.75;
 		}
 		hitwall = instance_place(x, y + vspeed/2,Wall);
 		if(instance_exists(hitwall)){
@@ -397,24 +408,25 @@ if(instance_exists(creator)){
 					}
 				}
 			}
-			speed *= 0.2;
+			speed *= 0.75;
 		}
 	
 		if(armed == true){
-			if(speed > 12){
+			if(speed > 8){
 				with(instance_place(x,y,prop)){
 				ball_sound("hit", 1);
 					projectile_hit(self, 10, 0, 0);
 				}
 				with(instance_place(x,y,enemy)){
 				ball_sound("hit", 1);
-					projectile_hit(self, 10, 5, direction);
+					projectile_hit(self, 10, 10, other.direction);
 				}
 			}
-
-			timer -= 1/room_speed;
-			if(timer < 0.5){
-				if(current_frame mod 2 == 0) {
+			if(speed <= 1){
+				timer -= current_time_scale;
+			}
+			if(timer < 20){
+				if(timer mod 2 == 0) {
 					flash = !flash
 					sound_play_pitchvol(sndDiscBounce, 2.5 * flash + 2, 0.25);
 					};
@@ -435,8 +447,8 @@ if(instance_exists(creator)){
 #define ball_destroy
 if(armed){
 	instance_create(x,y,Explosion);
-	sound_play_pitchvol(sndOasisExplosion, random_range(0.9,1.1), 0.35);
-	sound_play_pitchvol(sndExplosion, random_range(0.9,1.1), 0.35);
+	sound_play_pitchvol(sndOasisExplosion, random_range(0.9,1.1), 0.45);
+	sound_play_pitchvol(sndExplosion, random_range(0.9,1.1), 0.25);
 } else {
 	ball_sound("pop", 1);
 	repeat(10){
@@ -461,10 +473,6 @@ switch(snd){
 		sound_play_pitchvol(sndHitRock, random_range(0.9,1.1) * 1, 0.65 * vol);
 		sound_play_pitchvol(sndHitMetal, random_range(0.9,1.1) * 1, 0.65 * vol);
 		sound_play_pitchvol(sndWolfHurt, random_range(0.9,1.1) * 2, 0.35 * vol);
-	break;
-
-	case "woosh":
-		sound_play_pitchvol(sndEnemySlash, random_range(0.9,1.1) * 0.5, 0.65 * vol);
 	break;
 
 	case "release":
@@ -498,6 +506,8 @@ switch(snd){
 if(speed <= 1){isfading = true};
 if(isfading) fade -= 1/room_speed;
 image_alpha = fade;
+image_angle += (rot_amt)/2;
+rot_amt /= 2;
 if(fade <= 0){
 	instance_destroy();
 }
@@ -507,10 +517,10 @@ with(Player){
 	if (ball){
 		texture_set_repeat(true);
 		draw_primitive_begin_texture(pr_trianglestrip, global.tex);
-		draw_vertex_texture_color(x1 + dx, y1 + dy, 0, 0, make_color_hsv(0, 0, 164), 1);
-		draw_vertex_texture_color(x1 - dx, y1 - dy, 0, 1, make_color_hsv(0, 0, 164), 1);
-		draw_vertex_texture_color(x2 + dx, y2 + dy, f, 0, make_color_hsv(0, 0, 164), 1);
-		draw_vertex_texture_color(x2 - dx, y2 - dy, f, 1, make_color_hsv(0, 0, 164), 1);
+		draw_vertex_texture_color(x1 + dx, y1 + dy, 0, 0, make_color_hsv(0, 0, 120), 1);
+		draw_vertex_texture_color(x1 - dx, y1 - dy, 0, 1, make_color_hsv(0, 0, 120), 1);
+		draw_vertex_texture_color(x2 + dx, y2 + dy, f, 0, make_color_hsv(0, 0, 255), 1);
+		draw_vertex_texture_color(x2 - dx, y2 - dy, f, 1, make_color_hsv(0, 0, 255), 1);
 		draw_primitive_end();
 	}
 }
