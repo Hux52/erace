@@ -7,6 +7,10 @@ global.sprChain = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAFCAYAAABM6Gx
 global.sprMine = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABgAAAAVCAYAAABc6S4mAAAAAXNSR0IArs4c6QAAAitJREFUOI2dVTGLo0AU/gxWA1YKgYBjkS6B7US2swo2Flt4dX7Csb/AH3Bse/X+givShK3sQrATFK7YIgqBgYQrBNtckczs6IzJcV+jzpt57833vfc0ACBMoSBLceHvYQrjP+wAAFPn/J6zf0WYXoNM7m2a2zbmto2XxQKB6+J7FCFwXfx8fRW2RwmYY5nObRux7+NQ1ygYE+/PyyU+tlvx/XX2fLll3qPLlJ3zjADAIQSbPAcAxL6PXVlinST4XVXwKO3ZDnUNh5Cbn+YiBxEUhSmMz/O5d72n6VQcnFkWPrZbYYt9H7HvAwA8SjGzLOybRrmBooFDCBxCMLOsoQkepcraI5sIwCk6dZ2yaVeWWEVRj3MdXhYLRfBJpinTU9ehYEx8c2GHWW7yXGgxdgtTzh648s43b/JcaDDEJs+FwLuyFIlwf7dtxgToV88qikQmPJiOIjmRdZKI9cB1Ebhu7wbG5/ksgvBK8ShFwRgcQrQUFYzBo7R3AwDYN41KUZjCyNJrEM59wRieplMc21ZLUez7vV6QwUs1SwFDnkVcC7lMeYB1kmiFlnGoa/z5Vok+0M4inahjVTTEr6pS1pQAp67Dqeu01NzrgzGb0mgyCsZE4x3bFqsoEja5Bw51jWPbInBdpdEUDfi7PE0BiIoZPnlR8DkmzyJFZBnD5ju2LZ6XSzFVf7y/jzqWA5jDRRn8MH/yGt+/vfX26ZxzmFmq/yc/cvDoN8pn3F9wsyQSW+LhCAAAAABJRU5ErkJggg==", 1, 12, 10);
 global.sprChainLink = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAFCAYAAABM6GxJAAAAAXNSR0IArs4c6QAAAFdJREFUGJVjZGBg+M+AChjR+CjyDg2o8oyBWlr/GRgYGJ59/szAwMDAcPLxYxTdgVpaDPjkGdFtCNTSYpCXk2NgYGBgePjoEcP6a9cwDESWp74LGEgMAwBAiCoorgvr/gAAAABJRU5ErkJggg==", 4, 0, 4);
 
+// for level start
+global.newLevel = instance_exists(GenCont);
+global.hasGenCont = false;
+
 if(sprite_exists(global.sprChain)){
 	global.tex = sprite_get_texture(global.sprChain, 0);
 }
@@ -23,6 +27,17 @@ while(true){
 			sound_play_pitchvol(global.sndSelect,1.5,1);
 		}
 		_race[i] = r;
+	}
+	// first chunk here happens at the start of the level, second happens in portal
+	if(instance_exists(GenCont)) global.newLevel = 1;
+	else if(global.newLevel){
+		global.newLevel = 0;
+		level_start();
+	}
+	var hadGenCont = global.hasGenCont;
+	global.hasGenCont = instance_exists(GenCont);
+	if (!hadGenCont && global.hasGenCont) {
+		// nothing yet
 	}
 	wait 1;
 }
@@ -85,7 +100,7 @@ ball_dir = 0;
 // angle_increase = 0;
 
 rotation_speed = 0;
-rotation_direction = 0; // 1 (cw) or -1 (ccw)
+maxrot = 48; //max rotation speed
 
 extending = false;
 curdist = 0;
@@ -96,6 +111,17 @@ canwoosh = false;
 
 ball = 0;
 amt = 0;
+
+#define level_start
+with(Player){
+	with(my_ball) {instance_delete(self);}
+	my_ball = noone;
+	extending = false;
+	rotation_speed = 0;
+	curdist = 0;
+	ball = false;
+}
+
 
 #define game_start
 // executed after picking race and starting for each player picking this race
@@ -244,7 +270,7 @@ if(ball){
 	// rotation_speed += (button_check(index,"west") + (button_check(index,"east")*-1));
 		
 	if(abs(angle_difference(ball_dir,pdir)) > 15){
-		rotation_speed += sign(angle_difference(pdir,ball_dir)) * current_time_scale * 2;
+		rotation_speed += sign(angle_difference(pdir,ball_dir)) * current_time_scale * 3;
 		// trace(sign(angle_difference(pdir,ball_dir)))
 	}
 	if(extending = false){
@@ -252,7 +278,8 @@ if(ball){
 	}
 
 	// if(sign(angle_difference(pdir,rotation_speed)) != sign(rotation_speed)){
-		rotation_speed = lerp(rotation_speed, 0, 0.045*current_time_scale);
+		rotation_speed = lerp(rotation_speed, 0, 0.04*current_time_scale);
+		// trace(rotation_speed)
 	// }
 	if(canwoosh){
 		if(abs(angle_difference(ball_dir, dir_orig)) < 10 and abs(rotation_speed) > 10){
@@ -271,14 +298,14 @@ if(ball){
 		}
 	}
 
-	rotation_speed = clamp(rotation_speed, -48, 48);
+	rotation_speed = clamp(rotation_speed, -maxrot, maxrot);
 	
 } else {
 	canwalk = true;
 }
 
 if(button_released(index, "spec")){
-	if(my_ball != noone){
+	if(instance_exists(my_ball)){
 		my_ball.speed = (abs(rotation_speed)/2) * (curdist/maxdist);
 		my_ball.direction = ball_dir + (90 * sign(rotation_speed));
 		my_ball.friction = 0.6;
@@ -356,7 +383,13 @@ if(instance_exists(creator)){
 				}
 			}
 
-			if(abs(creator.rotation_speed) > 20){
+			if(abs(creator.rotation_speed) > creator.maxrot * 0.33){
+				armed = true;
+			} else {
+				armed = false;
+			}
+
+			if(armed){
 				with(instance_place(x,y,prop)){
 					if(nexthurt < current_frame){
 						ball_sound("hit", 1);
@@ -370,12 +403,7 @@ if(instance_exists(creator)){
 						projectile_hit(self, 16, 8, other.creator.ball_dir + (90 * sign(other.creator.rotation_speed)));
 					}
 				}
-
-				armed = true;
-			} else {
-				armed = false;
 			}
-
 		}
 	} else {
 		hitwall = instance_place(x + hspeed/2, y,Wall);
@@ -388,7 +416,7 @@ if(instance_exists(creator)){
 			}
 			direction = -direction + 180;
 			if(speed > 1 and armed) {
-				ball_sound("wall", speed/16);
+				ball_sound("wall", min(speed/16, 1));
 				repeat(4){
 					with(instance_create(x,y,Debris)){
 					speed = random_range(2,4);
@@ -408,7 +436,7 @@ if(instance_exists(creator)){
 			}
 			direction = -direction;
 			if(speed > 1 and armed) {
-				ball_sound("wall", speed/16);
+				ball_sound("wall", min(speed/16, 1));
 				repeat(4){
 					with(instance_create(x,y,Debris)){
 					speed = random_range(2,4);
@@ -520,6 +548,8 @@ if(isfading) fade -= 1/room_speed;
 image_alpha = fade;
 image_angle += (rot_amt)/2;
 rot_amt /= 2;
+move_bounce_solid(true);
+
 if(fade <= 0){
 	instance_destroy();
 }
