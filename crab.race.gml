@@ -100,7 +100,7 @@ ball_dir = 0;
 // angle_increase = 0;
 
 rotation_speed = 0;
-maxrot = 48; //max rotation speed
+maxrot = 56; //max rotation speed
 
 extending = false;
 curdist = 0;
@@ -354,6 +354,7 @@ if(instance_exists(creator)){
 		if(creator.extending){
 			if(place_meeting(x,y,Wall)){
 				creator.extending = false;
+				ball_sound("wall", 0.45);
 			}
 
 			with(instance_place(x,y,enemy)){
@@ -383,7 +384,7 @@ if(instance_exists(creator)){
 				}
 			}
 
-			if(abs(creator.rotation_speed) > creator.maxrot * 0.33){
+			if(abs(creator.rotation_speed) > creator.maxrot * 0.33 && creator.curdist > creator.maxdist/3){
 				armed = true;
 			} else {
 				armed = false;
