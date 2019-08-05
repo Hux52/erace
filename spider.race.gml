@@ -1,6 +1,9 @@
 #define init
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprSpiderSelect.png", 1, 0,0);
-global.sprPortrait = sprite_add("sprites/portrait/sprPortraitSpider.png",1 , 15, 185);
+global.sprPortrait = mskNone;
+global.sprPortraitDefault = sprite_add("sprites/portrait/sprPortraitSpider.png",1 , 15, 185);
+global.sprPortraitCursed = sprite_add("sprites/portrait/sprPortraitCursedSpider.png",1 , 15, 185);
+global.sprPortraitLightning = sprite_add("sprites/portrait/sprPortraitLightningSpider.png",1 , 15, 185);
 global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_CrystalSpider2.png", 1, 10, 10);
 
 global.sprLightningSpiderIdle = sprite_add("/sprites/sprLightningSpiderIdle.png", 8, 12, 12);
@@ -140,6 +143,8 @@ friction = 0.45
 u1 = ultra_get("spider", 1);
 u2 = ultra_get("spider", 2);
 
+global.sprPortrait = global.sprPortraitDefault;
+
 //ultra A: Cursed Carapace
 if (u1 == 1){
 	// sprites
@@ -154,6 +159,8 @@ if (u1 == 1){
 	//sounds
 	snd_hurt = global.snd_hurt_current;
 	snd_dead = global.snd_dead_current;
+
+	global.sprPortrait = global.sprPortraitCursed;
 }
 
 if(u2 == 1){
@@ -162,6 +169,8 @@ if(u2 == 1){
 	spr_walk = global.sprLightningSpiderWalk;
 	spr_hurt = global.sprLightningSpiderHurt;
 	spr_dead = global.sprLightningSpiderDead;
+
+	global.sprPortrait = global.sprPortraitLightning;
 
 	if(lightning_timer > 0){
 		lightning_timer -= current_time_scale;
@@ -286,7 +295,11 @@ return "CONTACT DAMAGE#@sNORMAL MOVEMENT #ON @wALL TERRAIN";
 
 #define race_portrait
 // return portrait for character selection screen and pause menu
-return global.sprPortrait;
+if(instance_exists(CampChar)){
+	return global.sprPortraitDefault;
+	} else {
+	return global.sprPortrait;
+	}
 
 
 #define race_mapicon
