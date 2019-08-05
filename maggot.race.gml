@@ -44,8 +44,9 @@ spr_shadow = shd16;
 spr_shadow_y = 0;
 mask_index = mskMaggot;
 canwalk = 1;
+died = false;
 
-type = "normal"; //types: meat, [tba]
+type = "normal"; //types: meat, rad, 
 _to = noone;
 
 // vars
@@ -68,6 +69,15 @@ switch(type){
 		case "rad":
 			image_blend = c_lime;
 		break;
+		case "lightning":
+			image_blend = make_color_hsv(140,200,255);
+		break;
+		case "plasma":
+			image_blend = c_lime;
+		break;
+		case "fire":
+			image_blend = c_yellow;
+		break;
 		default:
 			image_blend = c_white;
 		break;
@@ -76,6 +86,9 @@ switch(type){
 // no weps
 canswap = 0;
 canpick = 0;
+
+//no foodstep
+footstep = 10;
 
 // face direction you're moving in, as you have no weps
 if(direction > 90 and direction <= 270){
@@ -104,7 +117,53 @@ if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
 	}
 }
 
+if(type = "lightning"){
+	if("lightning_timer" not in self){lightning_timer = 0;}
+	if(lightning_timer > 0){
+		lightning_timer -= current_time_scale;
+	} else {
+		lightning_timer = irandom_range(5,25);
+		// sound_play_pitchvol(sndLightningHit,random_range(0.6,0.8), 0.5);
+		num_lightning = irandom_range(1,3);
+		randangle = random(360);
+		for (i = 0; i < num_lightning; i++){
+			with(instance_create(x + hspeed*2,y + vspeed*2,Lightning)){
+				creator = other;
+				image_angle = (360/creator.num_lightning)*creator.i + other.randangle;
+				team = creator.team;
+				ammo = 3;
+				alarm_set(0,1);
+			}
+		}
+	}
+}
+
+if(type = "fire"){
+	if("fire_timer" not in self){fire_timer = 0;}
+	if(fire_timer > 0){
+		fire_timer -= current_time_scale;
+	} else {
+		fire_timer = irandom_range(5,25);
+		// sound_play_pitchvol(sndLightningHit,random_range(0.6,0.8), 0.5);
+		num_fire = irandom_range(2, 4);
+		randangle = random(360);
+		for (i = 0; i < num_fire; i++){
+			with(instance_create(x,y,TrapFire)){
+				creator = other;
+				team = creator.team;
+				direction = (360/creator.num_fire)*creator.i + creator.randangle;
+				image_angle = direction;
+				speed = 6;
+				friction = 0.8;
+				sprite_index = sprSalamanderBullet;
+				damage = 2;
+			}
+		}
+	}
+}
+
 if(my_health = 0){
+	if(died = false){
 	//create explosion
 	switch(type){
 		case "meat":
@@ -131,14 +190,39 @@ if(my_health = 0){
 			instance_create(x,y,FishA);
 			instance_create(x,y,LaserBrain);
 		break;
+
+		case "plasma":
+			with(instance_create(x,y,PlasmaBall)){
+				team = other.team;
+				instance_destroy();
+			}
+		break;
+
+		case "fire":
+			repeat(irandom_range(6,8)) {
+				with(instance_create(x,y,TrapFire)){
+					creator = other;
+					team = creator.team;
+					direction = random(360);
+					image_angle = direction;
+					speed = 6;
+					friction = 0.8;
+					sprite_index = sprSalamanderBullet;
+					damage = 2;
+				}		
+			}
+		break;
 	}
+}
+
+died = true;
 
 	_to = mod_script_call("mod","erace","respawn_as", true, "maggot", "Maggot"); //reincarnation in tarnation
 	if(instance_exists(_to)){
 		type = _to.type;
 		instance_delete(_to);
 	}
-}
+} else {died = false;}
 
 #define race_name
 // return race name for character select and various menus

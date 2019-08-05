@@ -94,11 +94,7 @@ u1 = ultra_get(mod_current, 1);
 
 maggot_health = 2 + (skill_get(mut_rhino_skin) * 4) + max(0, floor(GameCont.hard / 2));	// get +1 max hp every 2 levels
 
-if(u1 == 1){
-	maggotType = "rad";
-} else {
-	maggotType = "normal";
-}
+maggotType = "normal";
 
 // special- self destruct init
 if(button_pressed(index, "spec") or button_pressed(index, "fire")){
@@ -131,14 +127,15 @@ if(my_health = 0 and died = 0){
 	}
 	// maggot spawn
 	repeat(5 + max(0, GameCont.hard)){
-		SpawnMaggot(maggot_health,maggotType);
+		if(u1) {maggotType = choose("rad", "lightning", "plasma", "meat", "fire");}
+		SpawnMaggot(maggot_health, maggotType);
 	}
 	// become maggot
 	died = 1;
 	race = "maggot";
 	wantrace = "maggotspawn";
 	if(u1 == 1){
-		type = "rad";
+		type = choose("rad", "lightning", "plasma", "meat", "fire");
 	}
 	maxhealth = maggot_health;
 	my_health = maxhealth;
@@ -162,32 +159,80 @@ if(my_health > 0){
 		sprite_index = spr_idle;
 	}
 	// face direction...
-	if(direction > 90 and direction <= 270){
-		right = -1;
-	}
-	else{
-		right = 1;
-	}
-	// ...cont
 	if(right = 1){
 		image_xscale = 1;
 	}
 	else{
 		image_xscale = -1;
 	}
-
-
-	// targeting
-	if(instance_exists(enemy)){
-		var _e = instance_nearest(x, y, enemy);
-		if(distance_to_object(_e) < 100 and !collision_line(x, y, _e.x, _e.y, Wall, true, true)){
-			target = _e;
-		}
-		else{
-			target = noone;
-		}
+	// ...cont
+	if(direction > 90 and direction <= 270){
+		right = -1;
 	}
 	else{
+		right = 1;
+	}
+
+	if(type = "lightning"){
+		if(lightning_timer > 0){
+			lightning_timer -= current_time_scale;
+		} else {
+			lightning_timer = irandom_range(5,25);
+			// sound_play_pitchvol(sndLightningHit,random_range(0.6,0.8), 0.5);
+			num_lightning = irandom_range(1,3);
+			randangle = random(360);
+			for (i = 0; i < num_lightning; i++){
+				with(instance_create(x + hspeed*2,y + vspeed*2,Lightning)){
+					creator = other;
+					image_angle = (360/creator.num_lightning)*creator.i + other.randangle;
+					team = creator.team;
+					ammo = 3;
+					alarm_set(0,1);
+				}
+			}
+		}
+	}
+
+	if(type = "fire"){
+		if(fire_timer > 0){
+			fire_timer -= current_time_scale;
+		} else {
+			fire_timer = irandom_range(5,25);
+			// sound_play_pitchvol(sndLightningHit,random_range(0.6,0.8), 0.5);
+			num_fire = irandom_range(2, 4);
+			randangle = random(360);
+			for (i = 0; i < num_fire; i++){
+				with(instance_create(x,y,TrapFire)){
+					creator = other;
+					team = creator.team;
+					direction = (360/creator.num_fire)*creator.i + creator.randangle;
+					image_angle = direction;
+					speed = 6;
+					friction = 0.8;
+					sprite_index = sprSalamanderBullet;
+					damage = 2;
+				}
+			}
+		}
+	}
+
+	if(instance_exists(creator)){
+		if(instance_is(creator, Player)){
+			if(creator.race == "maggot" or creator.race == "maggotspawn" or creator.race == "bigmaggot"){
+				_p = creator;
+			}
+		}
+	} else {
+		_p = noone;
+	}
+
+	// targeting
+	var _e = instance_nearest(x, y, enemy);
+	if(instance_exists(_e) and distance_to_object(_e) < 100 and !collision_line(x, y, _e.x, _e.y, Wall, true, true)){
+		target = _e;
+	} else if(instance_exists(_p) and player_get_race(_p.index) == "spider" and distance_to_object(_p) < 100 and !collision_line(x, y, _p.x, _p.y, Wall, true, true)){
+		target = _p;
+	} else {
 		target = noone;
 	}
 	
@@ -202,10 +247,10 @@ if(my_health > 0){
 	}
 	else{
 		if(alarm[0] = 0){	// target- go for it!
-			direction = point_direction(x, y, target.x, target.y) + random_range(-20, 20);
+			direction = point_direction(x, y, target.x, target.y) + random_range(-10, 10);
 			move_bounce_solid(true);
 			motion_add(direction, maxspeed);
-			alarm[0] = irandom_range(30, 50);
+			alarm[0] = irandom_range(10, 20);
 		}
 	}
 
@@ -241,6 +286,7 @@ else{
 sound_play_pitchvol(snd_dead, random_range(0.9,1.1), 0.6);
 // create corpse
 with(instance_create(x, y, Corpse)){
+	image_blend = other.image_blend;
 	sprite_index = other.spr_dead;
 	size = 1;
 }
@@ -257,6 +303,38 @@ if(type == "rad"){
 		}
 	}
 	instance_create(x,y,GammaBlast);
+}
+
+if(type == "plasma"){
+	with(instance_create(x,y,PlasmaBall)){
+		team = other.team;
+		instance_destroy();
+	}
+}
+
+if(type == "meat"){
+	repeat(3) {
+		instance_create(x,y,MeatExplosion);
+		with(instance_create(x,y,BloodStreak)){
+			image_angle = random(360);
+			speed = 8;
+		}
+	}
+}
+
+if(type == "fire"){
+	repeat(irandom_range(6,8)) {
+		with(instance_create(x,y,TrapFire)){
+			creator = other;
+			team = creator.team;
+			direction = random(360);
+			image_angle = direction;
+			speed = 6;
+			friction = 0.8;
+			sprite_index = sprSalamanderBullet;
+			damage = 2;
+		}		
+	}
 }
 
 #define maggot_hurt(damage, kb_vel, kb_dir)
@@ -294,6 +372,7 @@ if(sprite_index != spr_hurt){
 		mask_index = mskMaggot;
 		size = 1;
 		image_speed = 0.3;
+		image_blend = c_white;
 		spr_shadow = shd16;
 		direction = random(360);
 		move_bounce_solid(true);
@@ -309,12 +388,27 @@ if(sprite_index != spr_hurt){
 		with(script_bind_draw(0, 0)){
 			script = script_ref_create_ext("mod", "erace", "draw_outline", other.playerColor, other);
 		}
+		//oddities
 		switch(type){
 			case "normal":
 				image_blend = c_white;
 			break;
 			case "rad":
 				image_blend = c_lime;
+			break;
+			case "lightning":
+				image_blend = c_aqua;
+				lightning_timer = 0;
+			break;
+			case "meat":
+				image_blend = make_color_hsv(0,169,200);
+			break;
+			case "plasma":
+				image_blend = c_lime;
+			break;
+			case "fire":
+				image_blend = c_yellow;
+				fire_timer = 0;
 			break;
 		}
 	}
@@ -385,7 +479,7 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "IRRADIATED";
+	case 1: return "UPGRADE";
 	default: return "";
 }
 
@@ -393,7 +487,7 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "SPAWN @gRAD MAGGOTS @sTHAT EXPLODE INTO @gRADIATION";
+	case 1: return "SPAWN @gVARIOUS @rKINDS @sOF @bDIFFERENT @yMAGGOTS";
 	default: return "";
 }
 
