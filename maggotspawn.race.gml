@@ -217,10 +217,8 @@ if(my_health > 0){
 	}
 
 	if(instance_exists(creator)){
-		if(instance_is(creator, Player)){
-			if(creator.race == "maggot" or creator.race == "maggotspawn" or creator.race == "bigmaggot"){
-				_p = creator;
-			}
+		if(creator.race == "maggot" or creator.race == "maggotspawn" or creator.race == "bigmaggot"){
+			_p = creator;
 		}
 	} else {
 		_p = noone;
@@ -230,7 +228,7 @@ if(my_health > 0){
 	var _e = instance_nearest(x, y, enemy);
 	if(instance_exists(_e) and distance_to_object(_e) < 100 and !collision_line(x, y, _e.x, _e.y, Wall, true, true)){
 		target = _e;
-	} else if(instance_exists(_p) and player_get_race(_p.index) == "spider" and distance_to_object(_p) < 100 and !collision_line(x, y, _p.x, _p.y, Wall, true, true)){
+	} else if(instance_exists(_p) and distance_to_object(_p) < 75 and !collision_line(x, y, _p.x, _p.y, Wall, true, true)){
 		target = _p;
 	} else {
 		target = noone;
