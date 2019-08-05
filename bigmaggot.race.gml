@@ -211,32 +211,36 @@ if(my_health > 0){
 		sprite_index = spr_idle;
 	}
 	// face direction...
-	if(direction > 90 and direction <= 270){
-		right = -1;
-	}
-	else{
-		right = 1;
-	}
-	// ...cont
 	if(right = 1){
 		image_xscale = 1;
 	}
 	else{
 		image_xscale = -1;
 	}
+	// ...cont
+	if(direction > 90 and direction <= 270){
+		right = -1;
+	}
+	else{
+		right = 1;
+	}
+
+	if(instance_exists(creator)){
+		if(creator.race == "maggot" or creator.race == "maggotspawn" or creator.race == "bigmaggot"){
+			_p = creator;
+		}
+	} else {
+		_p = noone;
+	}
 
 
 	// targeting
-	if(instance_exists(enemy)){
-		var _e = instance_nearest(x, y, enemy);
-		if(distance_to_object(_e) < 100 and !collision_line(x, y, _e.x, _e.y, Wall, true, true)){
-			target = _e;
-		}
-		else{
-			target = noone;
-		}
-	}
-	else{
+	var _e = instance_nearest(x, y, enemy);
+	if(instance_exists(_e) and distance_to_object(_e) < 100 and !collision_line(x, y, _e.x, _e.y, Wall, true, true)){
+		target = _e;
+	} else if(instance_exists(_p) and distance_to_object(_p) < 75 and !collision_line(x, y, _p.x, _p.y, Wall, true, true)){
+		target = _p;
+	} else {
 		target = noone;
 	}
 	
@@ -251,10 +255,10 @@ if(my_health > 0){
 	}
 	else{
 		if(alarm[0] <= 0){	// target- go for it!
-			direction = point_direction(x, y, target.x, target.y) + random_range(-20, 20);
+			direction = point_direction(x, y, target.x, target.y) + random_range(-10, 10);
 			move_bounce_solid(true);
 			motion_add(direction, maxspeed);
-			alarm[0] = irandom_range(30, 50);
+			alarm[0] = irandom_range(10, 20);
 		}
 	}
 
@@ -346,6 +350,7 @@ instance_create(x + random_range(-1,1),y + random_range(-1,1),MeatExplosion);
 	with(instance_create(x, y, CustomHitme)){
 		name = "Maggot";
 		creator = other;
+				trace(object_get_name(creator))
 		team = creator.team;
 		spr_idle = sprMaggotIdle;
 		spr_walk = sprMaggotIdle;

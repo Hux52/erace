@@ -236,7 +236,7 @@ if(my_health > 0){
 	
 	// movement
 	if(target = noone){	// no target- random movement
-		if(alarm[0] = 0){
+		if(alarm[0] <= 0){
 			direction = random(360);
 			move_bounce_solid(true);
 			motion_add(direction, maxspeed);
@@ -244,7 +244,7 @@ if(my_health > 0){
 		}
 	}
 	else{
-		if(alarm[0] = 0){	// target- go for it!
+		if(alarm[0] <= 0){	// target- go for it!
 			direction = point_direction(x, y, target.x, target.y) + random_range(-10, 10);
 			move_bounce_solid(true);
 			motion_add(direction, maxspeed);
