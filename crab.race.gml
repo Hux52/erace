@@ -113,8 +113,8 @@ ball = 0;
 amt = 0;
 
 #define level_start
-with(Player){
-	with(my_ball) {instance_delete(self);}
+with(instances_matching(Player, "race", "crab")){
+	if("my_ball" in self) with(my_ball) {instance_delete(self);}
 	my_ball = noone;
 	extending = false;
 	rotation_speed = 0;
