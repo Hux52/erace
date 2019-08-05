@@ -427,7 +427,17 @@ if(instance_exists(CharSelect)){
 if(instance_exists(CampChar)){
 	instance_delete(TV);
 	with(CampChar){
-		if("lol" not in self){with(instance_create(x,y,BubblePop)){image_index = 1;} lol = true;}
+		if("lol" not in self){
+			repeat(4){
+				with(instance_create(x + random_range(-5,5),y,DustOLD)){
+					image_index = 0;
+					speed = 1.5;
+					image_angle = direction;
+					direction = random(360)
+				} 
+			lol = true;
+			}
+		}
 		x = 64;
 		y = 64;
 		lastx = 64;
