@@ -2,6 +2,7 @@
 // global.sprGas = sprite_add_base64("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", 8, 24, 48);
 // global.sprGas = sprRevive;
 global.sprGas = sprite_add_base64("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", 8, 24, 48);
+global.sprSkull = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAAAcAAAAFCAYAAACJmvbYAAAAAXNSR0IArs4c6QAAAC5JREFUCJljZGBgYPj///9/BjTAyMjIyIhNAgaYGBgYGErEUQVhfLw6GZDtRKcBy1UZCLtpzLUAAAAASUVORK5CYII=", 1, 4, 2);
 
 #define game_start
 
@@ -41,7 +42,7 @@ with(hitme){
 	if(place_meeting(x,y,other)){
 		if(team != other.team){
 			if(nexthurt < current_frame){
-				projectile_hit(self, 1, 1.5, other.direction);
+				projectile_hit(self, 0, 1.5, other.direction);
 				if("necromancer_poison_debuff" not in self){
 					necromancer_poison_debuff = instance_create(x,y,CustomObject);
 					with(necromancer_poison_debuff){
@@ -56,7 +57,7 @@ with(hitme){
 					}
 				} else {
 					with(necromancer_poison_debuff){
-						ticks = min(ticks + 2, 10);
+						ticks = min(ticks + 2, 15);
 					}
 				}
 			}
@@ -76,9 +77,15 @@ if(instance_exists(target)){
 			y = target.y;
 			depth = target.depth - 0.1;
 			if(timer <= 0){
-				dmg = min(ticks,2);
-				projectile_hit(target, dmg);
-				sound_play_pitchvol(sndOasisCrabAttack, (0.3 + (ticks/20)), 0.65);
+				dmg = min(ticks,3);
+				// projectile_hit(target, dmg);
+				
+				snd = choose(sndFrogEggSpawn1,sndFrogEggSpawn2,sndFrogEggSpawn3);
+				projectile_hit_raw(target, dmg, 0);
+				sound_play_pitchvol(sndOasisCrabAttack, (0.3 + (ticks/15)), 0.45);
+				sound_play_pitchvol(sndNothingFire, (1.5 + (ticks/15)), 0.1);
+				sound_play_pitchvol(sndNothingSmallball, (0.5 + (ticks/15)), 0.1);
+				sound_play_pitchvol(snd, (1.5 + (ticks/15)), 0.15);
 				repeat(ticks){
 					// with(instance_create(x + random_range(-1 * sprite_get_width(target.sprite_index)/2, sprite_get_width(target.sprite_index)/2),y + random_range(-16,16),Curse)){
 					with(instance_create(x,y,Curse)){
@@ -90,7 +97,7 @@ if(instance_exists(target)){
 					}
 				}
 				ticks -= 1;
-				timer = 15;
+				timer = min(25 - ticks, 15);
 			} else {
 				timer -= current_time_scale;
 			}
@@ -109,12 +116,16 @@ if(instance_exists(target)){
 
 #define necromancer_poison_debuff_draw
 if(instance_exists(target) and active){
-	with(target){
-		if("z" not in self){z = 0;}
-		if("right" not in self){right = image_xscale;}
-		d3d_set_fog(true, c_purple, 0, 0);
-		draw_sprite_ext(sprite_index, image_index, x, y - (z * -1), right, image_yscale, image_angle, c_white, 0.1 + other.ticks/20);
-		d3d_set_fog(false, c_purple, 0, 0);
+	if(target.object_index != RavenFly){
+		with(target){
+			if("z" not in self){z = 0;}
+			if("right" not in self){right = image_xscale;}
+			d3d_set_fog(true, merge_color(c_purple, c_fuchsia, other.ticks/20), 0, 0);
+			draw_sprite_ext(sprite_index, image_index, x, y - z, right, image_yscale, image_angle, c_white, 0.25 + other.ticks/40);
+			d3d_set_fog(false, c_purple, 0, 0);
+			draw_sprite_ext(global.sprSkull, 1, x + 1, y - z - 16 + 1, 1, 1, 0, c_purple, 1-other.timer/10);
+			draw_sprite_ext(global.sprSkull, 1, x, y - z - 16, 1, 1, 0, c_white, 1-other.timer/10);
+		}
 	}
 }
 
