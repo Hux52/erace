@@ -32,26 +32,32 @@ ultras ideas:
     A AND B: release maggots upon getting hit
     A: Blood explosions upon diving/resurfacing and taking damage
     B: Blood explosions upon smaller maggot deaths
+DONE
 
 -Corpse:
-    A: Increase maggot speed, health and damage
-    B: Special types of maggots (Radiation, Explosive(and/or burning), Lightning, Plasma)
+    A: Special types of maggots (Radiation, Explosive(and/or burning), Lightning, Plasma)
+    B: Increase maggot speed, health and damage    
+DONE
 
 -Rat:
     A and B: enemies drop cheese that heals 1 hp
     A: Start level with rat companions
     B: Boost health, damage and speed
+DONE
 
 missing portrait:
--Van
+-Bonefish
+-Hermit Crab
 
 fixes:
--Fix Gator portrait
 -Turret visuals need fixing
     -@Hux
 -Turtle ultra A needs sound
     -@everyone
 -Fireballer needs new CharSelect icon
+-fix spider icons and portraits
+
+----fix the fucking van
 
 general balance:
 -Laser crystal needs new ultras
@@ -60,12 +66,17 @@ general balance:
 -Rhino freak needs more movement options
 -Snow tank is too slow
     -idea: moving lets you speed up, but firing makes you lose all the speed
--Nerf Bandit ultras
-    -health cost?
--Change Ballguy ultra
-    -less devastator, more blood cannon
+        -we have done this months ago already, when am i cleaning this up
+
+second pass:
+    -fix hitmes stuck in walls
+    -fix sit1 and sit2 sprite
+    -fix missing melee sounds
+    -fix hitme iframes
 
 extra:
 -move repeating code snippets to one file
 -consistent wall debug
 -consistent AI
+-fix throne II fight (tentacles)
+-crab flailing mace or something
