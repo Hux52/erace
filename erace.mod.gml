@@ -913,7 +913,6 @@ if(command = "ERACE"){
 						trace_color("Enemies drop their normal amount of rads on death.", c_green);
 					}
 					with(enemy){erace_has_dropped_rads = false;}
-					trace(global.erace_raddrop);
 				}
 			break;
 
