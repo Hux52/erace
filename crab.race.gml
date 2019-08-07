@@ -359,14 +359,14 @@ if(instance_exists(creator)){
 
 			with(instance_place(x,y,enemy)){
 				if(nexthurt < current_frame){
-					ball_sound("hit", 0.5);
+					ball_sound("hit", 1);
 					projectile_hit(self, (other.creator.curdist/other.creator.maxdist) * 10, other.creator.amt, other.creator.ball_dir);
 				}
 			}
 
 			with(instance_place(x,y,prop)){
 				if(nexthurt < current_frame){
-					ball_sound("hit", 0.5);
+					ball_sound("hit", 1);
 					projectile_hit(self, (other.creator.curdist/other.creator.maxdist) * 10, 0, 0);
 				}
 			}
@@ -393,14 +393,14 @@ if(instance_exists(creator)){
 			if(armed){
 				with(instance_place(x,y,prop)){
 					if(nexthurt < current_frame){
-						ball_sound("hit", 1);
+						ball_sound("hit", 1.2);
 						projectile_hit(self, 16, 0);
 					}
 				}
 
 				with(instance_place(x,y,enemy)){
 					if(nexthurt < current_frame){
-						ball_sound("hit", 1);
+						ball_sound("hit", 1.2);
 						projectile_hit(self, 16, 8, other.creator.ball_dir + (90 * sign(other.creator.rotation_speed)));
 					}
 				}
@@ -576,7 +576,7 @@ return "CRAB";
 
 #define race_text
 // return passive and active for character selection screen
-return "CONTACT DAMAGE";
+return "@sSPRAY @gBULLETS#@wMINE FLAIL";
 
 
 #define race_portrait
@@ -664,4 +664,4 @@ switch(argument0){
 
 #define race_ttip
 // return character-specific tooltips
-return choose("SNIP SNIP", "AIN'T EASY BEING GREEN");
+return choose("SNIP SNIP", "AIN'T EASY BEING GREEN", "SWING IT!", "@qW@qO@qO@qO@qO@qO@qO@qO@qS@qH");
