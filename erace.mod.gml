@@ -288,9 +288,14 @@ if(global.erace_health_despawn = false){
 // no contact damage, rad bonus
 with(enemy){
 	if("erace_has_dropped_rads" not in self){
-		raddrop += global.erace_raddrop;
-		erace_has_dropped_rads = true;
-	}
+			raddrop_orig = raddrop;
+			erace_has_dropped_rads = false;
+		} else {
+			if(erace_has_dropped_rads == false){	
+				raddrop = raddrop_orig + global.erace_raddrop;
+				erace_has_dropped_rads = true;
+			}
+		}
 	if(meleedamage > 0){
         var _p = instance_nearest(x, y, Player);
 		if(instance_exists(_p)){
@@ -313,7 +318,7 @@ with(Player){
 	if(race == "spider"){
 		if(chase) {erace_maxspeed_orig = maxspeed_close;}
 		else {erace_maxspeed_orig = maxspeed_base;}
-		maxspeed = min(erace_maxspeed_orig + (min(erace_maxspeed_orig * logn(2, max(1,(erace_maxspeed_bonus/8)+1)), erace_maxspeed_orig/2)), maxspeed_close);
+		maxspeed = min(min(erace_maxspeed_orig + (min(erace_maxspeed_orig * logn(2, max(1,(erace_maxspeed_bonus/8)+1)), erace_maxspeed_orig/2)), maxspeed_close), 5);
 	} else if(race == "sniper"){
 		if(!isDashing){
 			maxspeed = min(erace_maxspeed_orig + (min(erace_maxspeed_orig * logn(2, max(1,(erace_maxspeed_bonus/8)+1)), erace_maxspeed_orig/2)), 4);
@@ -344,7 +349,7 @@ with(Player){
 		skill_set_active("fake_veins", 0);
 		if(instance_exists(enemy)){
 			espeed_nearest = instance_nearest(x,y,enemy);
-			if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
+			if(collision_rectangle(x + 14, y + 12, x - 14, y - 12, enemy, 0, 1)){
 				erace_maxspeed_bonus = -0.75;
 			}
 		}
@@ -907,6 +912,8 @@ if(command = "ERACE"){
 						global.erace_raddrop = 0;
 						trace_color("Enemies drop their normal amount of rads on death.", c_green);
 					}
+					with(enemy){erace_has_dropped_rads = false;}
+					trace(global.erace_raddrop);
 				}
 			break;
 
