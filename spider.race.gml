@@ -1,10 +1,13 @@
 #define init
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprSpiderSelect.png", 1, 0,0);
-global.sprPortrait = mskNone;
 global.sprPortraitDefault = sprite_add("sprites/portrait/sprPortraitSpider.png",1 , 15, 185);
 global.sprPortraitCursed = sprite_add("sprites/portrait/sprPortraitCursedSpider.png",1 , 15, 185);
 global.sprPortraitLightning = sprite_add("sprites/portrait/sprPortraitLightningSpider.png",1 , 15, 185);
-global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_CrystalSpider2.png", 1, 10, 10);
+global.sprPortrait = global.sprPortraitDefault;
+global.sprIconDefault = sprite_add("sprites/mapIcon/LoadOut_CrystalSpider2.png", 1, 10, 10);
+global.sprIconCursed = sprite_add("sprites/mapIcon/LoadOut_CursedSpider.png", 1, 10, 10);
+global.sprIconLightning = sprite_add("sprites/mapIcon/LoadOut_LightningSpider.png", 1, 10, 10);
+global.sprIcon = global.sprIconDefault;
 
 global.sprLightningSpiderIdle = sprite_add("/sprites/sprLightningSpiderIdle.png", 8, 12, 12);
 global.sprLightningSpiderWalk = sprite_add("/sprites/sprLightningSpiderWalk.png", 6, 12, 12);
@@ -99,7 +102,7 @@ snd_melee = sndSpiderMelee;
 
 // stats
 maxspeed_base = 2.6 + (skill_get(mut_extra_feet) * 0.5); //original wandering speed
-maxspeed_close = 4.6 + (skill_get(mut_extra_feet));
+maxspeed_close = 4.6 + (skill_get(mut_extra_feet) * 0.5);
 maxspeed = 2.6;
 team = 2;
 maxhealth = 18;
@@ -144,6 +147,8 @@ u1 = ultra_get("spider", 1);
 u2 = ultra_get("spider", 2);
 
 global.sprPortrait = global.sprPortraitDefault;
+global.sprIcon = global.sprIconDefault;
+
 
 //ultra A: Cursed Carapace
 if (u1 == 1){
@@ -161,6 +166,7 @@ if (u1 == 1){
 	snd_dead = global.snd_dead_current;
 
 	global.sprPortrait = global.sprPortraitCursed;
+	global.sprIcon = global.sprIconCursed;
 }
 
 if(u2 == 1){
@@ -171,6 +177,7 @@ if(u2 == 1){
 	spr_dead = global.sprLightningSpiderDead;
 
 	global.sprPortrait = global.sprPortraitLightning;
+	global.sprIcon = global.sprIconLightning;
 
 	if(lightning_timer > 0){
 		lightning_timer -= current_time_scale;
@@ -208,7 +215,7 @@ else{
 // outgoing contact damage
 with(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 	_p = other;
-	if(sprite_index != spr_hurt){
+	if(nexthurt <= current_frame){
 		projectile_hit_push(self, 3, 4);
 		sound_play_pitchvol(other.snd_melee, random_range(0.9, 1.1), 0.6);
 		//ultra B:
@@ -304,7 +311,11 @@ if(instance_exists(CampChar)){
 
 #define race_mapicon
 // return sprite for loading/pause menu map
-return global.sprIcon;
+if(instance_exists(CampChar)){
+	return global.sprIconDefault;
+	} else {
+	return global.sprIcon;
+	}
 
 
 #define race_swep
