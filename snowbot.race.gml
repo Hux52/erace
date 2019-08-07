@@ -192,7 +192,7 @@ if(charge > 0){
 			}
 		}
 	}
-	else if(charge = 1){
+	else if(charge <= 1){
 		// charge end, return to normal
 		canwalk = 1;
 		spr_idle = sprSnowBotIdle;
@@ -248,7 +248,8 @@ if(button_pressed(index, "fire")){
 		spr_walk = sprSnowBotWalk;
 		spr_hurt = sprSnowBotHurt;
 		// car projectile creation
-		with(instance_create(x + lengthdir_x(10, gunangle), y + lengthdir_y(10, gunangle), CarThrow)){
+		with(instance_create(x + lengthdir_x(16, gunangle), y + lengthdir_y(16, gunangle), CarThrow)){
+			trace(other.gunangle);
 			creator = other;
 			team = other;
 			speed = 18;
