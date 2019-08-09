@@ -239,6 +239,7 @@ with(AmmoChest){
 		instance_create(x, y, HealthChest);
 		instance_create(x, y, HealFX);
 		instance_create(x, y, BloodLust);
+		instance_create(x, y, RobotA);
 		instance_destroy();
 		}
 	}
@@ -247,6 +248,7 @@ with(AmmoChest){
 		instance_create(x, y, HealthChest);
 		instance_create(x, y, HealFX);
 		instance_create(x, y, BloodLust);
+		instance_create(x, y, RobotA);
 		instance_destroy();
 	}
 	
@@ -261,7 +263,8 @@ with(AmmoPickup){
 	if(random(100) > 100 - global.healthChance){
 		instance_create(x, y, HPPickup);
 		instance_create(x, y, HealFX);
-		instance_create(x, y, BloodLust)
+		instance_create(x, y, BloodLust);
+		instance_create(x, y, RobotA);
 	}
 	instance_destroy();
 }
@@ -271,7 +274,8 @@ with(WepPickup){
 	instance_create(x, y, HPPickup);
 	instance_create(x, y, HealFX);
 	instance_create(x, y, BloodLust);
-	instance_create(x, y, StrongSpirit);
+	instance_create(x, y, RobotA);
+	// instance_create(x, y, StrongSpirit);
 	sound_play_pitchvol(sndSwapGold,0.8,1);
 	sound_play_pitchvol(sndSwapCursed,0.8,2);
 	
@@ -1052,10 +1056,12 @@ if(command = "ERACE"){
 d3d_set_fog(1,playerColor,0,0);
 if(instance_exists(toDraw)){
     with(toDraw){
-        draw_sprite_ext(sprite_index, -1, x - 1, y, image_xscale, image_yscale, 0, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x + 1, y, image_xscale, image_yscale, 0, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x, y - 1, image_xscale, image_yscale, 0, playerColor, 1);
-        draw_sprite_ext(sprite_index, -1, x, y + 1, image_xscale, image_yscale, 0, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x - 1, y, image_xscale, image_yscale, image_angle, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x + 1, y, image_xscale, image_yscale, image_angle, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x, y - 1, image_xscale, image_yscale, image_angle, playerColor, 1);
+        draw_sprite_ext(sprite_index, -1, x, y + 1, image_xscale, image_yscale, image_angle, playerColor, 1);
     }
+} else {
+	instance_destroy();
 }
 d3d_set_fog(0,c_lime,0,0);
