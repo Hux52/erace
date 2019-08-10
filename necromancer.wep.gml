@@ -15,19 +15,8 @@ if(rev_cooldown <= 0){
 			if(collision_point(mouse_x[index], mouse_y[index] - 8, Floor, false, true)){
 				weapon_post(5, 0, 0);
 				// create revive area
-				with(instance_create(mouse_x[index], mouse_y[index], CustomObject)){
-					name = "revarea";
-					creator = other;
-					team = creator.team;
-					sprite_index = sprReviveArea;
-					mask_index = mskReviveArea;
-					image_speed = 0.4;
-					alarm = [50];	// time til revive occurs
-					rev = false;	// noise prompt
-					on_step = script_ref_create(revarea_step);
-					on_destroy = script_ref_create(revarea_destroy);
-				}
-			rev_cooldown = 60;
+				SpawnRevive(mouse_x[index], mouse_y[index], "big");
+			rev_cooldown = 15;
 			}
 		} else {
 			rev_cooldown = 0;	// refund reload upon clicking outside border/wall
@@ -37,29 +26,52 @@ if(rev_cooldown <= 0){
 	rev_cooldown -= current_time_scale;
 }
 
+if("ultra_timer" not in self){
+	ultra_timer = 15;
+} else {
+	ultra_timer -= current_time_scale * ultra_get(race, 2);
+}
+
+if(ultra_timer <= 0){
+	corpse_list = instances_matching_ge(Corpse, "size", 0);
+	if(array_length(corpse_list) > 0){
+		target_corpse = corpse_list[irandom(array_length(corpse_list) - 1)];
+	} else {
+		target_corpse = noone;
+	}
+	if(instance_exists(target_corpse)){
+		if(abs((view_xview[index] + game_width/2) - target_corpse.x) < game_width/2 and
+			abs((view_yview[index] + game_height/2) - target_corpse.y) < game_height/2 and
+			target_corpse.speed < 1){
+				//successful
+				SpawnRevive(target_corpse.x,target_corpse.y,"smol");
+				ultra_timer = irandom_range(300,600);
+		} else {
+			//unsuccessful, retry
+			ultra_timer = 15;
+		}
+	}
+	
+}
+
 #define gas_step
-with(hitme){
-	if(place_meeting(x,y,other)){
+with(enemy){
+	if(place_meeting(x,y,other)){		
 		if(team != other.team){
-			if(nexthurt < current_frame){
-				projectile_hit(self, 0, 1.5, other.direction);
-				if("necromancer_poison_debuff" not in self){
-					necromancer_poison_debuff = instance_create(x,y,CustomObject);
-					with(necromancer_poison_debuff){
-						image_blend_orig = other.image_blend;
-						target = other;
-						active = true;
-						ticks = 1;
-						timer = 15;
-						depth = -2.1;
-						on_step = script_ref_create(necromancer_poison_debuff_step);
-						on_draw = script_ref_create(necromancer_poison_debuff_draw);
-					}
-				} else {
-					with(necromancer_poison_debuff){
-						ticks = min(ticks + 2, 15);
-					}
-				}
+			if(nexthurt <= current_frame){
+				projectile_hit(self, 0, 1, other.direction);
+				ApplyPoison(self);
+			}
+		}
+	}
+}
+
+with(prop){
+	if(place_meeting(x,y,other)){		
+		if(team == 0){
+			if(nexthurt <= current_frame){
+				projectile_hit(self, 0, 0);
+				ApplyPoison(self);
 			}
 		}
 	}
@@ -69,23 +81,24 @@ if(image_index >= 7.8){
 	instance_destroy();
 }
 
-#define necromancer_poison_debuff_step
+#define poison_debuff_step
 if(instance_exists(target)){
 	if(active){
-		if(target.object_index != RavenFly){
+		if(object_is_ancestor(target.object_index, becomenemy) == false){
 			x = target.x;
 			y = target.y;
 			depth = target.depth - 0.1;
 			if(timer <= 0){
-				dmg = min(ticks,3);
-				// projectile_hit(target, dmg);
+				dmg = min(ticks,2);
 				
 				snd = choose(sndFrogEggSpawn1,sndFrogEggSpawn2,sndFrogEggSpawn3);
 				projectile_hit_raw(target, dmg, 0);
-				sound_play_pitchvol(sndOasisCrabAttack, (0.3 + (ticks/15)), 0.45);
+				nexthurt = current_frame;
+				sound_play_pitchvol(sndOasisCrabAttack, (1.3 + (ticks/15)), 0.25);
 				sound_play_pitchvol(sndNothingFire, (1.5 + (ticks/15)), 0.1);
-				sound_play_pitchvol(sndNothingSmallball, (0.5 + (ticks/15)), 0.1);
+				sound_play_pitchvol(sndNothingSmallball, (0.5 + (ticks/15)), 0.05);
 				sound_play_pitchvol(snd, (1.5 + (ticks/15)), 0.15);
+				sound_play_pitchvol(sndSnowBotHurt, (2.5 + (ticks/15)), 0.15);
 				repeat(ticks){
 					// with(instance_create(x + random_range(-1 * sprite_get_width(target.sprite_index)/2, sprite_get_width(target.sprite_index)/2),y + random_range(-16,16),Curse)){
 					with(instance_create(x,y,Curse)){
@@ -97,7 +110,7 @@ if(instance_exists(target)){
 					}
 				}
 				ticks -= 1;
-				timer = min(25 - ticks, 15);
+				timer = min(20 - ticks, 15);
 			} else {
 				timer -= current_time_scale;
 			}
@@ -114,16 +127,25 @@ if(instance_exists(target)){
 	instance_destroy();
 }
 
-#define necromancer_poison_debuff_draw
+
+#define poison_debuff_draw
 if(instance_exists(target) and active){
-	if(target.object_index != RavenFly){
+	if(object_is_ancestor(target.object_index, becomenemy) == false){
 		with(target){
 			if("z" not in self){z = 0;}
 			if("right" not in self){right = image_xscale;}
 			d3d_set_fog(true, merge_color(c_purple, c_fuchsia, other.ticks/20), 0, 0);
-			draw_sprite_ext(sprite_index, image_index, x, y - z, right, image_yscale, image_angle, c_white, 0.25 + other.ticks/40);
+			
+			if("drawspr" in self and "drawimg" in self){
+				draw_sprite_ext(drawspr, drawimg, x, y - z, right, image_yscale, image_angle, c_white, 0.25 + other.ticks/40);
+			} else {
+				draw_sprite_ext(sprite_index, image_index, x, y - z, right, image_yscale, image_angle, c_white, 0.25 + other.ticks/40);
+			}
+
+			draw_sprite_ext(global.sprSkull, 1, x, y - z - 16 + 2, 1, 1, 0, c_purple, 1-other.timer/10);
+
 			d3d_set_fog(false, c_purple, 0, 0);
-			draw_sprite_ext(global.sprSkull, 1, x + 1, y - z - 16 + 1, 1, 1, 0, c_purple, 1-other.timer/10);
+			
 			draw_sprite_ext(global.sprSkull, 1, x, y - z - 16, 1, 1, 0, c_white, 1-other.timer/10);
 		}
 	}
@@ -142,7 +164,7 @@ return 0;	// "melee"
 return true;
 
 #define weapon_load
-return 12;	// reload
+return 18;	// reload
 
 #define weapon_cost
 return 0;	// no ammo cost
@@ -164,10 +186,11 @@ return "RISE FROM YOUR GRAVE";
 
 #define weapon_fire
 
-weapon_post(4, 0, 0);	// weapon kick and screen shake
-sound_play_pitchvol(sndPopgun, random_range(0.25,0.35), 0.35);
+weapon_post(4.5, 0, 0);	// weapon kick and screen shake
+// sound_play_pitchvol(sndPopgun, random_range(0.25,0.35), 0.35);
 sound_play_pitchvol(sndToxicBoltGas, random_range(1.25,1.35), 0.25);
-sound_play_pitchvol(sndSwapCursed, random_range(1.4,1.6), 0.65);
+sound_play_pitchvol(sndSwapCursed, random_range(1.8,1.9), 0.35);
+sound_play_pitchvol(sndFastRatExpire, random_range(0.6,0.8), 0.45);
 with instance_create(x + lengthdir_x(8, gunangle), y + lengthdir_y(8, gunangle), CustomObject){
 	name = "NecroGas";
 	creator = other;
@@ -175,7 +198,7 @@ with instance_create(x + lengthdir_x(8, gunangle), y + lengthdir_y(8, gunangle),
 	sprite_index = global.sprGas;
 	image_speed = 0.4;
 	image_index = 1;
-	direction = other.gunangle;
+	direction = other.gunangle + random_range(-5,5);
 	image_angle = direction - 90;
 	image_blend = c_fuchsia;
 	friction = 0.7;
@@ -210,6 +233,24 @@ if(alarm[0] <= 0){
 if(rev = true){
 	sound_play(sndNecromancerRevive);
 }
+numparts = random_range(radius/2,radius);
+for (i = 0; i < numparts; i++){
+	with(instance_create(x + lengthdir_x(radius, (360/numparts)*i),y + lengthdir_y(radius, (360/numparts)*i),CustomObject)){
+		direction = 90;
+		speed = random_range(4,6);
+		friction = random_range(0.2,0.7);
+		image_blend = c_purple;
+		sprite_index = sprSweat;
+		image_index = irandom(image_number);
+		image_speed = 0;
+		a = choose(3,4,5);
+		on_step = script_ref_create(part_step);
+	}
+}
+
+#define part_step
+image_alpha -= a/room_speed;
+if(image_alpha<=0) instance_destroy();
 
 #define freak_step
 if(my_health > 0){
@@ -218,10 +259,15 @@ if(my_health > 0){
 		speed = maxspeed;
 	}
 	
+	_f = instance_place(x,y,Floor);
+	if(instance_exists(_f)){
+		friction = lerp(friction, _f.traction, 0.5);
+	}
+
 	// collision
 	move_bounce_solid(true);
 	
-	if (nexthurt > current_frame){
+	if (nexthurt > current_frame and current_frame > fresh){
 		if (sprite_index != spr_hurt){
 			sprite_index = spr_hurt;
 		}
@@ -263,38 +309,60 @@ if(my_health > 0){
 
 	// movement
 	if(target = noone){	// no target, random movement
-		if(alarm[0] = 0){
-			direction = random(360);
+		if(alarm[0] <= 0){
+			dir = random(360);
 			move_bounce_solid(true);
-			motion_add(direction, maxspeed);
-			alarm[0] = irandom_range(10, 30);
+			motion_add_ct(direction, maxspeed);
+			maxtimer = irandom_range(60, 100);
+			relax = choose(2,3,4);
+			alarm[0] = maxtimer;
 		}
 	}
 	else{
-		if(alarm[0] = 0){	// target, persue
-			direction = point_direction(x, y, target.x, target.y) + random_range(-50, 50);
+		if(alarm[0] <= 0){	// target, persue
+			dir = point_direction(x, y, target.x, target.y) + random_range(-50, 50);
 			move_bounce_solid(true);
-			motion_add(direction, maxspeed);
-			alarm[0] = irandom_range(30, 40);
+			motion_add_ct(direction, maxspeed);
+			maxtimer = irandom_range(20, 30);
+			relax = 10;
+			alarm[0] = maxtimer;
 		}
+	}
+
+	if(alarm[0] >= maxtimer/relax){
+		motion_add_ct(dir, maxspeed/4);
+	}
+
+	if(place_meeting(x + (dcos(direction) * 8), y - (dsin(direction) * 8), Wall)){
+		newd = choose(-90, 90);
+		direction += newd;
+		
+		dir += newd;
+		speed /= 2;
 	}
 		
 	// alarm management
 	for(i = 0; i < array_length_1d(alarm); i++){
-		if(alarm[i] > 0){
-			alarm[i]-= current_time_scale;
+		if(alarm[i] >= 0){
+			alarm[i] -= current_time_scale;
 		}
 	}
-	
+
+	if(instance_exists(grandcreator) and instance_is(grandcreator, Player)){
+		wantpois = ultra_get(grandcreator.race, 1);
+	} else {wantpois = 0;}
+
 	// incoming/outgoing contact damage
-	with(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
-		if(nexthurt < current_frame){
+	with(collision_rectangle(bbox_left, bbox_top, bbox_right, bbox_bottom, enemy, 0, 1)){
+		if(nexthurt <= current_frame){
 			projectile_hit(self, other.my_damage, 4, other.direction);
 			sound_play_pitchvol(sndFreakMelee, random_range(0.9,1.1), 0.25);
+				//with poison
+				if(other.wantpois){ApplyPoison(self);}
 		}
 		
 		if(meleedamage > 0){
-			if(other.nexthurt < current_frame){
+			if(other.nexthurt <= current_frame and nexthurt < current_frame + 3){
 				sound_play_pitchvol(snd_mele, random_range(0.9,1.1), 0.35);
 				projectile_hit(other, meleedamage, 4, direction);
 			}
@@ -305,95 +373,394 @@ else{
 	instance_destroy();
 }
 
-#define freak_destroy
+#define necromancer_step
+if(my_health > 0){
+	// speed management
+	if(speed > maxspeed){
+		speed = maxspeed;
+	}
+	
+	_f = instance_place(x,y,Floor);
+	if(instance_exists(_f)){
+		friction = lerp(friction, _f.traction, 0.5);
+	}
+	
+	// collision
+	move_bounce_solid(true);
+	
+	if (nexthurt > current_frame){
+		if (sprite_index != spr_hurt){
+			sprite_index = spr_hurt;
+		}
+	} else {
+		if (speed != 0){
+			sprite_index = spr_walk;
+		} else {
+			sprite_index = spr_idle;
+		}
+	}
+	
+	// face right or left
+	image_xscale = right;
+
+	if(gunangle > 90 and gunangle <= 270){
+		right = -1;
+	}
+	else{
+		right = 1;
+	}
+
+	//weapon shit
+	wkick = max(0, wkick - current_time_scale);
+
+	_c = instance_nearest(x, y, Corpse);
+	_e = instance_nearest(x, y, enemy);
+
+	if(instance_exists(enemy)){
+		if(distance_to_object(_e) < 150 and !collision_line(x, y, _e.x, _e.y, Wall, true, true)){
+			mode = "flee";
+			if(alarm[0] <= 0){
+				maxtimer = random_range(15,25);
+				relax = choose(3,4,5);
+				alarm[0] = maxtimer;
+				dir = point_direction(_e.x,_e.y,x,y);
+			}
+
+		} else {
+			if(alarm[0] <= 0){
+				mode = "wander";
+				dir = 90 * (irandom(3));
+			}
+		}
+	} else {
+		mode = "wander";
+	}
+
+
+	if(alarm[0] <= 0){
+		maxtimer = random_range(40,70);
+		relax = choose(3,4,5);
+		changedir = false;
+		alarm[0] = maxtimer;
+		
+		gunangle = direction + (random_range(10,45) * choose(-1,1));
+	}
+	
+	if(alarm[0] >= maxtimer/relax and wkick<=0){
+
+		if(place_meeting(x + (dcos(direction) * 8), y - (dsin(direction) * 8), Wall)){
+			newd = choose(-90, 90);
+			direction += newd;
+			
+			dir += newd;
+			speed /= 2;
+			
+			gunangle = direction + (random_range(10,45) * choose(-1,1));
+		}
+
+		switch(mode){
+			case "flee":
+				motion_add_ct(dir, maxspeed/3);
+
+				if(random(100*current_time_scale) < 10*current_time_scale){
+					instance_create(x,y,Sweat);
+				}
+				
+			break;
+
+			case "wander":
+				motion_add_ct(dir, maxspeed/4);
+
+				if(random(100*current_time_scale) < 3*current_time_scale and changedir == false){
+					dir += choose(90 * (irandom(3)), random(360));
+					changedir = true;
+				}
+
+				if(alarm[1] <= 0){ //fire
+					if(instance_exists(_c)){
+						if(distance_to_object(_c) < 225 and !collision_line(x, y, _c.x, _c.y, Wall, true, true) and _c.speed < 1){
+							SpawnRevive(_c.x,_c.y, "big");
+							wkick = 15;
+							gunangle = point_direction(x,y,_c.x,_c.y);
+							direction = gunangle;
+							speed /= 4;							
+							alarm[1] = random_range(90, 270);							
+						}
+					}
+				}
+			break;
+		}
+	}
+			
+	// alarm management
+	for(i = 0; i < array_length_1d(alarm); i++){
+		if(alarm[i] >= 0){
+			alarm[i]-= current_time_scale;
+		}
+	}
+
+	// incoming contact damage
+	with(collision_rectangle(bbox_left, bbox_top, bbox_right, bbox_bottom, enemy, 0, 1)){
+		if(meleedamage > 0){
+			if(other.nexthurt <= current_frame){
+				sound_play_pitchvol(snd_mele, random_range(0.9,1.1), 0.35);
+				projectile_hit(other, meleedamage, 4, direction);
+			}
+		}
+	}
+
+	_wStuck = instance_place(x,y,Wall);
+	if(instance_exists(_wStuck)){
+		motion_add_ct(point_direction(_wStuck.x + 8, _wStuck.y + 8, x, y), 1);
+	}
+}
+else{
+	instance_destroy();
+}
+
+#define necromancer_draw
+
+if(gunangle >= 0 and gunangle <= 180){
+
+	d3d_set_fog(1, playerColor, 0, 0);
+	// gun outline
+	draw_sprite_ext(weapon_get_sprite(wep), -1, x - lengthdir_x(wkick/2, gunangle) - 1, y - lengthdir_y(wkick/2, gunangle), 1, right, gunangle, playerColor, 1);
+	draw_sprite_ext(weapon_get_sprite(wep), -1, x - lengthdir_x(wkick/2, gunangle) + 1, y - lengthdir_y(wkick/2, gunangle), 1, right, gunangle, playerColor, 1);
+	draw_sprite_ext(weapon_get_sprite(wep), -1, x - lengthdir_x(wkick/2, gunangle), y - lengthdir_y(wkick/2, gunangle) - 1, 1, right, gunangle, playerColor, 1);
+	draw_sprite_ext(weapon_get_sprite(wep), -1, x - lengthdir_x(wkick/2, gunangle), y - lengthdir_y(wkick/2, gunangle) + 1, 1, right, gunangle, playerColor, 1);
+	d3d_set_fog(0,c_lime,0,0);
+	// draw gun
+	draw_sprite_ext(weapon_get_sprite(wep), 0, x - lengthdir_x(wkick/2, gunangle), y - lengthdir_y(wkick/2, gunangle), 1, right, gunangle, c_white, 1);
+
+	draw_self();
+} else {
+	draw_self();
+d3d_set_fog(1, playerColor, 0, 0);
+	// gun outline
+	draw_sprite_ext(weapon_get_sprite(wep), -1, x - lengthdir_x(wkick/2, gunangle) - 1, y - lengthdir_y(wkick/2, gunangle), 1, right, gunangle, playerColor, 1);
+	draw_sprite_ext(weapon_get_sprite(wep), -1, x - lengthdir_x(wkick/2, gunangle) + 1, y - lengthdir_y(wkick/2, gunangle), 1, right, gunangle, playerColor, 1);
+	draw_sprite_ext(weapon_get_sprite(wep), -1, x - lengthdir_x(wkick/2, gunangle), y - lengthdir_y(wkick/2, gunangle) - 1, 1, right, gunangle, playerColor, 1);
+	draw_sprite_ext(weapon_get_sprite(wep), -1, x - lengthdir_x(wkick/2, gunangle), y - lengthdir_y(wkick/2, gunangle) + 1, 1, right, gunangle, playerColor, 1);
+	d3d_set_fog(0,c_lime,0,0);
+	// draw gun
+	draw_sprite_ext(weapon_get_sprite(wep), 0, x - lengthdir_x(wkick/2, gunangle), y - lengthdir_y(wkick/2, gunangle), 1, right, gunangle, c_white, 1);
+}
+
+#define custom_hitme_destroy
 // make corpse
 sound_play_pitchvol(snd_dead, random_range(0.9,1.1), 0.6);
 with(instance_create(x, y, Corpse)){
 	sprite_index = other.spr_dead;
-	freak_nerf = true;
+	if(other.name == "freak") freak_nerf = true;
+	speed = other.speed;
+	direction = other.direction;
 	size = 1;
 }
 
-#define freak_hurt(damage, kb_vel, kb_dir)
+#define custom_hitme_hurt(damage, kb_vel, kb_dir)
 // incoming damage
-if(sprite_index != spr_hurt){
-	if(nexthurt <= current_frame){
-		sound_play_pitchvol(snd_hurt,random_range(0.9,1.1),0.4);
-		my_health -= argument0;
-		motion_add(argument2, argument1);
-		nexthurt = current_frame + 3;
-		sprite_index = spr_hurt;
-	}
-}
+sound_play_pitchvol(snd_hurt,random_range(0.9,1.1),0.4);
+my_health -= argument0;
+motion_add_ct(argument2, argument1);
+nexthurt = current_frame + 6;
+sprite_index = spr_hurt;
+image_index = 0;
 
 #define SpawnFreak()
 	if(instance_exists(enemy) or instance_exists(Portal)){	// no softlock
 		with(Corpse){
 			// if corpse in range
-			if(place_meeting(x, y, other)){
+			if(point_distance(x,y,other.x,other.y - ((other.radius div 32) * 2)) < other.radius + 2){
 				o = other;	// other is revive circle
 				o.rev = true;	// prompt to make noise
 				// make freak from corpse
 				with(instance_create(x, y, CustomHitme)){
-					name = "freak";
 					creator = other.o;	// revive circle
 					grandcreator = creator.creator;	// player
+
+					switch(creator.bigness){
+						case "big":
+							name = "freak";
+
+							//sprites
+							spr_idle = sprFreak1Idle;
+							spr_walk = sprFreak1Walk;
+							spr_hurt = sprFreak1Hurt;
+							spr_dead = sprFreak1Dead;
+
+							//sounds
+							snd_hurt = sndFreakHurt;
+							snd_dead = sndFreakDead;
+							
+							if("freak_nerf" in other){
+								maxhealth = 1;
+								my_health = maxhealth;
+								my_damage = 1;
+								image_blend = make_color_hsv(0, 0, 200);
+							}else{
+								maxhealth = 7;
+								my_health = maxhealth;
+								my_damage = 3;
+							}
+
+							mask_index = mskFreak;
+							fresh = current_frame + 15;
+							
+							alarm = [0];	// movement/targeting alarm
+
+							on_step = script_ref_create(freak_step);
+
+						break;
+
+						case "smol":
+							name = "necro";
+
+							// sprites
+							spr_idle = sprNecromancerIdle;
+							spr_walk = sprNecromancerWalk;
+							spr_hurt = sprNecromancerHurt;
+							spr_dead = sprNecromancerDead;
+
+							// sounds
+							snd_hurt = sndNecromancerHurt;
+							snd_dead = sndNecromancerDead;
+							mask_index = mskRat;
+
+							maxhealth = 6;
+							my_health = maxhealth;
+							
+							alarm = [irandom_range(10,25), irandom_range(45,75)];	// one's the movement alarm, the other's the revive alarm. capiche?
+
+							_e = noone;
+							mode = "wander";
+							friction = 0.4;
+							relax = choose(3,4,5);
+							changedir = false;
+							
+							wep = "necromancer";
+							wkick = 0;
+							gunangle = random(360);
+
+							_wStuck = noone;
+							wall_stuck = 0;
+
+							on_step = script_ref_create(necromancer_step);
+							on_draw = script_ref_create(necromancer_draw);
+
+						break;	
+					}
+
 					team = creator.team;
 
-					//sprites
-					spr_idle = sprFreak1Idle;
-					spr_walk = sprFreak1Walk;
-					spr_hurt = sprFreak1Hurt;
-					spr_dead = sprFreak1Dead;
-
-					//sounds
-					snd_hurt = sndFreakHurt;
-					snd_dead = sndFreakDead;
-
+					dir = random(360);
+					maxtimer = 0;
 
 					sprite_index = spr_idle;
-					if("freak_nerf" in other){
-						my_health = 1;
-						my_damage = 1;
-						image_blend = make_color_hsv(0, 0, 200);
-					}
-					else{
-						my_health = 7;
-						my_damage = 3;
-					}
 					maxspeed = 3.6;
-					mask_index = mskFreak;
-					size = 1;
+					size = 5;
 					image_speed = 0.4;
 					spr_shadow = shd24;
 					direction = random(360);
-					move_bounce_solid(true);
-					friction = 0.05;
 					right = choose(-1, 1);
-					alarm = [0];	// movement/targeting alarm
-					on_step = script_ref_create(freak_step);
-					on_hurt = script_ref_create(freak_hurt);
-					on_destroy = script_ref_create(freak_destroy);
-					// friendly outline
-					if(instance_exists(grandcreator)){
-						playerColor = player_get_color(grandcreator.index);
-					} else {
-						playerColor = c_black;
-					}
+					
+					on_hurt = script_ref_create(custom_hitme_hurt);
+					on_destroy = script_ref_create(custom_hitme_destroy);
+					
+					playerColor = creator.playerCol; //player color inherited from circle
+
 					with(script_bind_draw(0, 0)){
 						script = script_ref_create_ext("mod", "erace", "draw_outline", other.playerColor, other);
 					}
-					if(instance_position(x,y,Wall)){
-						f = instance_nearest(x,y,Floor);
-						if(instance_exists(f)){
-							x = f.x + sprite_get_width(f.sprite_index)/2;
-							y = f.y + sprite_get_height(f.sprite_index)/2;
+					_w = collision_rectangle(bbox_left, bbox_top, bbox_right, bbox_bottom, Wall, false, true);
+					if(instance_exists(_w)){
+						with(_w){
+							instance_create(x,y,FloorExplo);
+							instance_destroy();
 						}
+						
 					}
 				}
 				// effects and corpse destruction
-				instance_create(x, y, ReviveFX);
+					with(instance_create(x, y, ReviveFX)){						
+						if("spr_revive" in other.o){sprite_index = other.o.spr_revive;} // sprNecroRevive
+						playerCol = other.o.playerCol;
+						with(script_bind_draw(0, depth+0.1)){
+							script = script_ref_create_ext("mod", "erace", "draw_outline", other.playerCol, other);
+						}
+					}
 				instance_destroy();
 			}
 		}
 	}
+
+#define ApplyPoison(trg)
+with(trg){
+	if("poison_debuff" not in self){
+		poison_debuff = instance_create(x,y,CustomObject);
+		with(poison_debuff){
+			image_blend_orig = other.image_blend;
+			target = other;
+			active = true;
+			ticks = 2;
+			timer = 15;
+			depth = -2.1;
+			on_step = script_ref_create(poison_debuff_step);
+			on_draw = script_ref_create(poison_debuff_draw);
+		}
+	} else {
+		with(poison_debuff){
+			ticks = min(ticks + 2, 15);
+		}
+	}
+}
+
+#define SpawnRevive(_x, _y, _bigness)
+	with(instance_create(_x, _y, CustomObject)){
+		name = "revarea";
+		creator = other;
+		team = creator.team;
+		if(instance_is(other, Player)){
+			playerCol = player_get_color(creator.index);
+		} else {
+			if("playerColor" in other){
+				playerCol = other.playerColor;
+			} else {
+				playerCol = c_black;
+			}
+		}
+		bigness = _bigness;
+		switch(bigness){
+			case "big":
+				sprite_index = sprReviveArea;
+				alarm = [50];	// time til revive occurs
+				spr_revive = sprRevive;
+				image_speed = 0.4;
+				radius = 32;
+			break;
+
+			case "smol":
+				sprite_index = sprNecroReviveArea;
+				alarm = [15];	// time til revive occurs
+				spr_revive = sprNecroRevive;
+				image_speed = 0.4;
+				radius = 16;
+			break;
+		}
+		rev = false;	// noise prompt
+
+		on_step = script_ref_create(revarea_step);
+		on_draw = script_ref_create(revarea_draw);
+		on_destroy = script_ref_create(revarea_destroy);
+	}
+
+#define revarea_draw
+alpha_orig = draw_get_alpha();
+draw_set_alpha(0.75);
+d3d_set_fog(true, make_color_hsv(color_get_hue(playerCol), 255, 255), 0, 0);
+draw_sprite(sprite_index, image_index, x,y+1);
+draw_sprite(sprite_index, image_index, x,y-1);
+d3d_set_fog(false, playerCol,0, 0);
+
+draw_set_alpha(alpha_orig);
+
+draw_sprite(sprite_index, image_index, x,y);

@@ -1,7 +1,39 @@
 #define init
+// for level start
+global.newLevel = instance_exists(GenCont);
+global.hasGenCont = false;
+
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprNecromancerSelect.png", 1, 0, 0);
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitNecromancer.png",1 , 25, 205);
 global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_Necromancer.png", 1, 10, 10);
+
+// character select sounds
+var _race = [];
+for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
+while(true){
+ 	//character selection sound
+ 	for(var i = 0; i < maxp; i++){
+ 		var r = player_get_race(i);
+ 		if(_race[i] != r && r = "necromancer"){
+			sound_play_pitchvol(sndFreakPopoRevive, 1.5, 0.5);
+ 			sound_play_pitchvol(sndNecromancerRevive, 1.2 ,1);
+ 		}
+ 		_race[i] = r;
+ 	}
+	 // first chunk here happens at the start of the level, second happens in portal
+	if(instance_exists(GenCont)) global.newLevel = 1;
+	else if(global.newLevel){
+		global.newLevel = 0;
+		level_start();
+	}
+	var hadGenCont = global.hasGenCont;
+	global.hasGenCont = instance_exists(GenCont);
+	if (!hadGenCont && global.hasGenCont) {
+		// nothing yet
+	}
+
+	wait 1;
+}
 
 
 #define create
@@ -36,6 +68,12 @@ melee = 0;	// can melee or not
 // executed after picking race and starting for each player picking this race
 // player-specific global variable init
 
+#define level_start
+with(instances_matching(Player, "race", "necromancer")){
+	if("ultra_timer" in self){
+		if(ultra_timer < 60){ultra_timer = 60;}
+	}
+}
 
 #define step
 // executed within each player instance of this race after step
@@ -55,7 +93,7 @@ return "NECROMANCER";
 
 #define race_text
 // return passive and active for character selection screen
-return "REVIVES @rCORPSES";
+return "@sSPRAY @pNOXIOUS FUMES#@sREVIVE @rCORPSES";
 
 
 #define race_portrait
@@ -114,7 +152,8 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "NOTHING";
+	case 1: return "POISONOUS PACK";
+	case 2: return "AUTO-REVIVE";
 	default: return "";
 }
 
@@ -122,7 +161,8 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "DOES NOTHING";
+	case 1: return "@gFREAKS @sALSO APPLY @pPOISON";
+	case 2: return "@sLET THEM @wDO THE WORK#@yFOR YOU";
 	default: return "";
 }
 
