@@ -26,6 +26,8 @@ while(true){
 	wait 1;
 }
 
+//lol
+
 
 #define create
 // player instance creation of this race
