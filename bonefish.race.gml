@@ -57,6 +57,9 @@ bupple_alpha = 2;
 
 bupple_excess = 15;
 
+big_bupple = 0;
+want_big = false;
+
 // vars
 melee = 1;	// can melee or not
 
@@ -70,8 +73,12 @@ melee = 1;	// can melee or not
 // executed within each player instance of this race after step
 // most actives and passives handled here
 
+u1 = ultra_get(player_get_race(index), 1); //ultra 1: big ol' buppel
+u2 = ultra_get(player_get_race(index), 2); //ultra 2: double bouble
+
 script_bind_draw(custom_draw, -10);
 
+if(big_bupple > 4) big_bupple = 0;
 
 //passive: swimming
 friction = 0.25;
@@ -96,29 +103,39 @@ if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 			projectile_hit_push(self, 2, 4);
 			sound_play_pitchvol(other.snd_melee,random_range(0.9,1.1),1);
 			other.bupple_count += 1;
+			other.bupple_excess = 15;
 		}
 	}
 }
 
+if(big_bupple == 4 and u1 == 1) {want_big = true;} else{want_big = false;}
+
 if(delay <= 0){
 	if(button_check(index, "spec") and bupple_count > 0){
 		pdir = point_direction(x,y,mouse_x[index], mouse_y[index]);
-		with(instance_create(x,y,CustomObject)){
-			name = "bupple"
-			creator = other;
-			sprite_index = sprPlayerBubble;
-			image_index = 0;
-			health = 15;
-			timer = 45;
-			friction = 0.02;
-			direction = other.pdir;
-			damaged = 0;
-			speed = random_range(5,7);
+		repeat(u2 + 1){
+			with(instance_create(x,y,CustomObject)){
+				name = "bupple"
+				creator = other;
+				sprite_index = sprPlayerBubble;
+				image_index = 0;
+				big = other.want_big; // 0 or 1
+				maxhealth = 15 + 10*big;
+				health = maxhealth;
+				timer = 45;
+				friction = 0.02;
+				direction = other.pdir;
+				damaged = 0;
+				speed = random_range(5,7);
 
-			dmg = 3;
-			
-			on_step = script_ref_create(bupple_step);
-			on_draw = script_ref_create(bupple_draw);
+				dmg = 3 + 5*big;
+
+				image_xscale = 1 + big;
+				image_yscale = 1 + big;
+				
+				on_step = script_ref_create(bupple_step);
+				on_draw = script_ref_create(bupple_draw);
+			}
 		}
 
 		repeat(5){
@@ -134,6 +151,7 @@ if(delay <= 0){
 		delay = delay_base;
 		bupple_count--;
 		bupple_excess = 15;
+		big_bupple++;
 	}
 } else {
 	delay -= current_time_scale;
@@ -162,6 +180,7 @@ bupple_alpha -= 5/room_speed;
 
 #define custom_draw
 origalpha = draw_get_alpha();
+origcolor = draw_get_color();
 with(Player){
 	for(i = 0; i < bupple_count; i++){
 		if(i == bupple_count){
@@ -170,10 +189,20 @@ with(Player){
 			draw_set_alpha(1);
 		}
 		draw_set_alpha(bupple_alpha);
+		//shadow
+		d3d_set_fog(true, player_get_color(index), 0, 0);
+		// draw_sprite(sprBubble, 3, x + i*8 - (4*(bupple_count)) + 4 - 1, y - 16 - (i mod 2 * 2));
+		draw_sprite(sprBubble, 3, x + i*8 - (4*(bupple_count)) + 4, y - 16 - (i mod 2 * 2) + 1);
+
+		// draw_set_color(c_white);
+		d3d_set_fog(true, c_white, 0, 0);
 		draw_sprite(sprBubble, 3, x + i*8 - (4*(bupple_count)) + 4, y - 16 - (i mod 2 * 2));
+		d3d_set_fog(false, c_blue, 0, 0);
 	}
 }
 draw_set_alpha(origalpha);
+draw_set_color(origcolor);
+
 instance_destroy();
 
 #define bupple_step
@@ -181,7 +210,7 @@ instance_destroy();
 timer-=current_time_scale;
 damaged-=current_time_scale;
 if(timer<=0){timer = 45; health--;}
-health = clamp(health, 0, 15);
+health = clamp(health, 0, maxhealth);
 
 motion_add_ct(90, 0.15);
 vspeed = clamp(vspeed, -7, 7);
@@ -230,6 +259,13 @@ if(instance_exists(proj)){
 	}
 }
 
+ex = instance_place(x,y,Explosion);
+if(instance_exists(ex)){
+	health -= ex.damage;
+	damaged = 3;
+	sound_play_pitchvol(sndOasisShoot, 1.5 + random_range(-0.2,0.2), 0.15);
+}
+
 bupple = instance_place(x,y,CustomObject);
 if(instance_exists(bupple)){
 	if("name" in bupple and bupple.name == "bupple"){
@@ -241,9 +277,41 @@ if(instance_exists(bupple)){
 }
 
 if(health <= 0) {
-	instance_create(x,y,BubblePop);
+	with(instance_create(x,y,BubblePop)){
+		image_angle = random(360);
+		image_speed = 1;
+		image_xscale = other.image_xscale;
+		image_yscale = image_xscale;
+	}
 	sound_play_pitchvol(sndOasisExplosionSmall, 2.5 + random_range(-0.1,0.1), 0.15);
 	sound_play_pitchvol(sndOasisHurt, 2.5 + random_range(-0.1,0.1), 0.15);
+	if(big){
+		sound_play_pitchvol(sndOasisExplosion, 2.5 + random_range(-0.1,0.1), 0.15);
+		repeat(irandom_range(5,10)){
+			instance_create(x,y,Bubble);
+		}
+		repeat(3){
+			with(instance_create(x,y,CustomObject)){
+				name = "bupple"
+				creator = other;
+				sprite_index = sprPlayerBubble;
+				image_index = 0;
+				big = 0;
+				maxhealth = 15;
+				health = maxhealth;
+				timer = 45;
+				friction = 0.02;
+				direction = random(360);
+				damaged = 0;
+				speed = random_range(5,7);
+
+				dmg = 3;
+				
+				on_step = script_ref_create(bupple_step);
+				on_draw = script_ref_create(bupple_draw);
+			}
+		}
+	}
 	instance_destroy();
 }
 
@@ -252,7 +320,7 @@ draw_self();
 
 if(damaged>0){
 	draw_set_color(c_white);
-	draw_circle(x,y,13,false);
+	draw_circle(x,y,13 + 13*big,false);
 }
 
 #define race_name
@@ -262,7 +330,7 @@ return "BONEFISH";
 
 #define race_text
 // return passive and active for character selection screen
-return "CONTACT DAMAGE";
+return "CONTACT DAMAGE#@sSHOOT @wBUBBLES";
 
 
 #define race_portrait
@@ -321,7 +389,8 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "NOTHING";
+	case 1: return "BIG BUBBLE";
+	case 2: return "DOUBLE BUBBLE"
 	default: return "";
 }
 
@@ -329,7 +398,8 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "DOES NOTHING";
+	case 1: return "@sFIRE A @wBIGGER BUBBLE @s OCCASIONALLY";
+	case 2: return "@sFIRE @wTWO @sBUBBLES AT THE @wSAME TIME";
 	default: return "";
 }
 
