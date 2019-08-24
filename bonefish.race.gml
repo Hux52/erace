@@ -44,6 +44,19 @@ maxhealth = 6;
 spr_shadow_y = 0;
 mask_index = mskPlayer;
 
+bupple_cooldown = 0;
+bupple_cooldown_base = 45;
+
+delay = 0;
+delay_base = 7;
+
+bupple_count = 5;
+bupple_count_base = 5;
+
+bupple_alpha = 2;
+
+bupple_excess = 15;
+
 // vars
 melee = 1;	// can melee or not
 
@@ -56,6 +69,9 @@ melee = 1;	// can melee or not
 #define step
 // executed within each player instance of this race after step
 // most actives and passives handled here
+
+script_bind_draw(custom_draw, -10);
+
 
 //passive: swimming
 friction = 0.25;
@@ -79,8 +95,164 @@ if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 		if(sprite_index != spr_hurt){
 			projectile_hit_push(self, 2, 4);
 			sound_play_pitchvol(other.snd_melee,random_range(0.9,1.1),1);
+			other.bupple_count += 1;
 		}
 	}
+}
+
+if(delay <= 0){
+	if(button_check(index, "spec") and bupple_count > 0){
+		pdir = point_direction(x,y,mouse_x[index], mouse_y[index]);
+		with(instance_create(x,y,CustomObject)){
+			name = "bupple"
+			creator = other;
+			sprite_index = sprPlayerBubble;
+			image_index = 0;
+			health = 15;
+			timer = 45;
+			friction = 0.02;
+			direction = other.pdir;
+			damaged = 0;
+			speed = random_range(5,7);
+
+			dmg = 3;
+			
+			on_step = script_ref_create(bupple_step);
+			on_draw = script_ref_create(bupple_draw);
+		}
+
+		repeat(5){
+			with(instance_create(x,y,Bubble)){
+				direction = other.pdir + random_range(-15,15);
+				friction = 0;
+				speed = random_range(1,3)
+			}
+		}
+		// sound_play_pitchvol(sndOasisHurt, 2.5 + random_range(-0.1,0.1), 0.25);
+		sound_play_pitchvol(sndOasisChest, 1.5 + random_range(-0.1,0.1), 0.25);
+		sound_play_pitchvol(sndOasisMelee, 1.5 + random_range(-0.1,0.1), 0.65);
+		delay = delay_base;
+		bupple_count--;
+		bupple_excess = 15;
+	}
+} else {
+	delay -= current_time_scale;
+}
+
+if(bupple_count < bupple_count_base){
+	bupple_alpha = 10;
+	bupple_excess = 15;
+	if(bupple_cooldown < 45){
+		bupple_cooldown += current_time_scale;
+	} else {
+		bupple_count++;
+		bupple_cooldown = 0;
+	}
+} else if (bupple_count > bupple_count_base) {
+	bupple_alpha = 10;
+	if(bupple_excess > 0){
+		bupple_excess -= current_time_scale;
+	} else {
+		bupple_count--;
+		bupple_excess = 15;
+	}
+}
+
+bupple_alpha -= 5/room_speed;
+
+#define custom_draw
+origalpha = draw_get_alpha();
+with(Player){
+	for(i = 0; i < bupple_count; i++){
+		if(i == bupple_count){
+			draw_set_alpha(bupple_cooldown/bupple_cooldown_base);
+		} else {
+			draw_set_alpha(1);
+		}
+		draw_set_alpha(bupple_alpha);
+		draw_sprite(sprBubble, 3, x + i*8 - (4*(bupple_count)) + 4, y - 16 - (i mod 2 * 2));
+	}
+}
+draw_set_alpha(origalpha);
+instance_destroy();
+
+#define bupple_step
+
+timer-=current_time_scale;
+damaged-=current_time_scale;
+if(timer<=0){timer = 45; health--;}
+health = clamp(health, 0, 15);
+
+motion_add_ct(90, 0.15);
+vspeed = clamp(vspeed, -7, 7);
+hspeed = clamp(hspeed, -6, 6);
+
+hitwall = instance_place(x + hspeed/2, y,Wall);
+if(instance_exists(hitwall)){
+	direction = -direction + 180;
+	speed *= 0.95;
+	health -= 2;
+	damaged = 3;
+	sound_play_pitchvol(sndOasisShoot, 1.5 + random_range(-0.1,0.1), 0.15);
+}
+
+hitwall = instance_place(x, y + vspeed/2,Wall);
+if(instance_exists(hitwall)){
+	direction = -direction;
+	speed *= 0.95;
+	health -= 2;
+	damaged = 3;
+	sound_play_pitchvol(sndOasisShoot, 1.5 + random_range(-0.2,0.2), 0.15);
+}
+
+hit_thing = instance_place(x + hspeed/2, y + vspeed/2, hitme);
+if(instance_exists(hit_thing)){
+	if(hit_thing.team != 2){
+		direction = point_direction(hit_thing.x,hit_thing.y,x,y);
+		health--;
+		damaged = 3;
+		sound_play_pitchvol(sndOasisShoot, 1.5 + random_range(-0.2,0.2), 0.15);
+		sound_play_pitchvol(sndOasisHurt, 2.5 + random_range(-0.1,0.1), 0.25);
+		projectile_hit(hit_thing, dmg);
+	}
+}
+
+proj = instance_place(x,y,projectile);
+if(instance_exists(proj)){
+	if(proj.team != 2){
+		motion_add_ct(proj.direction, 4);
+		health -= proj.damage;
+		damaged = 3;
+		sound_play_pitchvol(sndOasisShoot, 1.5 + random_range(-0.2,0.2), 0.15);
+		with(proj){
+			instance_destroy();
+		}
+	}
+}
+
+bupple = instance_place(x,y,CustomObject);
+if(instance_exists(bupple)){
+	if("name" in bupple and bupple.name == "bupple"){
+		direction = point_direction(bupple.x,bupple.y,x,y);
+		health++;
+		speed *= 1.1;
+		instance_create(x,y,ThrowHit);
+	}
+}
+
+if(health <= 0) {
+	instance_create(x,y,BubblePop);
+	sound_play_pitchvol(sndOasisExplosionSmall, 2.5 + random_range(-0.1,0.1), 0.15);
+	sound_play_pitchvol(sndOasisHurt, 2.5 + random_range(-0.1,0.1), 0.15);
+	instance_destroy();
+}
+
+#define bupple_draw
+draw_self();
+
+if(damaged>0){
+	draw_set_color(c_white);
+	draw_circle(x,y,13,false);
 }
 
 #define race_name
