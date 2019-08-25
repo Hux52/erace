@@ -106,7 +106,7 @@ if(firing){
 					team = p.team;
 					damage = 3;
 					force = 2;
-					direction = creator.d;
+					direction = creator.d + random_range(-15,15);
 					image_angle = direction;
 					friction = 0;
 					speed = 10;
@@ -157,18 +157,18 @@ if(my_health > 0){
 		sprite_index = spr_idle;
 	}
 	// face direction...
-	if(direction > 90 and direction <= 270){
-		right = -1;
-	}
-	else{
-		right = 1;
-	}
-	// ...cont
 	if(right = 1){
 		image_xscale = 1;
 	}
 	else{
 		image_xscale = -1;
+	}
+	// ...cont
+	if(direction > 90 and direction <= 270){
+		right = -1;
+	}
+	else{
+		right = 1;
 	}
 
 
@@ -411,4 +411,4 @@ switch(argument0){
 
 #define race_ttip
 // return character-specific tooltips
-return choose("BUZZ BUZZ", "FLY YOU FOOL", "SIX SHOTS# MORE THAN ENOUGH TO KILL ANYTHING THAT MOVES");
+return choose("BUZZ BUZZ", "FLY YOU FOOL", "SIX SHOTS# MORE THAN ENOUGH #TO KILL ANYTHING THAT MOVES");

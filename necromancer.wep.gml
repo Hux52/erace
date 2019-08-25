@@ -77,7 +77,7 @@ with(prop){
 	}
 }
 
-if(image_index >= 7.8){
+if(ceil(image_index) >= 8){
 	instance_destroy();
 }
 
