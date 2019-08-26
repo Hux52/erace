@@ -54,6 +54,7 @@ bupple_count = 5;
 bupple_count_base = 5;
 
 bupple_alpha = 2;
+bupple_flash = 0;
 
 bupple_excess = 15;
 
@@ -79,7 +80,6 @@ u2 = ultra_get(player_get_race(index), 2); //ultra 2: double bouble
 script_bind_draw(custom_draw, -10);
 
 if(big_bupple > 4) big_bupple = 0;
-
 //passive: swimming
 friction = 0.25;
 footstep = 10;
@@ -104,6 +104,7 @@ if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 			sound_play_pitchvol(other.snd_melee,random_range(0.9,1.1),1);
 			other.bupple_count += 1;
 			other.bupple_excess = 15;
+			other.bupple_flash = 2;
 		}
 	}
 }
@@ -148,9 +149,10 @@ if(delay <= 0){
 		// sound_play_pitchvol(sndOasisHurt, 2.5 + random_range(-0.1,0.1), 0.25);
 		sound_play_pitchvol(sndOasisChest, 1.5 + random_range(-0.1,0.1), 0.25);
 		sound_play_pitchvol(sndOasisMelee, 1.5 + random_range(-0.1,0.1), 0.65);
-		delay = delay_base;
+		delay = min(delay_base, max(3, 15 - bupple_count));
 		bupple_count--;
 		bupple_excess = 15;
+		bupple_flash = 2;
 		big_bupple++;
 	}
 } else {
@@ -172,32 +174,57 @@ if(bupple_count < bupple_count_base){
 		bupple_excess -= current_time_scale;
 	} else {
 		bupple_count--;
-		bupple_excess = 15;
+		bupple_excess = min(24, max(4, 30 - bupple_count));
 	}
 }
 
 bupple_alpha -= 5/room_speed;
 
+bupple_flash -= current_time_scale;
+
+if(bupple_cooldown == 45 or bupple_excess == 0){
+	bupple_flash = 2;
+}
+
 #define custom_draw
 origalpha = draw_get_alpha();
 origcolor = draw_get_color();
 with(Player){
-	for(i = 0; i < bupple_count; i++){
-		if(i == bupple_count){
-			draw_set_alpha(bupple_cooldown/bupple_cooldown_base);
-		} else {
-			draw_set_alpha(1);
-		}
-		draw_set_alpha(bupple_alpha);
-		//shadow
-		d3d_set_fog(true, player_get_color(index), 0, 0);
-		// draw_sprite(sprBubble, 3, x + i*8 - (4*(bupple_count)) + 4 - 1, y - 16 - (i mod 2 * 2));
-		draw_sprite(sprBubble, 3, x + i*8 - (4*(bupple_count)) + 4, y - 16 - (i mod 2 * 2) + 1);
+	if(bupple_count < 10){
+		for(i = 0; i < bupple_count; i++){
+			if(i == bupple_count){
+				draw_set_alpha(bupple_cooldown/bupple_cooldown_base);
+			} else {
+				draw_set_alpha(1);
+			}
+			draw_set_alpha(bupple_alpha);
+			//shadow
+			d3d_set_fog(true, player_get_color(index), 0, 0);
+			// draw_sprite(sprBubble, 3, x + i*8 - (4*(bupple_count)) + 4 - 1, y - 16 - (i mod 2 * 2));
+			draw_sprite(sprBubble, 3, x + i*8 - (4*(bupple_count)) + 4, y - 16 - (i mod 2 * 2) + 1);
 
-		// draw_set_color(c_white);
-		d3d_set_fog(true, c_white, 0, 0);
-		draw_sprite(sprBubble, 3, x + i*8 - (4*(bupple_count)) + 4, y - 16 - (i mod 2 * 2));
-		d3d_set_fog(false, c_blue, 0, 0);
+			// draw_set_color(c_white);
+			d3d_set_fog(true, c_white, 0, 0);
+			draw_sprite(sprBubble, 3, x + i*8 - (4*(bupple_count)) + 4, y - 16 - (i mod 2 * 2));
+			if(bupple_flash > 0){
+				draw_circle(x + i*8 - (4*(bupple_count)) + 3, y - 16 - (i mod 2 * 2), 4, false);
+			}
+			d3d_set_fog(false, c_blue, 0, 0);
+		}
+	} else {
+		draw_set_alpha(1);
+		draw_set_halign(fa_left);
+		draw_set_valign(fa_center);
+		d3d_set_fog(true, player_get_color(index), 0, 0);
+		draw_sprite(sprBubble, 3, x - 8, y - 24 + 1);
+		draw_text(x, y - 24 + 1, string(bupple_count));
+		// draw_sprite(sprBubble, 3, x + i*8 - (4*(bupple_count)) + 4 - 1, y - 16 - (i mod 2 * 2));
+		d3d_set_fog(false, player_get_color(index), 0, 0);
+		draw_sprite(sprBubble, 3, x - 8, y - 24);
+		if(bupple_flash > 0){
+			draw_circle(x - 9, y - 24, 4, false);
+		}
+		draw_text(x, y - 24, string(bupple_count));
 	}
 }
 draw_set_alpha(origalpha);
