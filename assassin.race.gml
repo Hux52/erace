@@ -10,6 +10,8 @@ global.sprPortrait = sprite_add("sprites/portrait/sprPortraitAssassin.png", 1, 1
 
 global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_Assasin.png", 1, 10, 10);
 
+global.sprShuriken = sprite_add("sprites/sprShuriken.png", 2, 6, 6);
+
 // level start init- MUST GO AT END OF INIT
 while(true){
 	// first chunk here happens at the start of the level, second happens in portal
@@ -51,6 +53,8 @@ team = 2;
 maxhealth = 7;
 melee = 0;	// can melee or not
 firing = false;
+spec_load = 0;
+want_load = false;
 
 // vars
 getup = 0;	// alarm to get up from faking
@@ -107,6 +111,28 @@ if(firing = true){
 	canwalk = true;
 }
 
+if(button_pressed(index, "spec")){
+	if("fake" in self){
+		if(!instance_exists(fake[0])){
+			if(spec_load <= 0){
+				shuriken_burst();
+				want_load = true;
+				spec_load = 30;
+			}
+		}
+	}
+}
+
+if(spec_load > 0){
+	spec_load -= current_time_scale;
+}
+else{
+	if(want_load = true){
+		sound_play_pitchvol(sndSwapBow, 1.2 + random_range(-0.1, 0.1), 0.5);
+		want_load = false;
+	}
+}
+
 #define fake_step
 if(getup > 0){
 	creator.reload = 99;	// no firing
@@ -143,6 +169,70 @@ if(getup > 0){
 			view_object[index] = self;
 			instance_delete(fake[0]);
 			instance_delete(light[0]);
+		}
+	}
+}
+
+#define shuriken_burst()
+var _x = x + lengthdir_x(5, gunangle);
+var _y = y + lengthdir_y(5, gunangle);
+with instance_create(_x, _y, CustomObject){
+	name = "shurikenBurst";
+	creator = other;
+	team = creator.team;
+	mask_index = mskNone;
+	spr_shadow = mskNone;
+	direction = other.gunangle;
+	friction = 0;
+	on_step = script_ref_create(shurikenBurst_step);
+	alarm = [0];
+	maxammo = 3;
+	ammo = maxammo;
+}
+
+#define shurikenBurst_step
+if(instance_exists(creator)){
+	direction = creator.gunangle + (random(creator.accuracy) * choose(1, -1) * random(6));
+	// follow player
+	x = creator.x + lengthdir_x(5, creator.gunangle);
+	y = creator.y + lengthdir_y(5, creator.gunangle);
+	// fire bullets
+	if(alarm[0] <= 0){	// 3 bullets
+		sound_play_pitchvol(sndSwapSword, 1.7 + random_range(-0.1, 0.1), 0.8);
+		with(instance_create(x, y, Splinter)){
+			sprite_index = global.sprShuriken;
+			mask_index = mskBouncerBullet;
+			creator = other.creator;
+			team = creator.team;
+			direction = other.direction;
+			image_angle = direction;
+			friction = 0;
+			speed = 14;
+			damage = 2.80 + (0.20 * GameCont.level) + (GameCont.loops * 0.33);
+			spin = true;
+			script_bind_step(shuriken_step, 0, self);
+		}
+		ammo--;
+	}
+	for(i = 0; i < array_length(alarm); i++){
+		if(alarm[i] <= 0){
+			alarm[i] = 3;
+		}
+		alarm[i]-= current_time_scale;
+	}
+	if(ammo <= 0){
+		instance_destroy();
+	}
+}
+
+#define shuriken_step(hooh)
+with(hooh){
+	if(speed > 0){
+		if(id % 2 != 0){
+			image_angle += 24;
+		}
+		else{
+			image_angle -= 24;
 		}
 	}
 }
