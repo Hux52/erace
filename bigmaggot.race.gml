@@ -75,7 +75,7 @@ if(u2 == 1){
 	maggotType = "normal";
 }
 
-if(u1 == 1){
+if(u1 == 1 or u2 == 1){
 	if(my_health > previousHealth){
 		previousHealth = my_health; //healed		
 	}
@@ -350,7 +350,6 @@ instance_create(x + random_range(-1,1),y + random_range(-1,1),MeatExplosion);
 	with(instance_create(x, y, CustomHitme)){
 		name = "Maggot";
 		creator = other;
-				trace(object_get_name(creator))
 		team = creator.team;
 		spr_idle = sprMaggotIdle;
 		spr_walk = sprMaggotIdle;
