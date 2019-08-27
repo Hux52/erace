@@ -1065,3 +1065,4 @@ if(instance_exists(toDraw)){
 	instance_destroy();
 }
 d3d_set_fog(0,c_lime,0,0);
+
