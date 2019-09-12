@@ -11,15 +11,15 @@ global.sprDisappear = sprite_add("/sprites/sprTurretDisappear.png", 11, 12, 12);
 // level start init- MUST GO AT END OF INIT
 global.newLevel = instance_exists(GenCont);
 global.hasGenCont = false;
-// global.sndSelect = sound_add("sounds/sndMaggotSpawnSelect.ogg");
+global.sndSelect = sndTurretSpawn;
 var _race = [];
 for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
 while(true){
 	//character selection sound
 	for(var i = 0; i < maxp; i++){
 		var r = player_get_race(i);
-		if(_race[i] != r && r = "maggotspawn"){
-			// sound_play(global.sndSelect);
+		if(_race[i] != r && r = "turret"){
+			sound_play(global.sndSelect);
 		}
 		_race[i] = r;
 	}

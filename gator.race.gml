@@ -4,6 +4,22 @@ global.sprMenuButton = sprite_add("sprites/selectIcon/sprGatorSelect.png", 1, 0,
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitGator.png", 1, 20, 205);
 global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_SmallCrocodile.png", 1, 10, 10);
 
+// character select sounds
+global.sndSelect = sound_add("sounds/sndGatorSelect.ogg");
+var _race = [];
+for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
+while(true){
+	//character selection sound
+	for(var i = 0; i < maxp; i++){
+		var r = player_get_race(i);
+		if(_race[i] != r && r = "gator"){
+			sound_play(global.sndSelect);
+		}
+		_race[i] = r;
+	}
+	wait 1;
+}
+
 #define create
 // player instance creation of this race
 // https://bitbucket.org/YellowAfterlife/nuclearthronetogether/wiki/Scripting/Objects/Player

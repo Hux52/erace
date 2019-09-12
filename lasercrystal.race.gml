@@ -3,22 +3,6 @@ global.sprMenuButton = sprite_add("sprites/selectIcon/sprLaserCrystalSelect.png"
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitLaserCrystal.png",1 , 30, 195);
 global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_LaserCrystal.png", 1, 10, 10);
 
-// character select sounds
-// global.sndSelect = sound_add("sounds/sndRatSelect.ogg");
-// var _race = [];
-// for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
-// while(true){
-// 	//character selection sound
-// 	for(var i = 0; i < maxp; i++){
-// 		var r = player_get_race(i);
-// 		if(_race[i] != r && r = "rat"){
-// 			sound_play(global.sndSelect);
-// 		}
-// 		_race[i] = r;
-// 	}
-// 	wait 1;
-// }
-
 global.hitSounds = [
 	sndBanditHit,
 	sndSniperHit,
@@ -44,6 +28,22 @@ global.deathSounds = [
 
 global.snd_hurt_current = sndLaserCrystalHit;
 global.snd_dead_current = sndLaserCrystalDeath;
+
+//character selection sound
+global.sndSelect = sound_add("sounds/sndLaserCrystalSelect.ogg");
+var _race = [];
+for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
+while(true){
+	//character selection sound
+	for(var i = 0; i < maxp; i++){
+		var r = player_get_race(i);
+		if(_race[i] != r && r = "lasercrystal"){
+			sound_play_pitchvol(global.sndSelect, 1, 2);
+		}
+		_race[i] = r;
+	}
+	wait 1;
+}
 
 #define create
 // player instance creation of this race
