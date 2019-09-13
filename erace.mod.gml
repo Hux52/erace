@@ -35,7 +35,7 @@ global.race_names = ["maggotspawn", MaggotSpawn, "bigmaggot", BigMaggot, "bandit
 					"assassin", MeleeBandit, "raven", Raven, "salamander", Salamander, "sniper", 
 					Sniper, "spider", Spider, "lasercrystal", LaserCrystal, "snowbot", SnowBot, "wolf", 
 					Wolf, "bandit_snow", Bandit, "snowtank", SnowTank, "freak", Freak, "explofreak", 
-					ExploFreak, "rhinofreak", RhinoFreak, "turret", Freak,	"necromancer", Necromancer,
+					ExploFreak, "rhinofreak", RhinoFreak, "turret", Turret,	"necromancer", Necromancer,
 					 "guardian", Guardian, "exploguardian", ExploGuardian, "dogguardian", DogGuardian,
 					"turtle", Turtle, "junglefly", JungleFly, "bonefish", BoneFish, "crab", Crab, "molefish", Molefish, "molesarge", Molesarge, "jock", Jock, "fireballer", 
 					FireBaller, "grunt", Grunt, "inspector", Inspector, "shielder", Shielder, "van", Van];	// piss off
@@ -398,15 +398,14 @@ if(instance_exists(CharSelect)){
 							want_y = y;
 							instance_create(x,y,PortalClear);
 							index = other.i;
-							mask_index = mskNone;
 							friction = 10;
 							if(player_get_race(other.i) == "bandit_snow"){
 								spr_idle = sprSnowBanditIdle;
 								spr_walk = sprSnowBanditWalk;
 							}
-							else if(player_get_race(other.i) == "turret"){
-								spr_idle = sprTurretIdle;
-								spr_walk = sprTurretIdle;
+							
+							if(player_get_race(other.i) != "turret"){
+								mask_index = mskNone;
 							}
 						}
 						break;
