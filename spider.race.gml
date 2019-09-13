@@ -62,6 +62,9 @@ global.hasGenCont = false;
 // }
 
 // level start init- MUST GO AT END OF INIT
+global.sndSelect = sound_add("sounds/sndSpiderSelect.ogg");
+var _race = [];
+for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
 while(true){
 	// first chunk here happens at the start of the level, second happens in portal
 	if(instance_exists(GenCont)) global.newLevel = 1;
@@ -73,6 +76,14 @@ while(true){
 	global.hasGenCont = instance_exists(GenCont);
 	if (!hadGenCont && global.hasGenCont) {
 		// nothing yet
+	}
+	//character selection sound
+	for(var i = 0; i < maxp; i++){
+		var r = player_get_race(i);
+		if(_race[i] != r && r = "spider"){
+			sound_play(global.sndSelect);
+		}
+		_race[i] = r;
 	}
 	wait 1;
 }

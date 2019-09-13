@@ -5,6 +5,22 @@ global.sprMenuButton = sprite_add("sprites/selectIcon/sprSniperSelect.png", 1, 0
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitSniper.png", 1, 0, 200);
 global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_Sniper.png", 1, 10, 10);
 
+// character select sounds
+global.sndSelect = sound_add("sounds/sndSniperSelect.ogg");
+var _race = [];
+for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
+while(true){
+	//character selection sound
+	for(var i = 0; i < maxp; i++){
+		var r = player_get_race(i);
+		if(_race[i] != r && r = "sniper"){
+			sound_play(global.sndSelect);
+		}
+		_race[i] = r;
+	}
+	wait 1;
+}
+
 #define create
 // player instance creation of this race
 // https://bitbucket.org/YellowAfterlife/nuclearthronetogether/wiki/Scripting/Objects/Player
