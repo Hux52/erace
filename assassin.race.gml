@@ -128,7 +128,9 @@ if(spec_load > 0){
 }
 else{
 	if(want_load = true){
-		sound_play_pitchvol(sndSwapBow, 1.2 + random_range(-0.1, 0.1), 0.5);
+		sound_play_pitchvol(sndSwapBow, 1.5 + random_range(-0.1, 0.1), 0.25);
+		sound_play_pitchvol(sndMenuOptions, 2.5 + random_range(-0.1, 0.1), 0.45);
+		sound_play_pitchvol(sndMeleeFlip, 2 + random_range(-0.1, 0.1), 0.65);
 		want_load = false;
 	}
 }
@@ -198,7 +200,10 @@ if(instance_exists(creator)){
 	y = creator.y + lengthdir_y(5, creator.gunangle);
 	// fire bullets
 	if(alarm[0] <= 0){	// 3 bullets
-		sound_play_pitchvol(sndSwapSword, 1.7 + random_range(-0.1, 0.1), 0.8);
+		sound_play_pitchvol(sndMeleeFlip, 1.7 + (0.6 - (ammo/5)), 0.2);
+		sound_play_pitchvol(sndSwapSword, 2.5 + (0.6 - (ammo/5)), 0.65);
+		sound_play_pitchvol(sndBlackSword, 1.5 + (0.6 - (ammo/5)), 0.35);
+		view_shake[creator.index] += 10;
 		with(instance_create(x, y, Splinter)){
 			sprite_index = global.sprShuriken;
 			mask_index = mskBouncerBullet;
@@ -229,10 +234,10 @@ if(instance_exists(creator)){
 with(hooh){
 	if(speed > 0){
 		if(id % 2 != 0){
-			image_angle += 24;
+			image_angle += 24 * current_time_scale;
 		}
 		else{
-			image_angle -= 24;
+			image_angle -= 24 * current_time_scale;
 		}
 	}
 }
@@ -244,7 +249,7 @@ return "ASSASSIN";
 
 #define race_text
 // return passive and active for character selection screen
-return "@sBE @wHIDDEN#@sHAS @wPIPE";
+return "@sBE @wHIDDEN#@sTHROW @wSHURIKENS";
 
 
 #define race_portrait
