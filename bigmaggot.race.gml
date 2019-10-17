@@ -169,13 +169,8 @@ if(cooldown > 0){
 }
 
 // outgoing contact damage
-if(collision_rectangle(x + 20, y + 10, x - 20, y - 10, enemy, 0, 1)){
-	with(instance_nearest(x, y, enemy)){
-		if(sprite_index != spr_hurt){
-			projectile_hit_push(self, 3 + min(4, 0.4 * GameCont.level), 4);
-		}
-	}
-}
+// script_ref_create_ext("mod", "erace", "draw_outline", other.playerColor, other);
+mod_script_call("mod", "erace", "contact_check", 3 + (4 * GameCont.level));
 
 // on death
 if(my_health = 0 and died = 0){
