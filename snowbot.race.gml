@@ -11,6 +11,8 @@ global.sprPortrait = sprite_add("/sprites/portrait/sprPortraitSnowbot.png", 1, 2
 global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_SnowBot.png", 1, 10, 10);
 
 // level start init- MUST GO AT END OF INIT
+var _race = [];
+for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
 while(true){
 	// first chunk here happens at the start of the level, second happens in portal
 	if(instance_exists(GenCont)) global.newLevel = 1;
@@ -18,10 +20,13 @@ while(true){
 		global.newLevel = 0;
 		level_start();
 	}
-	var hadGenCont = global.hasGenCont;
-	global.hasGenCont = instance_exists(GenCont);
-	if (!hadGenCont && global.hasGenCont) {
-		// nothing yet
+	//character selection sound
+	for(var i = 0; i < maxp; i++){
+		var r = player_get_race(i);
+		if(_race[i] != r && r = "snowbot"){
+			sound_play(sndSnowBotPickup);
+		}
+		_race[i] = r;
 	}
 	wait 1;
 }

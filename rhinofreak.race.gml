@@ -4,20 +4,20 @@ global.sprPortrait = sprite_add("sprites/portrait/sprPortraitRhinoFreak.png",1 ,
 global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_Rhinofreak.png", 1, 10, 10);
 
 // character select sounds
-// global.sndSelect = sound_add("sounds/sndRatSelect.ogg");
-// var _race = [];
-// for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
-// while(true){
-// 	//character selection sound
-// 	for(var i = 0; i < maxp; i++){
-// 		var r = player_get_race(i);
-// 		if(_race[i] != r && r = "rat"){
-// 			sound_play(global.sndSelect);
-// 		}
-// 		_race[i] = r;
-// 	}
-// 	wait 1;
-// }
+global.sndSelect = sound_add("sounds/sndRhinoFreakSelect.ogg");
+var _race = [];
+for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
+while(true){
+	//character selection sound
+	for(var i = 0; i < maxp; i++){
+		var r = player_get_race(i);
+		if(_race[i] != r && r = "rhinofreak"){
+			sound_play(global.sndSelect);
+		}
+		_race[i] = r;
+	}
+	wait 1;
+}
 
 #define create
 // player instance creation of this race

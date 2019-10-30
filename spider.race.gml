@@ -45,22 +45,6 @@ global.a_wide_variety_of_death_sounds_to_choose_f_r_o_m = [
 global.newLevel = instance_exists(GenCont);
 global.hasGenCont = false;
 
-// character select sounds
-// global.sndSelect = sound_add("sounds/sndRatSelect.ogg");
-// var _race = [];
-// for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
-// while(true){
-// 	//character selection sound
-// 	for(var i = 0; i < maxp; i++){
-// 		var r = player_get_race(i);
-// 		if(_race[i] != r && r = "rat"){
-// 			sound_play(global.sndSelect);
-// 		}
-// 		_race[i] = r;
-// 	}
-// 	wait 1;
-// }
-
 // level start init- MUST GO AT END OF INIT
 global.sndSelect = sound_add("sounds/sndSpiderSelect.ogg");
 var _race = [];

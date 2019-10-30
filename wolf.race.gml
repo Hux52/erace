@@ -12,7 +12,8 @@ while(true){
 	for(var i = 0; i < maxp; i++){
 		var r = player_get_race(i);
 		if(_race[i] != r && r = "wolf"){
-			sound_play_pitchvol(global.sndSelect,0.8,0.65);
+			//sound_play_pitchvol(global.sndSelect,0.8,0.65);
+			sound_play(sndWolfRoll);
 		}
 		_race[i] = r;
 	}

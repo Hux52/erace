@@ -3,21 +3,22 @@ global.sprMenuButton = sprite_add("sprites/selectIcon/sprFreakSelect.png", 1, 0,
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitFreak.png",1 , 15, 210);
 
 global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_Freak.png", 1, 10, 10);
+
 // character select sounds
-// global.sndSelect = sound_add("sounds/sndRatSelect.ogg");
-// var _race = [];
-// for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
-// while(true){
-// 	//character selection sound
-// 	for(var i = 0; i < maxp; i++){
-// 		var r = player_get_race(i);
-// 		if(_race[i] != r && r = "rat"){
-// 			sound_play(global.sndSelect);
-// 		}
-// 		_race[i] = r;
-// 	}
-// 	wait 1;
-// }
+global.sndSelect = sound_add("sounds/sndFreakSelect.ogg");
+var _race = [];
+for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
+while(true){
+	//character selection sound
+	for(var i = 0; i < maxp; i++){
+		var r = player_get_race(i);
+		if(_race[i] != r && r = "freak"){
+			sound_play(global.sndSelect);
+		}
+		_race[i] = r;
+	}
+	wait 1;
+}
 
 #define create
 // player instance creation of this race

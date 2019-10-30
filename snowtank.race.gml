@@ -10,21 +10,20 @@ global.sprThruster = sprite_add("/sprites/sprTankThruster.png", 8, 24, 24);
 
 global.laser_color = make_color_rgb(250, 54, 0);
 
-// character select sounds
-// global.sndSelect = sound_add("sounds/sndBanditSelect.ogg");
-// var _race = [];
-// for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
-// while(true){
-// 	//character selection sound
-// 	for(var i = 0; i < maxp; i++){
-// 		var r = player_get_race(i);
-// 		if(_race[i] != r && r = "bandit"){
-// 			sound_play(global.sndSelect);
-// 		}
-// 		_race[i] = r;
-// 	}
-// 	wait 1;
-// }
+// level start init- MUST GO AT END OF INIT
+var _race = [];
+for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
+while(true){
+	//character selection sound
+	for(var i = 0; i < maxp; i++){
+		var r = player_get_race(i);
+		if(_race[i] != r && r = "snowtank"){
+			sound_play(sndSnowTankAim);
+		}
+		_race[i] = r;
+	}
+	wait 1;
+}
 
 
 #define create
