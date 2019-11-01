@@ -410,6 +410,16 @@ if(instance_exists(CharSelect)){
 							if(player_get_race(other.i) != "turret"){
 								mask_index = mskNone;
 							}
+							_offset = random(90);
+							for(i = 1; i < 5; i++){
+								with(instance_create(x + random_range(-5,5),y,DustOLD)){
+									image_index = 0;
+									speed = 4 + random_range(-0.5, 0.5);
+									image_speed = 0.4 + random_range(-0.1, 0.1);
+									image_angle = other.i * 90 + random_range(-30, 30) + other._offset;
+									direction = other.i * 90 + random_range(-30, 30) + other._offset;
+								}
+							}
 						}
 						break;
 					}

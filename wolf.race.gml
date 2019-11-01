@@ -52,6 +52,7 @@ boost_time = 5;
 fireDelay = 15;
 is_rolling = false;
 has_rolled = false;
+melee_damage = 4;
 
 // vars
 melee = 1;	// can melee or not
@@ -84,6 +85,7 @@ if(button_pressed(index,"fire")){
 			mask_index = mskShield;
 			on_step = script_ref_create(shield_step);
 		}
+		view_shake[index] = 6;
 	}
 }
 
@@ -112,6 +114,7 @@ if(is_rolling){
 
 	if(fireDelay == 0) {
 		for(i = 0; i < 3; i++){
+			sound_play_pitchvol(sndEnemyFire, random_range(0.9, 1.1), 1.4);
 			with(instance_create(x,y,AllyBullet)){
 				creator = other;
 				team = creator.team;
@@ -120,6 +123,7 @@ if(is_rolling){
 				speed = 5;
 				damage = 3;
 			}
+			view_shake[index] = 6;
 		}
 	}
 

@@ -85,7 +85,7 @@ if(instance_exists(creator)){
 					speed = 8;
 					damage = 5;
 					with(creator){
-						weapon_post(5, 30, 10);	// weapon kick and screen shake
+						weapon_post(5, 4, 2);	// weapon kick and screen shake
 					}
 				}
 			}

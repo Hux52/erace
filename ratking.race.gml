@@ -146,7 +146,7 @@ if(spawn_cool > 0){
 
 // special b- self destruct charge
 if(button_pressed(index, "spec") and spawn_cool <= 60 and charge_cool = 0){
-	sound_play(sndRatkingCharge);
+	sound_play(sndFlyFire);	// try weapon throw
 	charge_cool = 90;
 }
 

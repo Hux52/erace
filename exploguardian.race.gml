@@ -185,6 +185,8 @@ if(explo_timer >= 60 || button_released(index,"spec")){
 					damage = 3;	// damage is normally 2 for exploguardian, this is player bullet damage
 				}
 		}
+		
+		view_shake[index] = 3 + bullets * 1.5;
 		spr_idle = sprExploGuardianIdle;
 		spr_walk = sprExploGuardianWalk;
 		spr_hurt = sprExploGuardianHurt;

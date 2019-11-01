@@ -38,7 +38,7 @@ return false;
 return "RAD ASSAULT";
 
 #define weapon_fire
-weapon_post(0, 10, 5);	// weapon kick and screen shake
+weapon_post(0, 5, 3);	// weapon kick and screen shake
 sound_play(sndGuardianFire);
 // mid ball
 for(i = -1; i < 2; i++){

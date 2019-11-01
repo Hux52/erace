@@ -104,6 +104,7 @@ if(car = 0){
 if(button_pressed(index, "fire")){
 	if(canspec = 1 and charge = 0 and car = 0){	// if no car and not already charging
 		// charge init
+		view_shake[index] = 20;
 		spr_idle = spr_fire;
 		spr_walk = spr_fire;
 		sound_play(sndSnowBotSlideStart);
@@ -196,6 +197,7 @@ if(charge > 0){
 				}
 			}
 		}
+		view_shake[index] = 3;
 	}
 	else if(charge <= 1){
 		// charge end, return to normal
@@ -249,12 +251,14 @@ if(lift > 0){
 // spec b- throw car
 if(button_pressed(index, "fire")){
 	if(lift = 0 and car = 1){
+		view_shake[index] = 30;
 		spr_idle = sprSnowBotIdle;
 		spr_walk = sprSnowBotWalk;
 		spr_hurt = sprSnowBotHurt;
+		sound_play_pitchvol(sndSnowBotThrow, random_range(0.9, 1.1), 1.5);
 		// car projectile creation
 		with(instance_create(x + lengthdir_x(16, gunangle), y + lengthdir_y(16, gunangle), CarThrow)){
-			trace(other.gunangle);
+			// trace(other.gunangle);
 			creator = other;
 			team = other;
 			speed = 18;

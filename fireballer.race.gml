@@ -99,6 +99,7 @@ if(button_check(index,"fire")){
 				image_angle = direction;
 			}
 		}
+		view_shake[index] = 4.5;
 	}
 }
 

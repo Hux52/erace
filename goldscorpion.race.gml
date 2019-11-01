@@ -107,6 +107,7 @@ if(venom > 0){
 			damage = 3 + min(2.5, 0.25 * GameCont.level);
 		}
 	}
+	view_shake[index] = 4;
 	venom -= current_time_scale;
 }
 else{

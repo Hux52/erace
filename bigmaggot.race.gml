@@ -170,7 +170,17 @@ if(cooldown > 0){
 
 // outgoing contact damage
 // script_ref_create_ext("mod", "erace", "draw_outline", other.playerColor, other);
-mod_script_call("mod", "erace", "contact_check", 3 + (4 * GameCont.level));
+if(collision_rectangle(x + 16, y + 10, x - 16, y - 10, enemy, 0, 1)){
+	with(instance_nearest(x, y, enemy)){
+		if(sprite_index != spr_hurt){
+			my_health -= 3 + (2 * GameCont.level);
+			sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.6);
+			sound_play_pitch(sndMaggotBite, random_range(0.9, 1.1));
+			sprite_index = spr_hurt;
+			direction = other.direction;
+		}
+	}
+}
 
 // on death
 if(my_health = 0 and died = 0){

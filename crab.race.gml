@@ -182,6 +182,7 @@ if(is_firing){
 					image_angle = direction;
 				}
 			}
+			view_shake[index] = 4.5;
 			bulletCount -= 1;
 			fireDelay = fireDelayBase;
 		}
@@ -386,6 +387,7 @@ if(instance_exists(creator)){
 
 			if(abs(creator.rotation_speed) > creator.maxrot * 0.33 && creator.curdist > creator.maxdist/3){
 				armed = true;
+				view_shake[creator.index] = creator.rotation_speed * 0.1;
 			} else {
 				armed = false;
 			}

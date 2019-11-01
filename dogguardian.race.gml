@@ -176,6 +176,7 @@ if(jump > 0){
 		}
 		speed = 0;
 		sprite_index = spr_land;
+		view_shake[index] = 10;
 	}
 	if(jump_dir != direction and bounce = 0){
 		bounce = 10;

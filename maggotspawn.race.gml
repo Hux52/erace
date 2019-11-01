@@ -52,7 +52,7 @@ snd_dead = sndMaggotSpawnDie;
 // stats
 maxspeed = 0;
 team = 2;
-maxhealth = 12;
+maxhealth = 16;
 spr_shadow = shd32;
 spr_shadow_y = 0;
 mask_index = mskPlayer;
@@ -78,8 +78,8 @@ canpick = 0;
 canwalk = 0;
 
 // max health fix
-if(maxhealth != 12 + skill_get(mut_rhino_skin) * 4){
-	maxhealth = 12 + skill_get(mut_rhino_skin) * 4;
+if(maxhealth != 16 + GameCont.level * 1 + skill_get(mut_rhino_skin) * 4){
+	maxhealth = 16 + GameCont.level * 1 + skill_get(mut_rhino_skin) * 4;
 }
 
 // face direction you're "moving" as you have no weps
@@ -92,7 +92,7 @@ else{
 
 u1 = ultra_get(mod_current, 1);
 
-maggot_health = 2 + (skill_get(mut_rhino_skin) * 4) + max(0, floor(GameCont.hard / 2));	// get +1 max hp every 2 levels
+maggot_health = 4 + (skill_get(mut_rhino_skin) * 4) + 1 * GameCont.level;
 
 maggotType = "normal";
 
@@ -251,6 +251,17 @@ if(my_health > 0){
 			alarm[0] = irandom_range(10, 20);
 		}
 	}
+	
+	// tp if too far away
+	/*if(instance_exists(creator)){
+		if(distance_to_object(creator) > 360){
+			var _f = instance_nearest(lengthdir_x(340, point_direction(creator.x, creator.y, x, y)), lengthdir_y(340, point_direction(creator.x, creator.y, x, y)), Floor);
+			x = _f.x + 8;
+			y = _f.y + 8;
+			trace(string(x) + string(y));
+			instance_create(x, y, AmmoChest);
+		}
+	}*/
 
 	// stop showing hurt sprite
 	if(sprite_index = spr_hurt and image_index >= 2){
@@ -267,12 +278,10 @@ if(my_health > 0){
 	// outgoing/incoming contact damage
 	with(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
 		if(sprite_index != spr_hurt){
-			my_health -= 1;
+			projectile_hit_push(self, 1 + min(2.3, 0.23 * GameCont.level), 2);
 			if(other.name = "radmaggot"){
-				my_health -= 2;
+				projectile_hit_push(self, 2 + min(2.3, 0.23 * GameCont.level), 2);
 			}
-			sound_play_hit(snd_hurt, 0.1);
-			sprite_index = spr_hurt;
 		}
 	}
 }

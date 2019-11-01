@@ -38,7 +38,7 @@ return false;
 return "SNIPER";
 
 #define weapon_fire
-weapon_post(5, 30, 10);	// weapon kick and screen shake
+weapon_post(5, 6, 3);	// weapon kick and screen shake
 sound_play_gun(sndGruntFire, 0.2, 0.6);
 with(instance_create(x, y, PopoSlug)){
 	sprite_index = sprPopoSlug;

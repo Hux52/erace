@@ -161,6 +161,7 @@ if(laserFiring){
 			}
 		}
 		laserCharge -= current_time_scale;
+		view_shake[index] = (24 - laserCharge) / 2.5;
 	} else {
 		if(laserCount > 0){
 			if(laserDelay <= 0){
@@ -178,6 +179,7 @@ if(laserFiring){
 				laserCount -= 1;
 				laserDelay = laserDelayBase;
 			}
+			view_shake[index] = 4;
 			laserDelay -= 1 * current_time_scale;
 		} else {
 			laserFiring = false; //stop firing

@@ -38,7 +38,7 @@ return false;
 return false;
 
 #define weapon_fire
-weapon_post(5, 30, 10);	// weapon kick and screen shake
+weapon_post(5, 4, 2);	// weapon kick and screen shake
 sound_play_pitchvol(sndMolefishFire,random_range(0.9,1.1),0.65);
 with instance_create(x + lengthdir_x(8, gunangle), y + lengthdir_y(8, gunangle), AllyBullet){
 	creator = other;

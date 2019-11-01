@@ -8,7 +8,7 @@
 return "BANDIT RIFLE";
 
 #define weapon_sprt
-return sprBanditGun;
+return mskNone;
 
 #define weapon_type
 return 1;
@@ -38,14 +38,20 @@ return false;
 return "FIRE FIRST, AIM LATER";
 
 #define weapon_fire
-weapon_post(5, 30, 10);	// weapon kick and screen shake
-sound_play(sndEnemyFire);
+if("spins" not in self){
+	spins = 0;
+}
+weapon_post(4 + (spins * 6), 3 + (spins * 6), 2 + (spins * 6));	// weapon kick and screen shake
+sound_play_pitchvol(sndEnemyFire, random_range(0.9, 1.1) - (spins * 0.1), 2);
 with instance_create(x + lengthdir_x(8, gunangle), y + lengthdir_y(8, gunangle), AllyBullet){
 	creator = other;
 	team = creator.team;
 	direction = creator.gunangle;
 	image_angle = direction;
 	friction = 0;
-	speed = 6;
-	damage = 3 + min(8, 0.8 * GameCont.level);
+	image_xscale = 1 + (creator.spins * 0.2);
+	image_yscale = 1 + (creator.spins * 0.2);
+	speed = 6 + (creator.spins);
+	damage = (4 + 0.8 * GameCont.level) * (creator.spins + 1);
 }
+spins = 0;

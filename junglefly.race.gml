@@ -115,6 +115,7 @@ if(firing){
 				}
 			maggot_count -= 1;
 			fireDelay = fireDelayBase;
+			view_shake[index] = 4;
 		}
 		fireDelay -= current_time_scale;
 	} else {

@@ -120,6 +120,7 @@ if(venom > 0){
 			}
 		}
 	}
+	view_shake[index] = 4;
 	venom -= current_time_scale + (u2*current_time_scale);
 }
 else{

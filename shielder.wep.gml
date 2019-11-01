@@ -63,7 +63,7 @@ if(fork()){
 			damage = 3;
 		}
 		sound_play_gun(sndGruntFire, 0.2, 0.6);
-		weapon_post(5, 30, 10);
+		weapon_post(5, 5, 2);
 		ammo --;
 		var num = 3;
 		if skill_get(mut_stress) num = 1 + (2 * (my_health/maxhealth));

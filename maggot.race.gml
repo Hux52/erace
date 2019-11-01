@@ -39,12 +39,14 @@ snd_dead = sndEnemyDie;
 maxspeed = 2.5;
 erace_maxspeed_orig = maxspeed;
 team = 2;
-maxhealth = 2;
+maxhealth = 6 + GameCont.level * 1 + skill_get(mut_rhino_skin) * 4;
 spr_shadow = shd16;
 spr_shadow_y = 0;
 mask_index = mskMaggot;
 canwalk = 1;
 died = false;
+charge_cool = 0;	// charge cooldown
+charged = 0;
 
 type = "normal"; //types: meat, rad, 
 _to = noone;
@@ -87,6 +89,10 @@ switch(type){
 canswap = 0;
 canpick = 0;
 
+if(maxhealth != 6 + GameCont.level * 1 + skill_get(mut_rhino_skin) * 4){
+	maxhealth = 6 + GameCont.level * 1 + skill_get(mut_rhino_skin) * 4;
+}
+
 //no foodstep
 footstep = 10;
 
@@ -104,18 +110,60 @@ if(canwalk = 1){
 	motion_add(direction, maxspeed / 4);
 }
 
+// SPECIAL: launch
+if(button_pressed(index, "fire") and charge_cool = 0){
+	if(!collision_rectangle(x + 10, y + 8, x - 10, y - 8, Wall, 0, 1)){
+		sound_play_pitchvol(sndChickenThrow, random_range(0.9, 1.1), 2);
+		sound_play_pitchvol(sndFlyFire, random_range(1.9, 2.1), 0.5);
+		charge_cool = 20;
+		direction = gunangle;
+	}
+}
+
+// if charging
+if(charge_cool > 0){
+	canwalk = 0;	// lose control
+	charge_cool -= current_time_scale;
+	spr_walk = sprFiredMaggot;
+	spr_idle = sprFiredMaggot;
+	direction -= angle_difference(direction, gunangle)/12;
+	move_towards_point(x + lengthdir_x((maxspeed + 6) * current_time_scale, direction), y + lengthdir_y((maxspeed + 6) * current_time_scale, direction), (maxspeed + 6) * current_time_scale);
+	sprite_angle = direction;
+	image_xscale = right;
+	image_yscale = right;
+	if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, Wall, 0, 1)){
+		charge_cool = 0;
+	}
+}
+
 // outgoing contact damage
 if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
 	with(instance_nearest(x, y, enemy)){
 		if(sprite_index != spr_hurt){
-			my_health -= 1;
-			sound_play_pitchvol(snd_hurt, random_range(0.9, 1.1), 0.6);
-			sound_play(sndMaggotBite);
-			sprite_index = spr_hurt;
-			direction = other.direction;
+			if(other.charge_cool > 0){
+				projectile_hit_push(self, 5 + (0.5 * GameCont.level), 2);	// bonus charge damage
+			}
+			else{
+				projectile_hit_push(self, 2 + (0.5 * GameCont.level), 2);
+			}
+			sound_play_pitch(sndMaggotBite, random_range(0.9, 1.1));
 		}
 	}
+	charge_cool = 0;
 }
+
+// charge end
+if(charge_cool = 0 and charged != 0){
+	charge_cool = 0;
+	canwalk = 1;
+	spr_walk = sprMaggotIdle;
+	spr_idle = sprMaggotIdle;
+	sound_play_pitchvol(sndFootSlime2, random_range(0.9, 1.1), 2);
+	sprite_angle = 0;
+	image_yscale = 1;
+}
+
+charged = charge_cool;
 
 if(type = "lightning"){
 	if("lightning_timer" not in self){lightning_timer = 0;}

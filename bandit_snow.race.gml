@@ -42,6 +42,9 @@ team = 2;
 maxhealth = 8;
 mask_index = mskPlayer;
 melee = 0;	// can melee or not
+spinning = 0;
+spun = 0;
+spins = 0;
 
 
 #define game_start
@@ -110,6 +113,86 @@ with(RainDrop){
 	instance_destroy();
 }
 instance_delete(RainSplash);
+
+if(button_pressed(index, "spec") and spinning = 0 and spins < 3){
+	spins += 1;
+	sound_play_pitchvol(sndEnemySlash, (spins * 0.2) + random_range(0.7, 0.9), 2);
+	spinning = 8;
+}
+
+if(spinning > 0){
+	spinning -= current_time_scale;
+	// wepangle -= 360 - (current_time_scale * 20 / 20) * 13;
+	canaim = 0
+	reload = 5;
+	gunangle = point_direction(x,y,mouse_x[index],mouse_y[index])
+	script_bind_end_step(step_end, 0);
+}
+
+if(spinning <= 0){
+	if(spun > 0){
+		canaim = 1;
+		reload = 0;
+		sound_play_pitchvol(sndFootPlaMetal4, random_range(2.9, 3.1), 1.5);
+	}
+}
+
+if(spins > 0){
+	wkick = random(spins);
+	if(random(12) < spins){
+		with(instance_create(x, y, Smoke)){
+			direction = random_range(75, 115);
+			image_angle = random(360);
+			image_xscale = 0.5;
+			image_yscale = 0.5;
+			speed = 3;
+		}
+	}
+}
+spun = spinning;
+
+if(gunangle <= 180 and gunangle > 0){
+	script_bind_draw(gun_draw, depth);
+}
+else{
+	script_bind_draw(gun_draw, depth - 1);
+}
+script_bind_draw(gun_outline_draw, depth);
+
+
+
+#define step_end
+with(Player){
+	if("spinning" in self){
+		if(spinning > 0){
+			gunangle = point_direction(x,y,mouse_x[index],mouse_y[index]) + (360 / (8 / spinning)) * right;
+		}
+	}
+}
+instance_destroy();
+
+#define gun_draw
+with(Player){
+	if("spins" in self){
+		// gun
+		draw_sprite_ext(sprBanditGun, 0, x - lengthdir_x(wkick, gunangle + wepangle), y - lengthdir_y(wkick, gunangle + wepangle), 1, right, gunangle + wepangle, merge_color(c_white, c_red, spins * 0.3), 1);
+	}
+}
+instance_destroy();
+
+#define gun_outline_draw
+with(Player){
+	if("spins" in self){
+		// gun outline
+		d3d_set_fog(1, player_get_color(index), 0, 0);
+		draw_sprite_ext(sprBanditGun, -1, x - lengthdir_x(wkick, gunangle + wepangle) - 1, y - lengthdir_y(wkick, gunangle + wepangle), 1, right, gunangle, player_get_color(index), 1);
+		draw_sprite_ext(sprBanditGun, -1, x - lengthdir_x(wkick, gunangle + wepangle) + 1, y - lengthdir_y(wkick, gunangle + wepangle), 1, right, gunangle, player_get_color(index), 1);
+		draw_sprite_ext(sprBanditGun, -1, x - lengthdir_x(wkick, gunangle + wepangle), y - lengthdir_y(wkick, gunangle + wepangle) - 1, 1, right, gunangle, player_get_color(index), 1);
+		draw_sprite_ext(sprBanditGun, -1, x - lengthdir_x(wkick, gunangle + wepangle), y - lengthdir_y(wkick, gunangle + wepangle) + 1, 1, right, gunangle, player_get_color(index), 1);
+		d3d_set_fog(0,c_lime,0,0);
+	}
+}
+instance_destroy();
 
 // StreetLight Hydrant SodaMachine SnowMan
 // sprNewsStand

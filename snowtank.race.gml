@@ -151,6 +151,7 @@ if(is_firing){
 					image_angle = direction;
 				}
 			}
+			view_shake[index] = 4.5;
 			bulletCount -= 1;
 			fireDelay = fireDelayBase;
 		}

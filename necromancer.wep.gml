@@ -186,7 +186,7 @@ return "RISE FROM YOUR GRAVE";
 
 #define weapon_fire
 
-weapon_post(4.5, 0, 0);	// weapon kick and screen shake
+weapon_post(4.5, 4, 2);	// weapon kick and screen shake
 // sound_play_pitchvol(sndPopgun, random_range(0.25,0.35), 0.35);
 sound_play_pitchvol(sndToxicBoltGas, random_range(1.25,1.35), 0.25);
 sound_play_pitchvol(sndSwapCursed, random_range(1.8,1.9), 0.35);

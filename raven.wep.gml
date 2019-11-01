@@ -79,7 +79,7 @@ if(instance_exists(creator)){
 					speed = 6;
 					damage = 2.80 + (0.20 * GameCont.level) + (GameCont.loops * 0.33);
 					with(creator){
-						weapon_post(5, 30, 10);	// weapon kick and screen shake
+						weapon_post(5, 4, 2);	// weapon kick and screen shake
 					}
 					
 				}
