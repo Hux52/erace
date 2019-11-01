@@ -136,6 +136,19 @@ if(charge_cool > 0){
 	}
 }
 
+// charge end
+if(charge_cool = 0 and charged != 0){
+	charge_cool = 0;
+	canwalk = 1;
+	spr_walk = sprMaggotIdle;
+	spr_idle = sprMaggotIdle;
+	sound_play_pitchvol(sndFootSlime2, random_range(0.9, 1.1), 2);
+	sprite_angle = 0;
+	image_yscale = 1;
+}
+
+charged = charge_cool;
+
 // outgoing contact damage
 if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
 	with(instance_nearest(x, y, enemy)){
@@ -151,19 +164,6 @@ if(collision_rectangle(x + 10, y + 8, x - 10, y - 8, enemy, 0, 1)){
 	}
 	charge_cool = 0;
 }
-
-// charge end
-if(charge_cool = 0 and charged != 0){
-	charge_cool = 0;
-	canwalk = 1;
-	spr_walk = sprMaggotIdle;
-	spr_idle = sprMaggotIdle;
-	sound_play_pitchvol(sndFootSlime2, random_range(0.9, 1.1), 2);
-	sprite_angle = 0;
-	image_yscale = 1;
-}
-
-charged = charge_cool;
 
 if(type = "lightning"){
 	if("lightning_timer" not in self){lightning_timer = 0;}
