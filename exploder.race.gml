@@ -90,12 +90,13 @@ if(collision_rectangle(x + 10, y + 10, x - 10, y - 10, enemy, 0, 1) && exploded 
 else if(collision_rectangle(x - 30, y - 10, x + 30, y + 10, enemy, 0, 1)){
 	if(close = 0){
 		sound_play(sndFrogClose);
-		close = 30;
+		close = 20;
 	}
 }
 
 if(button_pressed(index, "spec")){
 	if(exploded <= 0){
+		my_health -= 1;
 		exploder_explode();
 	}
 }
@@ -116,8 +117,7 @@ if(my_health = 0 && dead = false){
 }
 
 #define exploder_explode
-my_health -= 1;
-exploded = 30;
+exploded = 20;
 	sound_play_pitchvol(sndFrogPistol, random_range(0.9, 1.1), 0.5);
 	// 8 bullets
 	for(i = 0; i < 8; i += 1){

@@ -251,6 +251,12 @@ if(my_health = 0 and died = 0){
 		race = "fastrat";
 		my_health = 7;
 	}
+	if(ultra_get("ratking", 1)){
+		with(instance_create(x, y, MeatExplosion)){
+			sprite_index = sprGreenExplosion;
+			team = other.team;
+		}
+	}
 	died = 1;
 }
 
@@ -372,6 +378,14 @@ with(instance_create(x, y, AcidStreak)){
 	speed = 8;
 	direction = other.direction;
 }
+if(ultra_get("ratking", 1)){
+	with(instance_create(x, y, MeatExplosion)){
+		sprite_index = sprGreenExplosion;
+		team = other.team;
+		image_xscale = 0.6;
+		image_yscale = 0.6;
+	}
+}
 sound_play(sndFastRatDie);
 
 // corpse
@@ -457,7 +471,7 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "NOTHING";
+	case 1: return "RATSPLOSION";
 	default: return "";
 }
 
@@ -465,7 +479,7 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "DOES NOTHING";
+	case 1: return "SPAWNED RATS EXPLODE ON DEATH";
 	default: return "";
 }
 

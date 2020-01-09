@@ -1,4 +1,5 @@
 #define init
+global.alt = false;
 
 #define game_start
 
@@ -18,14 +19,46 @@ if(weapon_custom_delay = 0){
 	// swing
 	weapon_post(3, 20, 5);	// weapon kick and screen shake
 	sound_play(sndAssassinAttack);
-	with(instance_create(x + lengthdir_x(8, gunangle), y + lengthdir_y(8, gunangle), Slash)){
-		creator = other;
-		team = creator.team;
-		direction = creator.gunangle;
-		image_angle = direction;
-		friction = 0;
-		damage = 5;
+	if(ultra_get("assassin", 1)){
+		if(global.alt = true){
+			with(instance_create(x + lengthdir_x(8, gunangle), y + lengthdir_y(8, gunangle), EnergySlash)){
+				creator = other;
+				team = creator.team;
+				direction = creator.gunangle;
+				image_angle = direction;
+				friction = 0;
+				damage = 15;
+			}
+		}
+		else{
+			with(instance_create(x + lengthdir_x(6, gunangle), y + lengthdir_y(6, gunangle), LightningSlash)){
+				creator = other;
+				team = creator.team;
+				direction = creator.gunangle;
+				image_angle = direction;
+				friction = 0;
+				damage = 10;
+			}
+		}
 	}
+	else{
+		with(instance_create(x + lengthdir_x(8, gunangle), y + lengthdir_y(8, gunangle), Slash)){
+			creator = other;
+			team = creator.team;
+			direction = creator.gunangle;
+			image_angle = direction;
+			friction = 0;
+			damage = 5;
+		}
+	}
+	
+	if(global.alt = true){
+		global.alt = false;
+	}
+	else{
+		global.alt = true;
+	}
+	
 	if(wepangle = 120){
 		wepangle = 235;
 	}

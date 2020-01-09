@@ -117,22 +117,22 @@ if(ambience > 0){
 // explode on contact- make noise when close
 if(collision_rectangle(x + 10, y + 10, x - 10, y - 10, enemy, 0, 1) && exploded <= 0){
 	exploder_explode();
-	my_health -= 1;
+	//	my_health -= 1;
 }
 else if(collision_rectangle(x + 30, y + 10, x - 30, y - 10, enemy, 0, 1)){
 	if(close = 0){
 		sound_play(sndFrogClose);
-		close = 30;
+		close = 20;
 	}
 }
 
 // noise cooldown to prevent spam
 if(close > 0){
-	close-= current_time_scale;
+	close -= current_time_scale;
 }
 
 if(exploded > 0){
-	exploded-= current_time_scale;
+	exploded -= current_time_scale;
 }
 
 // on death
@@ -143,7 +143,7 @@ if(my_health = 0 && dead = false){
 
 #define exploder_explode
 	instance_create(x,y,ExploderExplo);
-	exploded = 30;
+	exploded = 20;
 	// effect
 	for(i = 0; i < 360; i += 120){
 		with(instance_create(x, y, AcidStreak)){

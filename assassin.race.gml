@@ -3,6 +3,8 @@
 global.newLevel = instance_exists(GenCont);
 global.hasGenCont = false;
 
+global.sprSkull = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAAAcAAAAFCAYAAACJmvbYAAAAAXNSR0IArs4c6QAAAC5JREFUCJljZGBgYPj///9/BjTAyMjIyIhNAgaYGBgYGErEUQVhfLw6GZDtRKcBy1UZCLtpzLUAAAAASUVORK5CYII=", 1, 4, 2);
+
 // character select button
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprAssassinSelect.png", 1, 0, 0);
 
@@ -111,7 +113,7 @@ if(firing = true){
 	canwalk = true;
 }
 
-if(button_pressed(index, "spec")){
+if(button_check(index, "spec")){
 	if("fake" in self){
 		if(!instance_exists(fake[0])){
 			if(spec_load <= 0){
@@ -132,6 +134,37 @@ else{
 		sound_play_pitchvol(sndMenuOptions, 2.5 + random_range(-0.1, 0.1), 0.45);
 		sound_play_pitchvol(sndMeleeFlip, 2 + random_range(-0.1, 0.1), 0.65);
 		want_load = false;
+	}
+}
+
+if(ultra_get("assassin", 1)){
+	with(BoltStick){
+		if("poison" not in self){
+			ApplyPoison(target);
+			poison = true;
+		}
+	}
+}
+
+with(enemy){
+	if(my_health <= 0){
+		var _e = instance_nearest_notme(x, y, enemy);
+		sticks_dir = point_direction(x, y, _e.x, _e.y);
+		with(instances_matching(BoltStick, "target", self)){
+			sticks_dir = other.sticks_dir;
+			with(instance_create(x, y, Splinter)){
+				sprite_index = global.sprShuriken;
+				mask_index = mskBouncerBullet;
+				team = 2;
+				direction = other.sticks_dir;
+				image_angle = direction;
+				friction = 0;
+				speed = 14;
+				damage = 2.80 + (0.20 * GameCont.level) + (GameCont.loops * 0.33);
+				spin = true;
+				script_bind_step(shuriken_step, 0, self);
+			}
+		}
 	}
 }
 
@@ -205,6 +238,9 @@ if(instance_exists(creator)){
 		sound_play_pitchvol(sndBlackSword, 1.5 + (0.6 - (ammo/5)), 0.35);
 		view_shake[creator.index] += 10;
 		with(instance_create(x, y, Splinter)){
+			if(ultra_get("assassin", 1)){
+				image_blend = merge_color(c_white, c_purple, 0.3);
+			}
 			sprite_index = global.sprShuriken;
 			mask_index = mskBouncerBullet;
 			creator = other.creator;
@@ -239,7 +275,22 @@ with(hooh){
 		else{
 			image_angle -= 24 * current_time_scale;
 		}
+		if(ultra_get("assassin", 1)){
+			if(random(1) < 0.2){
+				with(instance_create(x, y, Curse)){
+					//	image_blend = merge_color(c_white, c_purple, 0.3);
+					direction = other.direction + 180 + random_range(-5, 5);
+					speed = 2;
+					image_speed = 0.6;
+					image_index = 4;
+					image_angle = random(360);
+				}
+			}
+		}
 	}
+}
+if(speed = 0){
+	instance_destroy();
 }
 
 #define race_name
@@ -350,3 +401,102 @@ if(instance_exists(toDraw)){
     }
 }
 d3d_set_fog(0,c_lime,0,0);
+
+#define instance_nearest_notme
+var _x = x;
+x -= 10000000;
+var _inst = instance_nearest(_x, y, enemy);
+x = _x;
+return _inst;
+
+
+
+#define ApplyPoison(trg)
+with(trg){
+	if("poison_debuff" not in self){
+		poison_debuff = instance_create(x,y,CustomObject);
+		with(poison_debuff){
+			image_blend_orig = other.image_blend;
+			target = other;
+			active = true;
+			ticks = 2;
+			timer = 15;
+			depth = -2.1;
+			on_step = script_ref_create(poison_debuff_step);
+			on_draw = script_ref_create(poison_debuff_draw);
+		}
+	} else {
+		with(poison_debuff){
+			ticks = min(ticks + 2, 15);
+		}
+	}
+}
+
+#define poison_debuff_step
+if(instance_exists(target)){
+	if(active){
+		if(object_is_ancestor(target.object_index, becomenemy) == false){
+			x = target.x;
+			y = target.y;
+			depth = target.depth - 0.1;
+			if(timer <= 0){
+				dmg = min(ticks,2);
+				
+				snd = choose(sndFrogEggSpawn1,sndFrogEggSpawn2,sndFrogEggSpawn3);
+				projectile_hit_raw(target, dmg, 0);
+				nexthurt = current_frame;
+				sound_play_pitchvol(sndOasisCrabAttack, (1.3 + (ticks/15)), 0.25);
+				sound_play_pitchvol(sndNothingFire, (1.5 + (ticks/15)), 0.1);
+				sound_play_pitchvol(sndNothingSmallball, (0.5 + (ticks/15)), 0.05);
+				sound_play_pitchvol(snd, (1.5 + (ticks/15)), 0.15);
+				sound_play_pitchvol(sndSnowBotHurt, (2.5 + (ticks/15)), 0.15);
+				repeat(ticks){
+					// with(instance_create(x + random_range(-1 * sprite_get_width(target.sprite_index)/2, sprite_get_width(target.sprite_index)/2),y + random_range(-16,16),Curse)){
+					with(instance_create(x,y,Curse)){
+						direction = 90 + random_range(-60,60);
+						image_angle = direction - 90;
+						speed = random_range(4,6);
+						image_index = 4;
+						friction = random_range(0.2,0.6);
+					}
+				}
+				ticks -= 1;
+				timer = min(20 - ticks, 15);
+			} else {
+				timer -= current_time_scale;
+			}
+		}
+	}
+	
+	if(ticks > 0) {
+		active = true;
+	} else {
+		active = false;
+	}
+
+} else {
+	instance_destroy();
+}
+
+#define poison_debuff_draw
+if(instance_exists(target) and active){
+	if(object_is_ancestor(target.object_index, becomenemy) == false){
+		with(target){
+			if("z" not in self){z = 0;}
+			if("right" not in self){right = image_xscale;}
+			d3d_set_fog(true, merge_color(c_purple, c_fuchsia, other.ticks/20), 0, 0);
+			
+			if("drawspr" in self and "drawimg" in self){
+				draw_sprite_ext(drawspr, drawimg, x, y - z, right, image_yscale, image_angle, c_white, 0.25 + other.ticks/40);
+			} else {
+				draw_sprite_ext(sprite_index, image_index, x, y - z, right, image_yscale, image_angle, c_white, 0.25 + other.ticks/40);
+			}
+
+			draw_sprite_ext(global.sprSkull, 1, x, y - z - 16 + 2, 1, 1, 0, c_purple, 1-other.timer/10);
+
+			d3d_set_fog(false, c_purple, 0, 0);
+			
+			draw_sprite_ext(global.sprSkull, 1, x, y - z - 16, 1, 1, 0, c_white, 1-other.timer/10);
+		}
+	}
+}

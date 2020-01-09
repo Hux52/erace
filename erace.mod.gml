@@ -722,12 +722,12 @@ if(selected = 1){
 }else{
 	// out of my sight
 	with(instances_matching(CharSelect, "area", area)){
-		xstart = 999;
+		xstart = 999 * area;
 		ystart = 300;
 	}
 	
 	for(i = 0; i < array_length(my_bg); i++){
-		//version A:
+		// version A:
 		// my_bg[i].x = -1000;
 		// my_bg[i].y = ystart + random_range(100,600)
 
@@ -736,6 +736,15 @@ if(selected = 1){
 		my_bg[i].x = other.xstart-20;
 		my_bg[i].y = -1000;		
 		}
+	}
+}
+
+//	out of my sight - Copy (2)
+with(CharSelect){
+	if("move_start" not in self and "area" in self){
+		xstart = 300 * area * 4;
+		ystart = 300;
+		move_start = true;
 	}
 }
 

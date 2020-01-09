@@ -244,9 +244,18 @@ else{
 #define maggot_destroy
 sound_play_pitchvol(snd_dead, random_range(0.9,1.1), 0.6);
 // create corpse
-with(instance_create(x, y, Corpse)){
+with(instance_create(x, y, CustomObject)){
+	name = "MaggotCorpse";
 	sprite_index = sprMaggotDead;
-	size = 1;
+	image_speed = 0.6;
+	//	image_index = 4;
+	speed = 0;
+	dir = choose(-1, 1);
+	alarm = 45 + irandom(10);
+	on_step = script_ref_create(MaggotCorpse_step);
+	//	image_xscale = 0.8;
+	//	image_yscale = 0.8;
+	//	image_angle = random(360);
 }
 //create explosion
 if(type == "meat"){
@@ -257,6 +266,21 @@ if(type == "meat"){
 			speed = 8;
 		}
 	}
+}
+
+#define MaggotCorpse_step
+if(image_index > 5 and image_speed != 0){
+	image_speed = 0;
+}
+alarm -= current_time_scale;
+if(alarm > 0 and alarm < 45){
+	image_alpha = alarm / 45;
+	image_xscale = alarm / 45;
+	image_yscale = image_xscale;
+	image_angle += 25 * dir;
+}
+else if(alarm <= 0){
+	instance_destroy();
 }
 
 #define maggot_hurt(damage, kb_vel, kb_dir)
