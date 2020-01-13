@@ -1,5 +1,9 @@
 #define init
-global.alt = false;
+global.alt = false; //true = energy, false = lightning
+
+// global.sprPipeBlue = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAAB0AAAAGCAYAAAA/gpVXAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH5AENAiITroPRyQAAAHFJREFUKM9jZGBgYBCc83YeA43A+xThJHQxFsE5b+e9TxFOpJWlgnPeYjiCBcaxlxRGkVQQE6aKpQvRPCQ45y0D3NKDz1FdhM4nF8TrqzEwMDAwPHj1Fm4my/sU4ST0IKAmWIgl6hgZaAzQE+n7FOEkAMN4I0CfxJ0sAAAAAElFTkSuQmCC", 1, 0, 2);
+global.sprPipeBlue = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAAB0AAAAGCAYAAAA/gpVXAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH5AENAjAQT37woAAAAGhJREFUKM9jZGBgYBCc8/Y/A43A+xRhRnQxRsE5b/+/TxGmlZ0MgnPeYjiCBcaxl0S1WEGMOg5ZiOYhwTlv/8MtPfgc1UXofHJBvL4aAwMDA8ODV2/hZjLSIU4xgpuRgcYA3UPvU4QZAf/cJDX0WaJ8AAAAAElFTkSuQmCC", 1, 0, 2);
+global.sprPipeGreen = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAAB0AAAAGCAYAAAA/gpVXAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH5AENAjcYDuTuVQAAAGlJREFUKM9jZGBgYBB8K/2fgUbgvfBTRnQxRsG30v/fCz+llZ0Mgm+lMRzBAuPYSwqjSCqICVPF0oXCt9Ad8Z/mPo3XV2NgYGBgePDqLcPB528ZBN9KMzDSIU4xgpuRgcYA3UPvhZ8yAgD/PSOUI57oqgAAAABJRU5ErkJggg==", 1, 0, 2);
 
 #define game_start
 
@@ -9,18 +13,17 @@ if ("weapon_custom_delay" not in self){
 }
 if(weapon_custom_delay >= 0){
 	weapon_custom_delay-= current_time_scale;
-	// no moving
-	firing = true;
-	speed = 0;
-} else {
-	firing = false;
-}
+} 
 if(weapon_custom_delay = 0){
 	// swing
 	weapon_post(3, 20, 5);	// weapon kick and screen shake
-	sound_play(sndAssassinAttack);
-	if(ultra_get("assassin", 1)){
+	sound_play_pitchvol(sndAssassinAttack, random_range(0.9, 1.1), 0.65);
+	sound_play_pitchvol(sndEnemySlash, random_range(0.9, 1.1), 0.65);
+	if(ultra_get("assassin", 2)){
 		if(global.alt = true){
+			sound_play_pitchvol(sndEliteInspectorFire, random_range(1.7, 1.9), 0.25);
+			sound_play_pitchvol(sndEnergySword, random_range(1.5, 1.7), 0.55);
+			
 			with(instance_create(x + lengthdir_x(8, gunangle), y + lengthdir_y(8, gunangle), EnergySlash)){
 				creator = other;
 				team = creator.team;
@@ -31,6 +34,9 @@ if(weapon_custom_delay = 0){
 			}
 		}
 		else{
+			sound_play_pitchvol(sndLightningHammer, random_range(1.5, 1.7), 0.35);
+			sound_play_pitchvol(sndLightningHit, random_range(1.5, 1.7), 0.85);
+
 			with(instance_create(x + lengthdir_x(6, gunangle), y + lengthdir_y(6, gunangle), LightningSlash)){
 				creator = other;
 				team = creator.team;
@@ -71,7 +77,10 @@ if(weapon_custom_delay = 0){
 return "PIPE";
 
 #define weapon_sprt
-return sprPipe;
+if(ultra_get("assassin", 2)){
+	if(global.alt) return global.sprPipeGreen;
+	else return global.sprPipeBlue;
+} else return sprPipe;
 
 #define weapon_type
 return 0;

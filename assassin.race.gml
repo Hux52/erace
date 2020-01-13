@@ -3,7 +3,9 @@
 global.newLevel = instance_exists(GenCont);
 global.hasGenCont = false;
 
-global.sprSkull = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAAAcAAAAFCAYAAACJmvbYAAAAAXNSR0IArs4c6QAAAC5JREFUCJljZGBgYPj///9/BjTAyMjIyIhNAgaYGBgYGErEUQVhfLw6GZDtRKcBy1UZCLtpzLUAAAAASUVORK5CYII=", 1, 4, 2);
+// global.sprBleed = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAAAsAAAAMCAYAAAC0qUeeAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAB3RJTUUH5AENBAMqeZQwkAAAADdJREFUKM9jYMACVgsI/McmzohPYeiHDyjyTAwkAEZC1iObTp7JuDyFbDpJJtNOMUmhQVKkkAQANK8V2gks4BwAAAAASUVORK5CYII=", 1, 4, 6);
+
+global.sprBleed = sprite_add("sprites/sprBleed.png", 1, 4, 3);
 
 // character select button
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprAssassinSelect.png", 1, 0, 0);
@@ -13,6 +15,8 @@ global.sprPortrait = sprite_add("sprites/portrait/sprPortraitAssassin.png", 1, 1
 global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_Assasin.png", 1, 10, 10);
 
 global.sprShuriken = sprite_add("sprites/sprShuriken.png", 2, 6, 6);
+
+global.sprShurikenRust = sprite_add("sprites/sprShurikenRust.png", 2, 6, 6);
 
 // level start init- MUST GO AT END OF INIT
 while(true){
@@ -54,7 +58,6 @@ maxspeed = 4.5;
 team = 2;
 maxhealth = 7;
 melee = 0;	// can melee or not
-firing = false;
 spec_load = 0;
 want_load = false;
 
@@ -107,12 +110,6 @@ with(instances_matching(Player, "race", "assassin")){
 canswap = 0;
 canpick = 0;
 
-if(firing = true){
-	canwalk = false;
-} else {
-	canwalk = true;
-}
-
 if(button_check(index, "spec")){
 	if("fake" in self){
 		if(!instance_exists(fake[0])){
@@ -139,31 +136,29 @@ else{
 
 if(ultra_get("assassin", 1)){
 	with(BoltStick){
-		if("poison" not in self){
-			ApplyPoison(target);
-			poison = true;
+		if("bleed" not in self){
+			ApplyBleed(target);
+			bleed = true;
 		}
 	}
 }
 
-with(enemy){
-	if(my_health <= 0){
-		var _e = instance_nearest_notme(x, y, enemy);
-		sticks_dir = point_direction(x, y, _e.x, _e.y);
-		with(instances_matching(BoltStick, "target", self)){
-			sticks_dir = other.sticks_dir;
-			with(instance_create(x, y, Splinter)){
-				sprite_index = global.sprShuriken;
-				mask_index = mskBouncerBullet;
-				team = 2;
-				direction = other.sticks_dir;
-				image_angle = direction;
-				friction = 0;
-				speed = 14;
-				damage = 2.80 + (0.20 * GameCont.level) + (GameCont.loops * 0.33);
-				spin = true;
-				script_bind_step(shuriken_step, 0, self);
-			}
+with(instances_matching_lt(enemy, "my_health", 0)){
+	var _e = instance_nearest_notme(x, y, enemy);
+	sticks_dir = point_direction(x, y, _e.x, _e.y);
+	with(instances_matching(BoltStick, "target", self)){
+		sticks_dir = other.sticks_dir;
+		with(instance_create(x, y, Splinter)){
+			sprite_index = choose(global.sprShuriken, global.sprShurikenRust);
+			mask_index = mskBouncerBullet;
+			team = 2;
+			direction = other.sticks_dir;
+			image_angle = direction;
+			friction = 0;
+			speed = 14;
+			damage = 3;
+			spin = true;
+			script_bind_step(shuriken_step, 0, self);
 		}
 	}
 }
@@ -241,7 +236,7 @@ if(instance_exists(creator)){
 			if(ultra_get("assassin", 1)){
 				image_blend = merge_color(c_white, c_purple, 0.3);
 			}
-			sprite_index = global.sprShuriken;
+			sprite_index = choose(global.sprShuriken, global.sprShurikenRust);
 			mask_index = mskBouncerBullet;
 			creator = other.creator;
 			team = creator.team;
@@ -276,21 +271,14 @@ with(hooh){
 			image_angle -= 24 * current_time_scale;
 		}
 		if(ultra_get("assassin", 1)){
-			if(random(1) < 0.2){
-				with(instance_create(x, y, Curse)){
-					//	image_blend = merge_color(c_white, c_purple, 0.3);
-					direction = other.direction + 180 + random_range(-5, 5);
-					speed = 2;
-					image_speed = 0.6;
-					image_index = 4;
-					image_angle = random(360);
-				}
+			with(instances_matching(BoltTrail, "creator", creator)){
+				image_blend = c_red;
 			}
 		}
 	}
-}
-if(speed = 0){
-	instance_destroy();
+	if(speed = 0){
+		instance_delete(other);
+	}
 }
 
 #define race_name
@@ -300,7 +288,7 @@ return "ASSASSIN";
 
 #define race_text
 // return passive and active for character selection screen
-return "@sBE @wHIDDEN#@sTHROW @wSHURIKENS";
+return "@sSTART @wHIDDEN#@sTHROW @wSHURIKENS";
 
 
 #define race_portrait
@@ -359,7 +347,8 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "NOTHING";
+	case 1: return "BLEEDING EDGE";
+	case 2: return "TECHNOLOGY";
 	default: return "";
 }
 
@@ -367,7 +356,8 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "DOES NOTHING";
+	case 1: return "SHURIKENS DEAL @rBLEEDING @sDAMAGE";
+	case 2: return "@gHIGHLY ADVANCED @sPIPE-BASED WEAPONRY";
 	default: return "";
 }
 
@@ -411,28 +401,28 @@ return _inst;
 
 
 
-#define ApplyPoison(trg)
+#define ApplyBleed(trg)
 with(trg){
-	if("poison_debuff" not in self){
-		poison_debuff = instance_create(x,y,CustomObject);
-		with(poison_debuff){
+	if("bleed_debuff" not in self){
+		bleed_debuff = instance_create(x,y,CustomObject);
+		with(bleed_debuff){
 			image_blend_orig = other.image_blend;
 			target = other;
 			active = true;
-			ticks = 2;
-			timer = 15;
+			ticks = 1;
+			timer = 30;
 			depth = -2.1;
-			on_step = script_ref_create(poison_debuff_step);
-			on_draw = script_ref_create(poison_debuff_draw);
+			on_step = script_ref_create(bleed_debuff_step);
+			on_draw = script_ref_create(bleed_debuff_draw);
 		}
 	} else {
-		with(poison_debuff){
-			ticks = min(ticks + 2, 15);
+		with(bleed_debuff){
+			ticks = min(ticks + 1, 15);
 		}
 	}
 }
 
-#define poison_debuff_step
+#define bleed_debuff_step
 if(instance_exists(target)){
 	if(active){
 		if(object_is_ancestor(target.object_index, becomenemy) == false){
@@ -440,63 +430,53 @@ if(instance_exists(target)){
 			y = target.y;
 			depth = target.depth - 0.1;
 			if(timer <= 0){
-				dmg = min(ticks,2);
+				dmg = ceil(ticks/2);
 				
-				snd = choose(sndFrogEggSpawn1,sndFrogEggSpawn2,sndFrogEggSpawn3);
 				projectile_hit_raw(target, dmg, 0);
 				nexthurt = current_frame;
-				sound_play_pitchvol(sndOasisCrabAttack, (1.3 + (ticks/15)), 0.25);
-				sound_play_pitchvol(sndNothingFire, (1.5 + (ticks/15)), 0.1);
-				sound_play_pitchvol(sndNothingSmallball, (0.5 + (ticks/15)), 0.05);
-				sound_play_pitchvol(snd, (1.5 + (ticks/15)), 0.15);
-				sound_play_pitchvol(sndSnowBotHurt, (2.5 + (ticks/15)), 0.15);
-				repeat(ticks){
+				sound_play_pitchvol(sndPlantFire, (1.3 + (ticks/15)), 0.25);
+				sound_play_pitchvol(sndPlantSnare, (2 + (ticks/15)), 0.45);
+				sound_play_pitchvol(sndMenuSword, (2 + (ticks/15)), 0.35);
+				repeat(ceil(ticks/2)){
 					// with(instance_create(x + random_range(-1 * sprite_get_width(target.sprite_index)/2, sprite_get_width(target.sprite_index)/2),y + random_range(-16,16),Curse)){
-					with(instance_create(x,y,Curse)){
-						direction = 90 + random_range(-60,60);
-						image_angle = direction - 90;
-						speed = random_range(4,6);
-						image_index = 4;
+					with(instance_create(x,y,BloodStreak)){
+						direction = 90 + random_range(-90,90);
+						image_angle = direction;
+						speed = random_range(3,4);
+						image_index = 3;
+						image_xscale = 0.5;
+						image_yscale = 0.5;
 						friction = random_range(0.2,0.6);
 					}
 				}
-				ticks -= 1;
-				timer = min(20 - ticks, 15);
+				timer = 30;
 			} else {
 				timer -= current_time_scale;
 			}
 		}
-	}
-	
-	if(ticks > 0) {
-		active = true;
-	} else {
-		active = false;
 	}
 
 } else {
 	instance_destroy();
 }
 
-#define poison_debuff_draw
+#define bleed_debuff_draw
 if(instance_exists(target) and active){
 	if(object_is_ancestor(target.object_index, becomenemy) == false){
 		with(target){
 			if("z" not in self){z = 0;}
 			if("right" not in self){right = image_xscale;}
-			d3d_set_fog(true, merge_color(c_purple, c_fuchsia, other.ticks/20), 0, 0);
+			d3d_set_fog(true, merge_color(c_maroon, c_red, other.ticks/50), 0, 0);
 			
 			if("drawspr" in self and "drawimg" in self){
-				draw_sprite_ext(drawspr, drawimg, x, y - z, right, image_yscale, image_angle, c_white, 0.25 + other.ticks/40);
+				draw_sprite_ext(drawspr, drawimg, x, y - z, right, image_yscale, image_angle, c_white, 0.25 + other.ticks/60);
 			} else {
-				draw_sprite_ext(sprite_index, image_index, x, y - z, right, image_yscale, image_angle, c_white, 0.25 + other.ticks/40);
+				draw_sprite_ext(sprite_index, image_index, x, y - z, right, image_yscale, image_angle, c_white, 0.25 + other.ticks/60);
 			}
 
-			draw_sprite_ext(global.sprSkull, 1, x, y - z - 16 + 2, 1, 1, 0, c_purple, 1-other.timer/10);
-
-			d3d_set_fog(false, c_purple, 0, 0);
+			d3d_set_fog(false, c_red, 0, 0);
 			
-			draw_sprite_ext(global.sprSkull, 1, x, y - z - 16, 1, 1, 0, c_white, 1-other.timer/10);
+			draw_sprite_ext(global.sprBleed, 1, x, y - z - 16, 1, 1, 0, c_red, 1-other.timer/20);
 		}
 	}
 }
