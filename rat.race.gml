@@ -64,7 +64,6 @@ team = 2;
 spr_shadow_y = 0;
 mask_index = mskPlayer;
 previousHealth = maxhealth;
-toxicity = 0;
 
 // vars
 melee = 1;	// can melee or not
@@ -106,27 +105,9 @@ else{
 if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 	with(instance_nearest(x, y, enemy)){
 		if(sprite_index != spr_hurt){
-			if(other.toxicity < 5){
-				other.toxicity += 1;
-			}
-			// trace(other.toxicity);
 			projectile_hit_push(self, other.damage, 4);
 		}
 	}
-}
-
-if(button_pressed(index, "spec") and toxicity > 0){
-	with(instance_create(x, y, CustomProjectile)){
-		name = "plagueFly";
-		creator = other;
-		team = other.team;
-		speed = 3;
-		sprite_index = global.sprPlagueFly;
-		alarm = [180];
-		on_wall = script_ref_create(plaguefly_wall);
-		on_step = script_ref_create(plaguefly_step);
-	}
-	toxicity--;
 }
 
 //chese
@@ -179,34 +160,6 @@ if(u1 == 1){
 	if(my_health < previousHealth){
 		previousHealth = my_health;
 	}
-}
-
-#define plaguefly_wall
-
-
-#define plaguefly_step
-if(fork()){
-	while(instance_exists(self)){
-		if(instance_exists(enemy)){
-			ne = instance_nearest(x, y, enemy);
-			if(ne != noone){
-				if(!collision_line(x, y, ne.x, ne.y, Wall, 1, 1) && ne.my_health > 0){
-					direction -= angle_difference(direction, point_direction(x, y, ne.x, ne.y)) / (point_distance(x, y, ne.x, ne.y) / 16);
-					// image_angle = direction;
-				}
-				else{
-					direction += random_range(-10, 10);
-					speed = 2;
-				}
-			}
-			else{
-				direction += random_range(-10, 10);
-				speed = 2;
-			}
-		}
-
-	}
-	exit;
 }
 
 #define SpawnRat
