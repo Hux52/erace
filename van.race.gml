@@ -64,8 +64,8 @@ spr_idle = mskNone;
 spr_walk = mskNone;
 spr_hurt = global.sprEmptyHurt;
 spr_dead = mskNone;
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds
 snd_hurt = sndVanHurt;

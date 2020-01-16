@@ -29,8 +29,8 @@ spr_idle = sprFreak1Idle;
 spr_walk = sprFreak1Walk;
 spr_hurt = sprFreak1Hurt;
 spr_dead = sprFreak1Dead;
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds
 snd_hurt = sndFreakHurt;

@@ -31,8 +31,8 @@ spr_idle = sprJungleFlyIdle;
 spr_walk = sprJungleFlyWalk;
 spr_hurt = sprJungleFlyHurt;
 spr_dead = sprJungleFlyDead;
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds
 snd_hurt = sndFlyHurt;

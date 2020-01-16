@@ -35,8 +35,8 @@ spr_idle = sprRatkingIdle;
 spr_walk = sprRatkingWalk;
 spr_hurt = sprRatkingHurt;
 spr_dead = sprRatkingDead;
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds
 snd_hurt = sndRatKingHit;

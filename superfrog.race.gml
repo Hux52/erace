@@ -33,8 +33,8 @@ spr_idle = sprSuperFrogIdle;
 spr_walk = sprSuperFrogWalk;
 spr_hurt = sprSuperFrogHurt;
 spr_dead = sprSuperFrogDead;
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds
 snd_dead = sndSuperFrogExplode;

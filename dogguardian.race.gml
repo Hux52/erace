@@ -34,8 +34,8 @@ spr_chrg = sprDogGuardianCharge;
 spr_nort = sprDogGuardianJumpUp;
 spr_sout = sprDogGuardianJumpDown;
 spr_land = sprDogGuardianLand;
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds
 snd_hurt = sndDogGuardianHurt;

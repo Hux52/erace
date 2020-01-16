@@ -27,8 +27,8 @@ spr_idle = sprRadMaggot;
 spr_walk = sprRadMaggot;
 spr_hurt = sprRadMaggotHurt;
 spr_dead = sprRadMaggotDead;
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds
 snd_hurt = sndHitFlesh;

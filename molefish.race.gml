@@ -32,8 +32,8 @@ spr_idle = sprMolefishIdle;
 spr_walk = sprMolefishWalk;
 spr_hurt = sprMolefishHurt;
 spr_dead = sprMolefishDead;
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds
 snd_hurt = sndMolefishHurt;

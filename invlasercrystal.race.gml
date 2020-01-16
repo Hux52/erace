@@ -52,8 +52,8 @@ spr_walk = sprInvLaserCrystalIdle;
 spr_hurt = sprInvLaserCrystalHurt;
 spr_dead = sprInvLaserCrystalDead;
 spr_fire = sprInvLaserCrystalFire; //for when it's firing lol good explanation right
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds
 snd_hurt = global.hitSounds[irandom(array_length(global.hitSounds) - 1)];

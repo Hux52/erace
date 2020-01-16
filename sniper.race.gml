@@ -30,8 +30,8 @@ spr_idle = sprSniperIdle;
 spr_walk = sprSniperWalk;
 spr_hurt = sprSniperHurt;
 spr_dead = sprSniperDead;
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds
 snd_hurt = sndSniperHit;

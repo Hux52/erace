@@ -81,8 +81,8 @@ spr_idle = sprSpiderIdle;
 spr_walk = sprSpiderWalk;
 spr_hurt = sprSpiderHurt;
 spr_dead = sprSpiderDead;
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds
 snd_hurt = sndSpiderHurt;

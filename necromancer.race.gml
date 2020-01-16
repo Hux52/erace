@@ -45,8 +45,8 @@ spr_idle = sprNecromancerIdle;
 spr_walk = sprNecromancerWalk;
 spr_hurt = sprNecromancerHurt;
 spr_dead = sprNecromancerDead;
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds
 snd_hurt = sndNecromancerHurt;

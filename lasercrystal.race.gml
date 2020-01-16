@@ -55,8 +55,8 @@ spr_walk = sprLaserCrystalIdle;
 spr_hurt = sprLaserCrystalHurt;
 spr_dead = sprLaserCrystalDead;
 spr_fire = sprLaserCrystalFire; //for when it's firing lol good explanation right
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds
 snd_hurt = sndLaserCrystalHit;

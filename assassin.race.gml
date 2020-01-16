@@ -46,8 +46,8 @@ spr_idle = sprMeleeIdle;
 spr_walk = sprMeleeWalk;
 spr_hurt = sprMeleeHurt;
 spr_dead = sprMeleeDead;
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds
 snd_hurt = sndAssassinHit;

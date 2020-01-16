@@ -45,8 +45,8 @@ spr_walk = sprTurtleIdle;
 spr_hurt = sprTurtleHurt;
 spr_dead = sprTurtleDead;
 spr_fire = sprTurtleFire;
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds
 snd_hurt = sndTurtleHurt;

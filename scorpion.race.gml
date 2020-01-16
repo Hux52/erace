@@ -28,8 +28,8 @@ spr_idle = sprScorpionIdle;
 spr_walk = sprScorpionWalk;
 spr_hurt = sprScorpionHurt;
 spr_dead = sprScorpionDead;
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds
 snd_hurt = sndScorpionHit;

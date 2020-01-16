@@ -34,8 +34,8 @@ spr_idle = sprGoldTankIdle;
 spr_walk = sprGoldTankWalk;
 spr_hurt = sprGoldTankHurt;
 spr_dead = sprGoldTankDead;
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds
 snd_hurt = sndGoldTankHurt;

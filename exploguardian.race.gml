@@ -28,8 +28,8 @@ spr_idle = sprExploGuardianIdle;
 spr_walk = sprExploGuardianWalk;
 spr_hurt = sprExploGuardianHurt;
 spr_dead = sprExploGuardianDead;
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds
 snd_hurt = sndExploGuardianHurt;

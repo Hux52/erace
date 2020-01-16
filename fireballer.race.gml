@@ -33,8 +33,8 @@ spr_walk = sprFireBallerIdle; //lol
 spr_hurt = sprFireBallerHurt;
 spr_dead = sprFireBallerDead;
 spr_fire = sprFireBallerFire;
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds
 snd_hurt = sndFireballerHurt;

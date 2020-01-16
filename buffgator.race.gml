@@ -15,8 +15,8 @@ spr_idle = sprBuffGatorIdle;
 spr_walk = sprBuffGatorWalk;
 spr_hurt = sprBuffGatorHurt;
 spr_dead = sprBuffGatorDead;
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds
 snd_hurt = sndBuffGatorHit;

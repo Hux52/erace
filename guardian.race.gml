@@ -49,8 +49,8 @@ spr_hurt = sprGuardianHurt;
 spr_dead = sprGuardianDead;
 spr_tele = [sprGuardianDisappear, sprGuardianAppear];	// teleport sprites
 spr_fire = [sprGuardianFire];	// shoot bullets
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds
 snd_hurt = sndGuardianHurt;

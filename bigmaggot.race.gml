@@ -32,8 +32,8 @@ spr_idle = sprBigMaggotIdle;
 spr_walk = sprBigMaggotIdle;
 spr_hurt = sprBigMaggotHurt;
 spr_dead = sprBigMaggotDead;
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds
 snd_hurt = sndBigMaggotHit;

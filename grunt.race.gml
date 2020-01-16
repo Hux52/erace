@@ -24,8 +24,8 @@ spr_idle = sprGruntIdle;
 spr_walk = sprGruntWalk;
 spr_hurt = sprGruntHurt;
 spr_dead = sprGruntDead;
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds- pick from male or female
 if(random(1) < 0.5){

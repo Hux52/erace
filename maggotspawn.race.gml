@@ -43,8 +43,8 @@ spr_idle = sprMSpawnIdle;
 spr_walk = sprMSpawnIdle;
 spr_hurt = sprMSpawnHurt;
 spr_dead = sprMSpawnDead;
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds
 snd_dead = sndMaggotSpawnDie;

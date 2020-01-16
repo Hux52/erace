@@ -15,8 +15,8 @@ spr_idle = sprJungleBanditIdle;
 spr_walk = sprJungleBanditWalk;
 spr_hurt = sprJungleBanditHurt;
 spr_dead = sprJungleBanditDead;
-spr_sit1 = sprMutant15GoSit;
-spr_sit2 = sprMutant15Sit;
+spr_sit1 = spr_idle;
+spr_sit2 = spr_idle;
 
 // sounds
 snd_hurt = sndBanditHit;
