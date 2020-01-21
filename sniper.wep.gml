@@ -12,7 +12,6 @@ if("flash" not in self) flash = 0;
 if("rl" not in self) rl = 0;
 
 script_bind_draw("laser_draw", depth);
-script_bind_draw("flash_draw", depth - 1);
 
 if(rl > 0) rl -= current_time_scale;
 
@@ -117,19 +116,6 @@ with(Player){
 	draw_set_alpha(oldAlpha);
 	draw_set_color(oldColor);
 }
-
-instance_destroy();
-
-#define flash_draw
-// with(Player){
-// 	if(flash > 0){
-// 		d3d_set_fog(true, c_white, 0, 0);
-// 		draw_sprite(sprite_index, image_index, x, y);
-// 		d3d_set_fog(false,c_white,0,0);
-// 	}
-// }
-
-instance_destroy();
 
 #define weapon_name
 return "SNIPER RIFLE";
