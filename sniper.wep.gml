@@ -116,6 +116,7 @@ with(Player){
 	draw_set_color(oldColor);
 }
 
+
 instance_destroy();
 
 #define weapon_name
