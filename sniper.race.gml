@@ -39,7 +39,7 @@ snd_hurt = sndSniperHit;
 //snd_dead = doesn't have one
 
 // stats
-maxspeed_base = 1.1;
+maxspeed_base = 1.7;
 maxspeed = maxspeed_base;
 team = 2;
 maxhealth = 6;
