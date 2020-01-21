@@ -4,6 +4,7 @@
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprSniperSelect.png", 1, 0,0);
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitSniper.png", 1, 0, 200);
 global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_Sniper.png", 1, 10, 10);
+global.sprArrow = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH5AEQFCYA9IkFkwAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAH0lEQVQI12P4/////3Xr1v3/////fwZ0QLok8YL4AABnlzcGWUuLLwAAAABJRU5ErkJggg==", 1, 3,3);
 
 // character select sounds
 global.sndSelect = sound_add("sounds/sndSniperSelect.ogg");
@@ -44,10 +45,16 @@ team = 2;
 maxhealth = 6;
 hasDied = false;
 firing = false;
-cooldown_base = 45;
+cooldown_base = 10;
 cooldown = 0;
 dash_speed = 7;
 isDashing = false;
+dashes = 3;
+maxDashes = 3;
+dashRecharge = 0;
+dashRechargeFull = 30;
+dashHide = 3;
+dash_queued = false;
 
 // vars
 melee = 0;	// can melee or not
@@ -74,40 +81,78 @@ if (cooldown > 0){
 
 if(firing == true){
 	canwalk = false;
+	canspec = false;
+} 
+
+if(cooldown < cooldown_base - 8){ //can't walk for 8 frames
+	isDashing = false;
 } else {
-	if(cooldown < cooldown_base - 7){ //can't walk for 7 frames
-		isDashing = false;
-		canwalk = true;
-	} else {
-		isDashing = true;
-		canwalk = false;
-	}
+	isDashing = true;
 }
 
-//fixing speed
-if(isDashing){
-	maxspeed = dash_speed;
+
+if(button_pressed(index, "spec") && dashes >= 1 && cooldown <= 4 && firing == false){
+	dash_queued = true;
 }
 
 //dash event
-if(button_pressed(index, "spec")){
-	if(canspec = true && firing = false){
-		isDashing = true;
-		instance_create(x,y,Dust);
-		maxspeed = dash_speed;
+if(dash_queued && canspec){
+	isDashing = true;
+	instance_create(x,y,Dust);
+	maxspeed = dash_speed;
+	if(speed > 0){
 		motion_add(direction, dash_speed);
-		cooldown = cooldown_base;
-		sound_play(sndAssassinGetUp);
+	} else {
+		motion_add(gunangle, dash_speed);
 	}
+	cooldown = cooldown_base;
+	sound_play_pitchvol(sndAssassinGetUp, 1.2 + (dashes * 0.1),0.15);
+	sound_play_pitchvol(sndSnowBotSlideStart, 1.8 + (dashes * 0.3),0.55);
+	sound_play_pitchvol(sndEnemySlash, 1.5 + (dashes * 0.4),0.85);
+
+	dashes--;
+	dash_queued = false;
 }
-if (reload > 30 && wep == "sniper"){
-	firing = true;
-} else {firing = false;}
 
 if (my_health == 0 && hasDied == false){
 	sound_play(sndExplosion);
 	instance_create(x,y,Explosion);
 	hasDied = true;
+}
+
+//fixing speed
+if(isDashing){
+	canwalk = false;
+	maxspeed = dash_speed;
+	
+	with(instance_create(x,y,BoltTrail)){
+		image_xscale = other.speed;
+		image_yscale = 1.5;
+		image_angle = other.direction;
+		image_blend = merge_color(player_get_color(other.index), c_white, 0);
+	}
+	with(instance_create(x,y,BoltTrail)){
+		image_xscale = other.speed;
+		image_yscale = 2;
+		image_angle = other.direction;
+		image_blend = merge_color(player_get_color(other.index), c_black, 0.3);
+	}
+} else {
+	if(firing == false){
+		canwalk = true;
+	}
+	maxspeed = maxspeed_base;
+}
+if(dashes < maxDashes){
+	dashHide = 3;
+	if(dashRecharge >= dashRechargeFull){
+		dashRecharge = 0;
+		dashes++;
+	} else {
+		dashRecharge += current_time_scale;
+	}
+} else {
+	dashHide -= 1/room_speed;
 }
 
 if (ultra_get("sniper", 1) == 1){
@@ -124,6 +169,11 @@ else{
 	if(wep != "sniper"){
 		wep = "sniper";
 	}
+}
+
+#define draw
+for(i = 0; i < dashes; i++){
+	draw_sprite_ext(global.sprArrow, 0, x - 10 + (i * 4), y - 10 + (2 * i), 1, 1, 0, c_white, dashHide);
 }
 
 #define race_name
