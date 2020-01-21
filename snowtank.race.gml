@@ -182,21 +182,9 @@ if(my_health < 1){
 
 #define snowtank_draw
 with(Player){
-	laser_x = x;
-	laser_y = y;
-	_n = 0;
-
 	if (is_firing or is_charging){
-		p_dir = point_direction(x,y,mouse_x[index],mouse_y[index]);
-		while(instance_position(x + lengthdir_x(_n,p_dir), y + lengthdir_y(_n,p_dir), Wall) == noone){
-			_n++;
-			laser_x = x + lengthdir_x(_n,p_dir);
-			laser_y = y + lengthdir_y(_n,p_dir);
-			if(_n > 200){
-				break;
-			}
-		}
-		draw_line_width_color(x,y,laser_x,laser_y,1,global.laser_color,global.laser_color);
+		draw_set_color(c_red);
+		draw_lasersight(x, y, d, 900, 1);
 	}
 }
 instance_destroy();
@@ -299,3 +287,39 @@ switch(argument0){
 #define race_ttip
 // return character-specific tooltips
 return choose("MOW THEM DOWN");
+
+#define draw_lasersight(_x, _y, _dir, _maxDistance, _width)
+    var _sx = _x,
+        _sy = _y,
+        _lx = _sx,
+        _ly = _ly,
+        _md = _maxDistance,
+        d = _md,
+        m = 0; // Minor hitscan increment distance
+
+    while(d > 0){
+         // Major Hitscan Mode (Start at max, go back until no collision line):
+        if(m <= 0){
+            _lx = _sx + lengthdir_x(d, _dir);
+            _ly = _sy + lengthdir_y(d, _dir);
+            d -= sqrt(_md);
+
+             // Enter minor hitscan mode:
+            if(!collision_line(_sx, _sy, _lx, _ly, Wall, false, false)){
+                m = 2;
+                d = sqrt(_md);
+            }
+        }
+
+         // Minor Hitscan Mode (Move until collision):
+        else{
+            if(position_meeting(_lx, _ly, Wall)) break;
+            _lx += lengthdir_x(m, _dir);
+            _ly += lengthdir_y(m, _dir);
+            d -= m;
+        }
+    }
+
+    draw_line_width(_sx, _sy, _lx, _ly, _width);
+
+return [_lx, _ly];
