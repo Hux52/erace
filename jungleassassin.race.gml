@@ -114,7 +114,7 @@ if(button_check(index, "spec")){
 			if(spec_load <= 0){
 				leaf_burst();
 				want_load = true;
-				spec_load = 20;
+				spec_load = 15;
 			}
 		}
 	}
@@ -131,6 +131,10 @@ else{
 
 if(my_health < lasthealth){
 	spawnLeaf((lasthealth - my_health) * 5);
+	lasthealth = my_health;
+}
+
+if(my_health > lasthealth){
 	lasthealth = my_health;
 }
 
@@ -208,10 +212,10 @@ if(instance_exists(creator)){
 	y = creator.y + lengthdir_y(5, creator.gunangle);
 	// fire bullets
 	if(alarm[0] <= 0){	// 2 bullets
-		sound_play_pitchvol(sndLuckyShotProc, 1.7 + (0.6 - (ammo/5)), 0.9);
-		sound_play_pitchvol(sndSwapSword, 2.5 - (0.2 - (ammo/5)), 0.45);
-		sound_play_pitchvol(sndHitPlant, 1.5 + (0.6 - (ammo/5)), 0.35);
-		sound_play_pitchvol(sndJungleAssassinAttack, 3 + (0.2 - (ammo/5)), 0.45);
+		sound_play_pitchvol(sndLuckyShotProc, 2 + random_range(-0.2, 0.2), 0.9);
+		sound_play_pitchvol(sndSwapSword, 2.6 + random_range(-0.2, 0.2), 0.45);
+		sound_play_pitchvol(sndHitPlant, 1.8 + random_range(-0.2, 0.2), 0.35);
+		sound_play_pitchvol(sndJungleAssassinAttack, 3 + random_range(-0.2, 0.2), 0.25);
 		view_shake[creator.index] += 6;
 		with(instance_create(x, y, CustomProjectile)){
 			sprite_index = global.sprLeaf;
@@ -223,7 +227,7 @@ if(instance_exists(creator)){
 			image_angle = direction;
 			image_yscale = 0.75;
 			friction = 0;
-			speed = 9;
+			speed = 12;
 			damage = 0;
 			on_hit = script_ref_create(leaf_hit);
 			on_wall = script_ref_create(leaf_wall);
