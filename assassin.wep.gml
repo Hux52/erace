@@ -17,7 +17,11 @@ if(weapon_custom_delay >= 0){
 if(weapon_custom_delay = 0){
 	// swing
 	weapon_post(3, 20, 5);	// weapon kick and screen shake
-	sound_play_pitchvol(sndAssassinAttack, random_range(0.9, 1.1), 0.65);
+	if(race == "jungleassassin"){
+		sound_play_pitchvol(sndJungleAssassinAttack, random_range(0.9, 1.1), 0.65);
+	} else {
+		sound_play_pitchvol(sndAssassinAttack, random_range(0.9, 1.1), 0.65);
+	}
 	sound_play_pitchvol(sndEnemySlash, random_range(0.9, 1.1), 0.65);
 	if(ultra_get("assassin", 2)){
 		if(global.alt = true){

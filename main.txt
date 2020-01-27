@@ -66,6 +66,8 @@ secret
 
 /loadrace turtle
 /loadrace junglefly
+/loadrace bandit_jungle
+/loadrace jungleassassin
 
 /loadrace molefish
 /loadrace molesarge
@@ -74,7 +76,6 @@ secret
 
 /loadrace maggot
 /loadrace radmaggot
-/loadrace bandit_jungle
 /loadrace goldscorpion
 /loadrace fastrat
 /loadrace superfrog

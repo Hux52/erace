@@ -1,6 +1,6 @@
 #define init
 // character select button
-global.sprMenuButton = sprite_add_base64("iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACOSURBVDhPYwCC/9jw231BRGGgWgoNmNua9B8bJtYgyg24cHTLf3yYkEGUG4DN+dgwLoMoNwCbs5Ex7Q2ASaDjPxaoGCZOPwNIwFgFice2GvL/QTjfw5IkTD0DsEkSgzFcgAtj0wzC1DMAmyQ+DDOYegbA0jxMApsmEEbXCE+JFBsAy23oGKYBl0YIDvoPABoXHHo1+L+9AAAAAElFTkSuQmCCAAAAAAAAAA==", 1, 0, 0);
+global.sprMenuButton = sprite_add("sprites/selectIcon/sprBanditSelect.png", 1, 0, 0);
 
 global.sprPortrait = sprite_add("/sprites/portrait/sprPortraitJungleBandit.png", 1, 22, 210);
 
@@ -56,7 +56,7 @@ return "HAS BANDIT RIFLE";
 
 #define race_portrait
 // return portrait for character selection screen and pause menu
-return sprBigPortraitChickenHeadless;
+return global.sprPortrait;
 
 
 #define race_mapicon
@@ -71,12 +71,12 @@ return "bandit_popgun";
 
 #define race_avail
 // return if race is unlocked
-return 0;
+return 1;
 
 
 #define race_menu_button
 // return race menu button icon
-return mskNone;
+sprite_index = global.sprMenuButton;
 
 #define race_skins
 // return number of skins the race has

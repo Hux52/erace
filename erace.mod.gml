@@ -25,7 +25,7 @@ global.races = [
 					[ "bandit_snow", "snowbot", "wolf","snowtank"],
 					["freak", "explofreak", "rhinofreak", "turret", "necromancer"],
 					["guardian", "exploguardian", "dogguardian"],
-					["molefish", "molesarge", "fireballer", "jock", "turtle", "junglefly", "bonefish", "crab", "grunt", "inspector", "shielder", "van"]
+					["molefish", "molesarge", "fireballer", "jock", "turtle", "bandit_jungle", "jungleassassin", "junglefly", "bonefish", "crab", "grunt", "inspector", "shielder", "van"]
 				];	// please add races in the order and area you want them to be displayed
 
 global.player_races = ["unknown", "unknown", "unknown", "unknown"];
@@ -37,7 +37,7 @@ global.race_names = ["maggotspawn", MaggotSpawn, "bigmaggot", BigMaggot, "bandit
 					Wolf, "bandit_snow", Bandit, "snowtank", SnowTank, "freak", Freak, "explofreak", 
 					ExploFreak, "rhinofreak", RhinoFreak, "turret", Turret,	"necromancer", Necromancer,
 					 "guardian", Guardian, "exploguardian", ExploGuardian, "dogguardian", DogGuardian,
-					"turtle", Turtle, "junglefly", JungleFly, "bonefish", BoneFish, "crab", Crab, "molefish", Molefish, "molesarge", Molesarge, "jock", Jock, "fireballer", 
+					"turtle", Turtle, "bandit_jungle", JungleBandit, "jungleassassin", JungleAssassin, "junglefly", JungleFly, "bonefish", BoneFish, "crab", Crab, "molefish", Molefish, "molesarge", Molesarge, "jock", Jock, "fireballer", 
 					FireBaller, "grunt", Grunt, "inspector", Inspector, "shielder", Shielder, "van", Van];	// piss off
 
 global.deselect_color = make_color_hsv(0, 0, 80);	// dimmnessss :)
@@ -112,6 +112,11 @@ with(instances_matching_ne(Player, "wantrace", null)){
 	image_blend = c_white; //lol
 	race = wantrace;
 }
+
+with(instances_matching_lt(Player, "maxspeed", 4)){
+	erace_maxspeed_orig = maxspeed;
+}
+
 wait(2);
 with(ChestOpen){
 	instance_destroy();
@@ -335,16 +340,16 @@ with(Player){
 	}		
 				
 	if(array_length(instances_matching(projectile, "creator", self)) > 0){
-		erace_maxspeed_bonus = -0.75;
+		erace_maxspeed_bonus = -2;
 	}
 	if(button_check(index,"fire") or button_check(index,"spec")){
-		erace_maxspeed_bonus = -0.75;
+		erace_maxspeed_bonus = -2;
 	}
 	if(my_health > erace_prevh){
 		erace_prevh = my_health;	
 	}
 	if(my_health < erace_prevh){
-		erace_maxspeed_bonus = -0.75;
+		erace_maxspeed_bonus = -2;
 		erace_prevh = my_health;
 	}
 
@@ -355,9 +360,8 @@ with(Player){
 		skill_set(mut_boiling_veins, 1);
 		skill_set_active("fake_veins", 0);
 		if(instance_exists(enemy)){
-			espeed_nearest = instance_nearest(x,y,enemy);
 			if(collision_rectangle(x + 14, y + 12, x - 14, y - 12, enemy, 0, 1)){
-				erace_maxspeed_bonus = -0.75;
+				erace_maxspeed_bonus = -2;
 			}
 		}
 	}
