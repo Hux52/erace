@@ -3,7 +3,6 @@ global.sprMenuButton = sprite_add("sprites/selectIcon/sprRatSelect.png", 1, 0, 0
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitRat.png",1 , 15, 185);
 global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_Rat.png", 1, 10, 10);
 global.sprCheese = sprite_add("sprites/sprCheese.png", 7, 5, 5);
-global.sprPlagueFly = sprite_add("sprites/sprPlagueFly.png", 4, 10, 10);
 
 // for level start
 global.newLevel = instance_exists(GenCont);
