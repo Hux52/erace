@@ -17,9 +17,6 @@ if(weapon_custom_delay >= 0){
 	firing = true;
 }
 if(weapon_custom_delay = 0){
-
-firing = false;
-canwalk = 1;
 weapon_post(5, 30, 10);
 sound_play(sndSniperFire);
 with(instance_create(x + lengthdir_x(8, gunangle), y + lengthdir_y(8, gunangle), CustomHitme)){
@@ -46,6 +43,11 @@ with(instance_create(x + lengthdir_x(8, gunangle), y + lengthdir_y(8, gunangle),
 
 }
 
+
+if(weapon_custom_delay <= 0){
+	firing = false;
+	canwalk = 1;
+}
 
 #define weapon_name
 return "SUPER SNIPER CANNON";
