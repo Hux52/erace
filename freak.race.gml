@@ -4,6 +4,10 @@ global.sprPortrait = sprite_add("sprites/portrait/sprPortraitFreak.png",1 , 15, 
 
 global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_Freak.png", 1, 10, 10);
 
+
+global.sprEyeBig = sprite_add("sprites/sprEyeBig.png", 1, 2, 2);
+global.sprEyeSmall = sprite_add("sprites/sprEyeSmall.png", 1, 2, 2);
+
 // character select sounds
 global.sndSelect = sound_add("sounds/sndFreakSelect.ogg");
 var _race = [];
@@ -39,12 +43,15 @@ snd_dead = sndFreakDead;
 // stats
 maxspeed = 3.6;
 team = 2;
-maxhealth = 7;
+maxhealth = 10;
 spr_shadow_y = 0;
 
 // vars
 melee = 1;	// can melee or not
 melee_damage = 3;
+
+p_ammo = 3;
+p_load = 0;
 
 #define game_start
 // executed after picking race and starting for each player picking this race
@@ -67,6 +74,126 @@ else{
 	right = 1;
 }
 
+if(button_pressed(index, "fire") or button_pressed(index, "spec")){
+	if(p_ammo > 0){
+		if(p_ammo >= 3){
+			if(ultra_get("freak", 1) = true){
+				sound_play_pitchvol(sndFreakMelee, random_range(0.9,1.1), 0.6);
+				wobble_sound = sound_play(sndPlasmaBigUpg);
+				with(instance_create(x, y, PlasmaBall)){
+					creator = other;
+					team = creator.team;
+					damage = 6;
+					force = 1;
+					speed = 8;
+					direction = creator.gunangle;
+					image_angle = direction;
+					image_xscale = 1.4;
+					image_yscale = 1.4;
+					script_bind_step("plasma_step", 1, self);
+				}
+				p_load = 55;
+			}
+			else{
+				sound_play_pitchvol(sndFreakMelee, random_range(0.9,1.1), 0.6);
+				wobble_sound = sound_play(sndPlasmaUpg);
+				with(instance_create(x, y, PlasmaBall)){
+					creator = other;
+					team = creator.team;
+					damage = 2;
+					force = 1;
+					speed = 10;
+					direction = creator.gunangle;
+					image_angle = direction;
+					image_xscale = 0.9;
+					image_yscale = 0.9;
+					script_bind_step("plasma_step", 1, self);
+				}
+				p_load = 65;
+			}
+		}
+		else{
+			if(ultra_get("freak", 1) = true){
+				sound_play_pitchvol(sndFreakMelee, random_range(0.9,1.1), 0.6);
+				wobble_sound = sound_play(sndPlasmaUpg);
+				with(instance_create(x, y, PlasmaBall)){
+					creator = other;
+					team = creator.team;
+					damage = 2;
+					force = 1;
+					speed = 8;
+					direction = creator.gunangle;
+					image_angle = direction;
+					image_xscale = 0.9;
+					image_yscale = 0.9;
+					script_bind_step("plasma_step", 1, self);
+				}
+				p_load = 30;
+			}
+			else{
+				sound_play_pitchvol(sndFreakMelee, random_range(0.9,1.1), 0.6);
+				wobble_sound = sound_play(sndPlasma);
+				with(instance_create(x, y, PlasmaBall)){
+					creator = other;
+					team = creator.team;
+					damage = 1;
+					force = 0.5;
+					speed = 7;
+					direction = creator.gunangle;
+					image_angle = direction;
+					image_xscale = 0.6;
+					image_yscale = 0.6;
+					script_bind_step("plasma_step", 1, self);
+				}
+				p_load = 30;
+			}
+		}
+		p_ammo -= 1;
+	}
+}
+
+if(p_ammo < 3 and p_load <= 0){
+	p_ammo += 1;
+	if(p_ammo = 2){
+		p_load = 30;
+	}
+	else{
+		p_load = 20;
+	}
+	if(p_ammo >= 3){
+		sound_play_pitchvol(sndPlasmaReloadUpg, random_range(0.8, 1), 0.6);
+		with(instance_create(x, y, LaserCannon)){
+			creator = other;
+			team = creator.team;
+			damage = 6;
+			force = 1;
+			ammo = 5;
+			direction = creator.gunangle;
+			image_angle = direction;
+		}
+	}
+	else{
+		sound_play_pitchvol(sndPlasmaReload, random_range(1.2, 1.3), 0.5);
+		with(instance_create(x, y, LaserCannon)){
+			creator = other;
+			team = creator.team;
+			damage = 6;
+			force = 1;
+			ammo = 1;
+			direction = creator.gunangle;
+			image_angle = direction;
+		}
+	}
+}
+
+if(p_load > 0){
+	p_load -= current_time_scale;
+}
+
+if("wobble_sound" in self){
+	sound_pitch(wobble_sound, random_range(0.5, 1));
+}
+
 // outgoing contact damage
 with(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 	if(sprite_index != spr_hurt){
@@ -75,6 +202,44 @@ with(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 	}
 }
 
+
+#define plasma_step(hooh)
+if(instance_exists(hooh)){
+	with(hooh){
+		image_xscale -= 0.01 * current_time_scale;
+		image_yscale = image_xscale;
+		x += sin(current_frame) * 4;
+		y += sin(current_frame) * 4;
+		if(image_xscale <= 0){
+			instance_destroy();
+		}
+	}
+}
+else{
+	instance_destroy();
+}
+
+#define draw
+if(p_ammo >= 1){
+	draw_sprite_ext(global.sprEyeSmall, 0, x + 9, y - 14, -1, 1, 0, c_white, 1);
+}
+else{
+	draw_sprite_ext(global.sprEyeSmall, 0, x + 9, y - 14, -1, 1, 0, c_white, 0.7);
+}
+
+if(p_ammo >= 2){
+	draw_sprite(global.sprEyeSmall, 0, x - 8, y - 14);
+}
+else{
+	draw_sprite_ext(global.sprEyeSmall, 0, x - 8, y - 14, 1, 1, 0, c_white, 0.7);
+}
+
+if(p_ammo >= 3){
+	draw_sprite(global.sprEyeBig, 0, x, y - 18);
+}
+else{
+	draw_sprite_ext(global.sprEyeBig, 0, x, y - 18, 1, 1, 0, c_white, 0.7);
+}
 
 #define race_name
 // return race name for character select and various menus
@@ -142,7 +307,7 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "NOTHING";
+	case 1: return "FREAK 3000";
 	default: return "";
 }
 
@@ -150,7 +315,7 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "DOES NOTHING";
+	case 1: return "ENERGY SYSTEMS SET TO OVERDRIVE";
 	default: return "";
 }
 
