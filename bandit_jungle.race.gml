@@ -1,6 +1,6 @@
 #define init
 // character select button
-global.sprMenuButton = sprite_add("sprites/selectIcon/sprBanditSelect.png", 1, 0, 0);
+global.sprMenuButton = sprite_add("sprites/selectIcon/sprJungleBanditSelect.png", 1, 0, 0);
 
 global.sprPortrait = sprite_add("/sprites/portrait/sprPortraitJungleBandit.png", 1, 22, 210);
 
