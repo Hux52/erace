@@ -3,6 +3,8 @@ global.sprMenuButton = sprite_add("sprites/selectIcon/sprRhinoFreakSelect.png", 
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitRhinoFreak.png",1 , 0, 205);
 global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_Rhinofreak.png", 1, 10, 10);
 
+global.sprFistSlash = sprite_add("sprites/sprFistSlash.png", 3, 18, 18);
+
 // character select sounds
 global.sndSelect = sound_add("sounds/sndRhinoFreakSelect.ogg");
 var _race = [];
@@ -47,6 +49,8 @@ spr_shadow_y = 6;
 melee = 1;	// can melee or not
 melee_damage = 3;
 
+arm_swap = 1;
+
 #define game_start
 // executed after picking race and starting for each player picking this race
 // player-specific global variable init
@@ -68,6 +72,26 @@ else{
 	right = 1;
 }
 
+
+if(button_pressed(index, "fire") or button_pressed(index, "spec")){
+	sound_play(sndHammer);
+	sound_play_pitchvol(sndRhinoFreakMelee,random_range(0.7,0.8),0.7);
+	with(instance_create(x + lengthdir_x(30, gunangle), y + lengthdir_y(30, gunangle), Slash)){
+		creator = other;
+		team = creator.team;
+		dir = creator.gunangle;
+		arm_swap = creator.arm_swap;
+		direction = dir;
+		image_angle = direction;
+		sprite_index = global.sprFistSlash;
+		mask_index = sprite_index;
+		image_xscale = arm_swap * -1;
+		image_yscale = arm_swap * -1;
+		script_bind_step("slash_step", 1, self);
+	}
+	arm_swap *= -1;
+}
+
 // outgoing contact damage
 with(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 	if(sprite_index != spr_hurt){
@@ -86,6 +110,25 @@ if(instance_exists(en)){
 }
 
 //if(x != xprevious);
+
+#define slash_step(hooh)
+if(instance_exists(hooh)){
+	with(hooh){
+		if(instance_exists(creator)){
+			dir += 10 * current_time_scale * arm_swap;
+			x = creator.x + lengthdir_x(30, dir);
+			y = creator.y + lengthdir_y(30, dir);
+			image_angle = dir;
+		}
+		else{
+			instance_destroy();
+		}
+	}
+}
+else{
+	instance_destroy();
+}
+
 
 #define race_name
 // return race name for character select and various menus
