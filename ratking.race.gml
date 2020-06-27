@@ -127,6 +127,30 @@ if(spawn_cool > 0){
 					script = script_ref_create_ext("mod", "erace", "draw_outline", other.playerColor, other);
 				}
 			}
+			// acid bullets
+			if(ultra_get("ratking", 2)){
+				sound_play_pitchvol(choose(sndRatkingCharge, sndRatkingChargeEnd), random_range(0.9, 1.1), 1);
+				repeat(3){
+					with(instance_create(x, y, UltraShell)){
+						creator = other;
+						team = creator.team;
+						direction = creator.gunangle + (random(30) * choose(1, -1));
+						image_angle = direction;
+						speed = 12;
+						friction = 0.5;
+					}
+				}
+				repeat(choose(1, 2)){
+					with(instance_create(x, y, ToxicGas)){
+						creator = other;
+						team = creator.team;
+						direction = creator.gunangle + (random(30) * choose(1, -1));
+						image_angle = direction;
+						speed = 8;
+						friction = 0.2;
+					}
+				}
+			}
 		}
 		// no control while spawning
 		canwalk = 0;
@@ -378,6 +402,7 @@ with(instance_create(x, y, AcidStreak)){
 	speed = 8;
 	direction = other.direction;
 }
+// ultra explo
 if(ultra_get("ratking", 1)){
 	with(instance_create(x, y, MeatExplosion)){
 		sprite_index = sprGreenExplosion;
@@ -386,6 +411,13 @@ if(ultra_get("ratking", 1)){
 		image_yscale = 0.6;
 	}
 }
+
+// small HP drop chance
+if(random(1) < 0.2){
+	instance_create(x, y, HPPickup);
+}
+
+// death sound
 sound_play(sndFastRatDie);
 
 // corpse
@@ -472,6 +504,7 @@ return "DOES NOTHING";
 // determines how many ultras are shown
 switch(argument0){
 	case 1: return "RATSPLOSION";
+	case 2: return "ACID REFLUX";
 	default: return "";
 }
 
@@ -480,6 +513,7 @@ switch(argument0){
 // recieves ultra mutation index and returns description
 switch(argument0){
 	case 1: return "SPAWNED RATS EXPLODE ON DEATH";
+	case 2: return "FIRE PROJECTILE VOMIT WITH RATS";
 	default: return "";
 }
 
