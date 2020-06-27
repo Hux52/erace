@@ -4,7 +4,7 @@ global.newLevel = instance_exists(GenCont);
 global.hasGenCont = false;
 
 // character select button
-global.sprMenuButton = sprite_add("sprites/selectIcon/sprAssassinSelect.png", 1, 0, 0);
+global.sprMenuButton = sprite_add("sprites/selectIcon/sprJungleAssassinSelect.png", 1, 0, 0);
 
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitJungleAssassin.png", 1, 15, 198);
 
@@ -398,21 +398,28 @@ with(trg){
 			target = other;
 			active = true;
 			ticks = 1;
-			maxticks = 10;
+			maxticks = 5;
 			timer = 120;
 			depth = -2.1;
+			dmg = 0;
 			leaves = array_create(0);
 			on_step = script_ref_create(leaf_debuff_step);
 			on_draw = script_ref_create(leaf_debuff_draw);
 		}
 	} else {
 		with(leaf_debuff){
+			timer = 120;
 			if(ticks < maxticks){
-				if(ticks == 0) timer = 120;
 				ticks++;
 			} else {
-				timer = 90;
-				ticks = maxticks;
+				dmg = max(2, target.my_health * 0.02); //2 damage or 2% of current hp
+				projectile_hit(target, dmg);
+				nexthurt = current_frame;
+				sub = ticks;
+
+				sound_play_pitchvol(sndJungleAssassinHurt, 2, 0.3 + ticks/25);
+				sound_play_pitchvol(sndJungleAssassinWake, 2.6, ticks/10);
+				target.lasthealth = target.my_health;
 			}
 		}
 	}
@@ -425,13 +432,13 @@ if(instance_exists(target)){
 			x = target.x;
 			y = target.y;
 			depth = target.depth - 0.1;
-			dmg = ticks;
+			dmg = max(ticks, target.my_health * ticks * 0.01); 
+			//does x damage or x% of current health, whichever is greatest
 
-			if(target.my_health < target.lasthealth){
-				//taken damage
+			if(target.my_health < target.lasthealth){ //on taking damage
 				target.my_health -= dmg;
-				sub = ceil(ticks/2);
-				ticks -= sub;
+				sub = ticks;
+				ticks -= 1;
 				repeat(sub * 3){
 					with(instance_create(x,y,Feather)){
 						sprite_index = sprLeaf;
@@ -439,8 +446,8 @@ if(instance_exists(target)){
 						fall = random_range(30,60);
 					}
 				}
-				sound_play_pitchvol(sndJungleAssassinHurt, 1 - (ticks/12), 0.3 + ticks/30);
-				sound_play_pitchvol(sndJungleAssassinWake, 0.6 - (ticks/30), ticks/10);
+				sound_play_pitchvol(sndJungleAssassinHurt, 2 - (ticks/12), 0.3 + ticks/25);
+				sound_play_pitchvol(sndJungleAssassinWake, 2.6 - (ticks/30), ticks/10);
 				target.lasthealth = target.my_health;
 			}
 
