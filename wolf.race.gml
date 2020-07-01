@@ -2,6 +2,7 @@
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprWolfSelect.png", 1, 0, 0);
 global.sprPortrait = sprite_add("sprites/portrait/sprPortraitWolf.png",1 , 5, 190);
 global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_Robotwolf.png", 1, 10, 10);
+global.mskDeflect = sprite_add("sprites/mskDeflect.png", 1, 12, 12);
 
 // character select sounds
 global.sndSelect = sndHalloweenWolf;
@@ -40,23 +41,18 @@ snd_dead = sndWolfDead;
 snd_roll = sndWolfRoll; //also for rolling
 
 // stats
-maxspeed_base = 3.1;
 team = 2;
 maxhealth = 12;
 spr_shadow_y = 0;
-friction_base = 0.45;
 meleedamage = 2;
 meleedamage_base = 2;
 
-boost_time = 5;
-fireDelay = 15;
-is_rolling = false;
-has_rolled = false;
 melee_damage = 4;
 
 // vars
 melee = 1;	// can melee or not
-
+roll_time = 0;
+roll_extend = 0;
 
 #define game_start
 // executed after picking race and starting for each player picking this race
@@ -72,31 +68,74 @@ if(button_pressed(index,"fire")){
 	} else {
 		d = direction;
 	}
-	if(is_rolling = false){
-		has_rolled = false;
-		is_rolling = true;
+	if(roll_time <= 0 and roll_extend <= 0){
+		roll_time = 15;
+		roll_extend = 15;
 		sprite_index = spr_fire;
 		sound_play_pitchvol(snd_roll,random_range(0.9,1.1), 0.6);
-		shield = instance_create(x, y, CustomObject);
-		with(CustomObject){
+		shield = instance_create(x, y, CustomSlash);
+		with(CustomSlash){
 			creator = other;
 			team = creator.team;
-			sprite_index = mskNone;
-			mask_index = mskShield;
+			sprite_index = global.mskDeflect;
+			mask_index = global.mskDeflect;
+			index = creator.index;
+			can_deflect = 1;
+			image_speed = 0;
+			walled = false;
 			on_step = script_ref_create(shield_step);
+			on_wall = script_ref_create(shield_wall);
+			on_hit = script_ref_create(shield_hit);
+			on_projectile = script_ref_create(shield_projectile);
+			on_grenade = script_ref_create(shield_grenade);
+			on_end_step = script_ref_create(shield_end_step);
 		}
 		view_shake[index] = 6;
 	}
 }
 
-if(is_rolling){
+if(button_check(index, "fire")){
+	if(roll_time <= 0 and roll_extend > 0){
+		move_bounce_solid(true);
+
+		meleedamage = meleedamage_base * 2;
+		canwalk = false;
+		sprite_index = spr_fire;
+
+		if(image_index >= 5 and image_index <= 6){
+			image_index = 2;
+		}
+		
+		motion_add(d, maxspeed / 3);
+		roll_extend -= 1 * current_time_scale;
+		
+		if(roll_extend <= 0){
+			for(i = 0; i < 3; i++){
+				sound_play_pitchvol(sndEnemyFire, random_range(0.9, 1.1), 1.4);
+				with(instance_create(x,y,AllyBullet)){
+					creator = other;
+					team = creator.team;
+					direction = creator.direction - 10 + (other.i*10);
+					image_angle = direction;
+					speed = 5;
+					damage = 3;
+				}
+				view_shake[index] = 6;
+			}
+			if(instance_exists(shield)){
+				instance_delete(shield);
+			}
+			canwalk = true;
+			meleedamage = meleedamage_base;
+			speed = 0;
+		}
+	}
+}
+
+if(roll_time > 0){
 	move_bounce_solid(true);
 
 	meleedamage = meleedamage_base * 2;
-	fireDelay -= 1 * current_time_scale;
-	
-	maxspeed = maxspeed_base * 1.5;
-	friction = 0.15;
 	canwalk = false;
 	sprite_index = spr_fire;
 
@@ -104,17 +143,14 @@ if(is_rolling){
 		image_index = 2;
 	}
 
-	if(has_rolled = false){
-		motion_add(d,maxspeed/3);
-	}
+	motion_add(d, maxspeed / 3);
+	roll_time -= 1 * current_time_scale;
+}
 
-	if(speed > maxspeed*0.8){
-		has_rolled = true;
-	}
-
-	if(fireDelay == 0) {
+if!(button_check(index, "fire")){
+	if(roll_time <= 0 and roll_extend > 0){
 		for(i = 0; i < 3; i++){
-			sound_play_pitchvol(sndEnemyFire, random_range(0.9, 1.1), 1.4);
+		sound_play_pitchvol(sndEnemyFire, random_range(0.9, 1.1), 1.4);
 			with(instance_create(x,y,AllyBullet)){
 				creator = other;
 				team = creator.team;
@@ -124,27 +160,17 @@ if(is_rolling){
 				damage = 3;
 			}
 			view_shake[index] = 6;
-		}
-	}
-
-	if(has_rolled){
-		friction = 0.2;
-		if(speed <= 1){
-			is_rolling = false;
-			if(instance_exists(shield)){
-				instance_delete(shield);
 			}
+		if(instance_exists(shield)){
+			instance_delete(shield);
 		}
+		canwalk = true;
+		meleedamage = meleedamage_base;
+		speed = 0;
+		roll_extend = 0;
 	}
-
-} else {
-	canwalk = true;
-	meleedamage = meleedamage_base;
-	friction = friction_base;
-	maxspeed = maxspeed_base;
-	has_rolled = false;
-	fireDelay = 15;
 }
+
 // no weps
 canswap = 0;
 canpick = 0;
@@ -169,32 +195,70 @@ if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 
 #define shield_step
 if(instance_exists(creator)){
-	x = creator.x;
-	y = creator.y;
-
-	with(instance_nearest(x + hspeed, y, projectile)){
-		if(team != other.team){
-			direction = -direction + 180;
-			sprite_angle = direction;
-			sound_play_pitch(sndCrystalRicochet, random_range(0.9, 1.1));
-			deflected = true;
-			team = other.team;
-		}
-	}
-
-	with(instance_nearest(x, y + vspeed, projectile)){
-		if(team != other.team){
-			direction = -direction;
-			sprite_angle = direction;
-			sound_play_pitch(sndCrystalRicochet, random_range(0.9, 1.1));
-			deflected = true;
-			team = other.team;
-		}
-	}
+	x = creator.x + lengthdir_x(creator.speed + 2, creator.direction);
+	y = creator.y + lengthdir_y(creator.speed + 2, creator.direction);
+	xprevious = x;
+	yprevious = y;
 }
 else{
 	instance_delete(self);
 }
+
+#define shield_projectile
+sound_play_pitchvol(sndCrystalRicochet, random_range(0.9, 1.1), 1);
+with(other){
+	with(other.creator){
+		motion_add(other.speed / 20, other.direction);
+	}
+	deflected = true;
+	team = other.team;
+	if(place_meeting(x + hspeed, y, other)){
+		hspeed *= -1;
+	}
+	if(place_meeting(x, y + vspeed, other)){
+		vspeed *= -1;
+	}
+	image_angle = direction;
+	with(instance_create(x, y, Deflect)){
+		direction = other.direction + random_range(-40, 40);
+		image_angle = direction;
+	}
+}
+
+#define shield_grenade
+sound_play_pitchvol(sndCrystalRicochet, random_range(0.9, 1.1), 1);
+with(other){
+	deflected = true;
+	team = other.team;
+	if(place_meeting(x + hspeed, y, other)){
+		hspeed *= -1;
+	}
+	if(place_meeting(x, y + vspeed, other)){
+		vspeed *= -1;
+	}
+	image_angle = direction;
+	with(instance_create(x, y, Deflect)){
+		direction = other.direction + random_range(-40, 40);
+		image_angle = direction;
+	}
+}
+
+
+
+
+#define shield_wall
+if(other.solid){
+	walled = true;
+}
+
+#define shield_hit
+
+#define shield_end_step
+if(walled){
+	x += hspeed_raw;
+	y += vspeed_raw;
+}
+
 
 /*if(instance_exists(projectile)){
 	var _b = instance_nearest(x, y, projectile);

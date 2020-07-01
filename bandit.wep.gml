@@ -43,6 +43,9 @@ if("spins" not in self){
 }
 weapon_post(4 + (spins * 6), 3 + (spins * 6), 2 + (spins * 6));	// weapon kick and screen shake
 sound_play_pitchvol(sndEnemyFire, random_range(0.9, 1.1) - (spins * 0.1), 2);
+if(spins > 0){
+	sound_play_pitchvol(sndHammer, random_range(0.9, 1.1) - (spins * 0.1), 0.8);
+}
 with instance_create(x + lengthdir_x(8, gunangle), y + lengthdir_y(8, gunangle), AllyBullet){
 	creator = other;
 	team = creator.team;

@@ -120,7 +120,8 @@ else{
 	if(button_pressed(index, "spec") and spinning = 0 and spins < 3){
 		spins += 1;
 		sound_play_pitchvol(sndEnemySlash, (spins * 0.2) + random_range(0.7, 0.9), 2);
-		spinning = 8;
+		sound_play_pitchvol(sndMeleeFlip, random_range(0.9, 1.1), 1);
+		spinning = 8 - (floor(GameCont.level / 4));
 	}
 }
 

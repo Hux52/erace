@@ -70,9 +70,7 @@ with(Floor){
 	switch(sprite_index){
 		case sprFloor0:
 		case sprFloor1:
-		case sprFloor1B:
 		case sprFloor3:
-		case sprFloor3B:
 		material = 1;
 		sprite_index = sprFloor5;
 		break;
@@ -82,6 +80,11 @@ with(Floor){
 		case sprFloor3Explo:
 		material = 2;
 		sprite_index = sprFloor5Explo;
+		break;
+		
+		case sprFloor1B:
+		case sprFloor3B:
+		sprite_index = sprFloor5B;
 		break;
 	}
 }
