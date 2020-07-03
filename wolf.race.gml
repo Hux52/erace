@@ -77,7 +77,7 @@ if(button_pressed(index,"fire")){
 		with(CustomSlash){
 			creator = other;
 			team = creator.team;
-			sprite_index = global.mskDeflect;
+			sprite_index = mskNone;
 			mask_index = global.mskDeflect;
 			index = creator.index;
 			can_deflect = 1;
@@ -207,9 +207,6 @@ else{
 #define shield_projectile
 sound_play_pitchvol(sndCrystalRicochet, random_range(0.9, 1.1), 1);
 with(other){
-	with(other.creator){
-		motion_add(other.speed / 20, other.direction);
-	}
 	deflected = true;
 	team = other.team;
 	if(place_meeting(x + hspeed, y, other)){
