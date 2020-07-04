@@ -77,7 +77,7 @@ if(instance_exists(creator)){
 					image_angle = direction;
 					friction = 0;
 					speed = 6;
-					damage = 2.80 + (0.20 * GameCont.level) + (GameCont.loops * 0.33);
+					damage = 2.2;
 					with(creator){
 						weapon_post(5, 4, 2);	// weapon kick and screen shake
 					}

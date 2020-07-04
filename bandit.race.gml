@@ -1,10 +1,22 @@
 #define init
-// character select button
-global.sprMenuButton = sprite_add("sprites/selectIcon/sprBanditSelect.png", 1, 0, 0);
-// character select portrait
-global.sprPortrait = sprite_add("/sprites/portrait/sprPortraitBandit.png", 1, 22, 210);
+// UI
+global.sprMenuButton = sprite_add("sprites/selectIcon/sprBanditSelect.png", race_skins(), 0, 0);
+global.spr_port = sprite_add("sprites/portrait/sprPortraitBandit.png", race_skins(), 22, 210);
+global.spr_skin = sprite_add("sprites/mapIcon/LoadOut_Bandit.png", race_skins(), 10, 10);
+global.spr_icon = global.spr_skin;
 
-global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_Bandit.png", 1, 10, 10);
+// A Skin
+global.sprIdle[0] = sprBanditIdle;
+global.sprWalk[0] = sprBanditWalk;
+global.sprHurt[0] = sprBanditHurt;
+global.sprDead[0] = sprBanditDead;
+
+
+// B Skin
+global.sprIdle[1] = sprSnowBanditIdle;
+global.sprWalk[1] = sprSnowBanditWalk;
+global.sprHurt[1] = sprSnowBanditHurt;
+global.sprDead[1] = sprSnowBanditDead;
 
 // character select sounds
 global.sndSelect = sound_add("sounds/sndBanditSelect.ogg");
@@ -22,18 +34,17 @@ while(true){
 	wait 1;
 }
 
-
 #define create
 // player instance creation of this race
 // https://bitbucket.org/YellowAfterlife/nuclearthronetogether/wiki/Scripting/Objects/Player
 
 // sprites
-spr_idle = sprBanditIdle;
-spr_walk = sprBanditWalk;
-spr_hurt = sprBanditHurt;
-spr_dead = sprBanditDead;
-spr_sit1 = spr_idle;
-spr_sit2 = spr_idle;
+spr_idle = global.sprIdle[bskin];
+spr_walk = global.sprWalk[bskin];
+spr_hurt = global.sprHurt[bskin];
+spr_dead = global.sprDead[bskin];
+spr_sit1 = global.sprIdle[bskin];
+spr_sit2 = global.sprIdle[bskin];
 
 // sounds
 snd_hurt = sndBanditHit;
@@ -172,6 +183,74 @@ if(u2 == 1){
 	}
 }
 
+
+
+
+// B SKIN EFFECTS
+if(bskin = 1){
+	with(Floor){
+		if(random(1000) < current_time_scale){
+			with(instance_create(x+18,y+16,SnowFlake)){
+				addx = -5;
+			}
+		}
+		switch(sprite_index){
+			case sprFloor0:
+			case sprFloor1:
+			case sprFloor3:
+			material = 1;
+			sprite_index = sprFloor5;
+			break;
+
+			case sprFloor0Explo:
+			case sprFloor1Explo:
+			case sprFloor3Explo:
+			material = 2;
+			sprite_index = sprFloor5Explo;
+			break;
+			
+			case sprFloor1B:
+			case sprFloor3B:
+			sprite_index = sprFloor5B;
+			break;
+		}
+	}
+
+	with(prop){
+		switch(object_get_name(object_index)){
+			case "Cactus":
+			case "NightCactus":
+			case "BigSkull":
+			case "BonePile":
+			case "BonePileNight":
+			case "Tires":
+			toReplace = choose(Hydrant, Hydrant, Hydrant, StreetLight, SodaMachine, SodaMachine, SnowMan);
+			with(instance_create(x,y,toReplace)){
+				if(object_index = Hydrant){
+					if(random(100) < 5){
+						spr_idle = sprNewsStand;
+						spr_hurt = sprNewsStandHurt;
+						spr_dead = sprNewsStandDead;
+					}
+				}
+			}
+			instance_delete(self);
+			break;
+		}
+	}
+
+	with(RainDrop){
+		instance_destroy();
+	}
+	instance_delete(RainSplash);
+
+	if(button_pressed(index, "spec") and spinning = 0 and spins < 3){
+		spins += 1;
+		sound_play_pitchvol(sndEnemySlash, (spins * 0.2) + random_range(0.7, 0.9), 2);
+		spinning = 8;
+	}
+}
+
 #define step_end
 with(Player){
 	if("spinning" in self){
@@ -217,12 +296,12 @@ return "HAS BANDIT RIFLE";
 
 #define race_portrait
 // return portrait for character selection screen and pause menu
-return global.sprPortrait;
+return global.spr_port
 
 
 #define race_mapicon
 // return sprite for loading/pause menu map
-return global.sprIcon;
+return global.spr_icon;
 
 
 #define race_swep
@@ -241,7 +320,7 @@ sprite_index = global.sprMenuButton;
 
 #define race_skins
 // return number of skins the race has
-return 1;
+return 2;
 
 
 #define race_skin_avail
@@ -250,7 +329,8 @@ return 1;
 
 #define race_skin_button
 // return skin switch button sprite
-return sprMapIconChickenHeadless;
+sprite_index = global.spr_skin;
+image_index = argument0;
 
 
 #define race_soundbank

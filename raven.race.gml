@@ -7,6 +7,7 @@ global.hasGenCont = false;
 global.sprMenuButton = sprite_add("sprites/selectIcon/sprRavenSelect.png", 1, 0, 0);
 global.sprPortrait = sprite_add("/sprites/portrait/sprPortraitRaven.png", 1, 0, 190); 
 global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_Raven.png", 1, 10, 10);
+global.mskDeflect = sprite_add("sprites/mskDeflect.png", 1, 12, 12);
 
 // level start init- MUST GO AT END OF INIT
 var _race = [];
@@ -399,22 +400,27 @@ else{
 if(ultra_get("raven", 2)){
 	if(button_pressed(index, "spec") and charge_cool = 0){
 		if(!collision_rectangle(x + 10, y + 8, x - 10, y - 8, Wall, 0, 1)){
-			sound_play_pitchvol(sndChickenThrow, random_range(0.9, 1.1), 2);
+			//sound_play_pitchvol(sndChickenThrow, random_range(0.8, 0.9), 2);
+			sound_play_pitchvol(sndHammer, random_range(1.4, 1.5), 1);
 			sound_play_pitchvol(sndRavenLift, random_range(1.2, 1.4), 0.5);
 			charge_cool = 20;
 			direction = gunangle;
+			spr_shadow_y = 6;
 			with(instance_create(x, y, CustomSlash)){
-				name = "RavenSlash";
 				creator = other;
 				team = creator.team;
 				sprite_index = mskNone;
-				mask_index = mskPlayer;
+				mask_index = global.mskDeflect;
 				index = creator.index;
 				can_deflect = 1;
 				image_speed = 0;
-				on_step = script_ref_create(ravenslash_step);
-				on_wall = script_ref_create(ravenslash_wall);
-				on_hit = script_ref_create(ravenslash_hit);
+				walled = false;
+				on_step = script_ref_create(shield_step);
+				on_wall = script_ref_create(shield_wall);
+				on_hit = script_ref_create(shield_hit);
+				on_projectile = script_ref_create(shield_projectile);
+				on_grenade = script_ref_create(shield_grenade);
+				on_end_step = script_ref_create(shield_end_step);
 			}
 		}
 	}
@@ -459,10 +465,12 @@ if(charge_cool = 0 and charged != 0){
 	canwalk = 1;
 	spr_walk = sprRavenWalk;
 	spr_idle = sprRavenIdle;
-	sound_play_pitchvol(sndFootOrgSand2, random_range(1, 1.1), 2);
-	sound_play_pitchvol(sndFootOrgSand3, random_range(1.6, 2), 2);
+	//sound_play_pitchvol(sndFootOrgSand2, random_range(1, 1.1), 2);
+	//sound_play_pitchvol(sndFootOrgSand3, random_range(1.6, 2), 2);
+	sound_play_pitchvol(sndMoneyPileBreak, random_range(1.6, 1.7), 1);
 	sprite_angle = 0;
 	image_yscale = 1;
+	spr_shadow_y = 0;
 }
 
 charged = charge_cool;
@@ -482,19 +490,68 @@ if(my_health = 0 and died = 0){
 }
 
 
-#define ravenslash_step
+#define shield_step
 if(instance_exists(creator)){
 	x = creator.x + lengthdir_x(creator.speed + 2, creator.direction);
 	y = creator.y + lengthdir_y(creator.speed + 2, creator.direction);
-	if(creator.charge_cool = 0){
-		trace(1);
-		instance_destroy();
+	xprevious = x;
+	yprevious = y;
+}
+else{
+	instance_delete(self);
+}
+
+#define shield_projectile
+sound_play_pitchvol(sndCrystalRicochet, random_range(0.9, 1.1), 1);
+with(other){
+	deflected = true;
+	team = other.team;
+	if(place_meeting(x + hspeed, y, other)){
+		hspeed *= -1;
+	}
+	if(place_meeting(x, y + vspeed, other)){
+		vspeed *= -1;
+	}
+	image_angle = direction;
+	with(instance_create(x, y, Deflect)){
+		direction = other.direction + random_range(-40, 40);
+		image_angle = direction;
 	}
 }
 
-#define ravenslash_wall
+#define shield_grenade
+sound_play_pitchvol(sndCrystalRicochet, random_range(0.9, 1.1), 1);
+with(other){
+	deflected = true;
+	team = other.team;
+	if(place_meeting(x + hspeed, y, other)){
+		hspeed *= -1;
+	}
+	if(place_meeting(x, y + vspeed, other)){
+		vspeed *= -1;
+	}
+	image_angle = direction;
+	with(instance_create(x, y, Deflect)){
+		direction = other.direction + random_range(-40, 40);
+		image_angle = direction;
+	}
+}
 
-#define ravenslash_hit
+
+
+
+#define shield_wall
+if(other.solid){
+	walled = true;
+}
+
+#define shield_hit
+
+#define shield_end_step
+if(walled){
+	x += hspeed_raw;
+	y += vspeed_raw;
+}
 
 #define draw_flight(id, fly_alarm)
 with(id){

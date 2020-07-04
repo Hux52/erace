@@ -22,7 +22,7 @@ global.races = [
 					["rat", "ratking", "exploder", "gator", "assassin"],
 					["raven", "salamander", "sniper"],
 					["spider", "lasercrystal"],
-					[ "bandit_snow", "snowbot", "wolf","snowtank"],
+					["snowbot", "wolf","snowtank"],
 					["freak", "explofreak", "rhinofreak", "turret", "necromancer"],
 					["guardian", "exploguardian", "dogguardian"],
 					["molefish", "molesarge", "fireballer", "jock", "turtle", "bandit_jungle", "jungleassassin", "junglefly", "bonefish", "crab", "grunt", "inspector", "shielder", "van"]
@@ -34,7 +34,7 @@ global.race_names = ["maggotspawn", MaggotSpawn, "bigmaggot", BigMaggot, "bandit
 					Scorpion, "rat", Rat, "ratking", Ratking, "exploder", Exploder, "gator", Gator, 
 					"assassin", MeleeBandit, "raven", Raven, "salamander", Salamander, "sniper", 
 					Sniper, "spider", Spider, "lasercrystal", LaserCrystal, "snowbot", SnowBot, "wolf", 
-					Wolf, "bandit_snow", Bandit, "snowtank", SnowTank, "freak", Freak, "explofreak", 
+					Wolf, "snowtank", SnowTank, "freak", Freak, "explofreak", 
 					ExploFreak, "rhinofreak", RhinoFreak, "turret", Turret,	"necromancer", Necromancer,
 					 "guardian", Guardian, "exploguardian", ExploGuardian, "dogguardian", DogGuardian,
 					"turtle", Turtle, "bandit_jungle", JungleBandit, "jungleassassin", JungleAssassin, "junglefly", JungleFly, "bonefish", BoneFish, "crab", Crab, "molefish", Molefish, "molesarge", Molesarge, "jock", Jock, "fireballer", 
@@ -45,6 +45,9 @@ global.hover_color = make_color_hsv(0, 0, 190);	// same
 
 global.backgrounds_A = [sprFloor1,sprFloor2,sprFloor3,sprFloor4,sprFloor5,sprFloor6,sprFloor7,sprFloor100];
 global.backgrounds_B = [sprFloor1B,sprFloor2B,sprFloor3B,sprFloor4B,sprFloor5B,sprFloor6B,sprFloor7B,sprFloor100B];
+
+global.sprButtonBandit = sprite_add("sprites/selectIcon/sprBanditSelect.png", 1, 0, 0);
+global.sprButtonSnowBandit = sprite_add("sprites/selectIcon/sprSnowBanditSelect.png", 1, 0, 0);
 
 // disable default races
 for(i = 1; i < 16; i++){
@@ -395,7 +398,6 @@ with(CharSelect){
 		}
 	}
 }
-
 // spawn enemies
 if(instance_exists(CharSelect)){
 	for(i = 0; i < 4; i++){
@@ -413,11 +415,6 @@ if(instance_exists(CharSelect)){
 							instance_create(x,y,PortalClear);
 							index = other.i;
 							friction = 10;
-							if(player_get_race(other.i) == "bandit_snow"){
-								spr_idle = sprSnowBanditIdle;
-								spr_walk = sprSnowBanditWalk;
-							}
-							
 							if(player_get_race(other.i) != "turret"){
 								mask_index = mskNone;
 							}
@@ -458,7 +455,33 @@ if(instance_exists(CharSelect)){
 			alarm_set(i, 0);
 		}
 	}
+	// B skin appearance!!!
+	for(i = 0; i < 4; i++){
+		if(player_get_race(i) == "bandit"){
+			if(player_get_skin(i) = 1){
+				with(instances_matching(enemy, "index", i)){
+					sprite_idle = sprSnowBanditIdle;
+					sprite_walk = sprSnowBanditWalk;
+					sprite_index = sprite_idle;
+				}
+				with(instances_matching(CharSelect, "race", "bandit")){
+					image_index = 1;
+				}
+			}
+			else{
+				with(instances_matching(enemy, "index", i)){
+					sprite_idle = sprBanditIdle;
+					sprite_walk = sprBanditWalk;
+					sprite_index = sprite_idle;
+				}
+				with(instances_matching(CharSelect, "race", "bandit")){
+					image_index = 0;
+				}
+			}
+		}
+	}
 }
+
 
 if(instance_exists(CampChar)){
 	instance_delete(TV);
