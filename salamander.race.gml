@@ -132,12 +132,14 @@ if(is_spewing_fire){
 	fireBar_alpha = 2;
 	
 	if(fire_remaining - floor(fire_remaining) == 0){
-		with(instance_create(x,y,TrapFire)){
+		with(instance_create(x + lengthdir_x(5, gunangle),y,Flame)){
 			creator = other;
 			team = creator.team;
+			image_xscale = 1.1;
+			image_yscale = image_xscale;
 			direction = creator.fire_angle;
 			image_angle = direction;
-			speed = 6;
+			speed = 10;
 			if(ultra_get("salamander", 2)){
 				sprite_index = sprFireLilHunter;
 				damage = 6;
@@ -269,14 +271,25 @@ a = draw_get_alpha();
 draw_set_alpha(fireBar_alpha);
 //draw_triangle_color(x - 15, y - 10, x - 15 + ((fire_remaining/fire_max)*30), y - 10, x - 15 + ((fire_remaining/fire_max)*30), y - 10 - ((fire_remaining/fire_max)*5),c_red,c_orange,c_yellow, false);
 draw_primitive_begin(pr_trianglestrip);
-draw_set_color(c_red);
+if(ultra_get("salamander", 2)){
+	draw_set_color(c_blue);
+}
+else{
+	draw_set_color(c_red);
+}
 draw_vertex(xx, yy);
 for(i = 0; i <= num; i += 1){
 	if((fire_remaining/fire_max) >= (i / num)){
 		if(fireBar_alpha = 1.5 || fireBar_alpha = 1.55 || fireBar_alpha = 1.6 || fireBar_alpha = 1.65  || fireBar_alpha = 1.8 || fireBar_alpha = 1.85 || fireBar_alpha = 1.9 || fireBar_alpha = 1.95 ){
 			draw_set_color(c_white);
-		} else {
-		draw_set_color(make_color_hsv(40 * (i/num),255,255));
+		}
+		else{
+			if(ultra_get("salamander", 2)){
+				draw_set_color(make_color_hsv(175 - (40 * (i/num)),255,255));
+			}
+			else{
+				draw_set_color(make_color_hsv(40 * (i/num),255,255));
+			}
 		}
 		draw_vertex(xx - lengthdir_x(r, -90 + (360*i / num)), yy - lengthdir_y(r, -90 + (360*i / num)));
 		draw_vertex(xx - lengthdir_x(r/2, -90 + (360*i / num)), yy - lengthdir_y(r/2, -90 + (360*i / num)));
