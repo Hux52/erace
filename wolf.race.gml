@@ -63,6 +63,7 @@ loop = noone;
 bullets = 0;
 firing = false;
 fireDelay = 0;
+flash = 0;
 
 #define game_start
 // executed after picking race and starting for each player picking this race
@@ -73,7 +74,8 @@ fireDelay = 0;
 // executed within each player instance of this race after step
 // most actives and passives handled here
 footstep = 1;
-script_bind_draw("draw_arrows", depth-1);
+script_bind_draw("wolf_draw", depth-1);
+flash -= current_time_scale;
 if(can_roll){
 	if(button_pressed(index,"fire")){ //launch self
 		d = gunangle; //set initial direction
@@ -81,8 +83,8 @@ if(can_roll){
 		can_roll = false;
 		canwalk = false;
 		bullets = 0;
-		maxspeed = 5.5 + (skill_get(mut_extra_feet) * 0.5);
-		motion_set(gunangle, maxspeed);
+		maxspeed = 6 + (skill_get(mut_extra_feet) * 0.5);
+		motion_set(gunangle, 1);
 		melee_damage = 5;
 		rSound = sound_play_pitchvol(snd_roll,random_range(0.9,1.1), 0.6);
 		view_shake[index] = 6;
@@ -107,18 +109,25 @@ if(can_roll){
 		}
 	}
 }
+
 if(is_rolling){
 	roll_time += current_time_scale;
-
 	move_bounce_solid(true);
 
 	if(button_check(index, "fire")){
 		friction = 0.35;
-		motion_add(direction - (angle_difference(direction,gunangle) * 0.7) , 3/roll_time);
-		_f = instance_place(x,y,Floor);
-		if(instance_exists(_f)){
-			friction = lerp(friction, _f.traction, 0.5);
-		}
+		motion_add(direction - (angle_difference(direction,gunangle) * 0.7) , min(1,3/roll_time));
+
+		//add momentum while attacking enemies
+		motion_add(direction,smoke/18);
+	} else {
+		if(speed > 2) motion_add(direction - 180, speed/30);
+		// friction = 1;
+	}
+	
+	_f = instance_place(x,y,Floor);
+	if(instance_exists(_f)){
+		friction = lerp(friction, _f.traction, 0.5);
 	}
 
 	//sprite stuff	
@@ -126,6 +135,9 @@ if(is_rolling){
 
 	if(image_index >= 5 and image_index <= 6){
 		image_index = 2;
+	}
+	if(image_index > 3 and image_index < 4){
+		image_index = 4;
 	}
 
 	if(!audio_is_playing(loop)){
@@ -148,10 +160,11 @@ if(is_rolling){
 			image_angle = direction;
 		}
 		speed *= 0.98;
+		flash = 2;
 	}
 
 	if(roll_time > roll_minimum){
-		if(speed <= 2 || button_check(index,"fire") == false){ //end roll
+		if(speed <= 3){ //end roll
 			is_rolling = false;
 			can_roll = true;
 			finished_roll = 3;
@@ -200,6 +213,7 @@ if(firing){
 					fireDelay = 1;
 				}
 			break;
+
 			case "rifle":
 				if(fireDelay<=0){
 					with(instance_create(_x,_y,Bullet1)){
@@ -214,6 +228,7 @@ if(firing){
 					fireDelay = 3;
 				}
 			break;
+
 			case "bounce":
 				shell = sprBulletShell;
 				if(fireDelay<=0){
@@ -228,6 +243,7 @@ if(firing){
 					fireDelay = 2;
 				}
 			break;
+			
 			case "shotgun":
 				repeat(bullets){
 						with(instance_create(_x,_y,Bullet2)){
@@ -306,23 +322,35 @@ if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 				sound_play_pitchvol(sndSewerPipeBreak, random_range(2.1,2.7), 0.65);
 			}
 			projectile_hit(self, other.melee_damage, other.speed, other.direction);
-			with(other){motion_add(direction, 1);}
+			with(other){
+				if(is_rolling) {
+					smoke = 12; 
+					flash = 1;
+				}
+			}
 		}
 	}
 }
 
-#define draw_arrows
+#define wolf_draw
 with(Player){
+	maxArrows = min(5, max(1, floor(speed - 2)*2));
 	if(is_rolling){
-		maxArrows = min(5, floor(speed));
 		for(i = 0; i < maxArrows; i++){
-			distX = lengthdir_x(10 + (i*4),direction - (angle_difference(direction,gunangle) * (i/8)));
-			distY = lengthdir_y(10 + (i*4),direction - (angle_difference(direction,gunangle) * (i/8)));
+			distX = lengthdir_x(10 + (i*4),direction - (angle_difference(direction,gunangle) * (i/10)));
+			distY = lengthdir_y(10 + (i*4),direction - (angle_difference(direction,gunangle) * (i/10)));
 			// draw_triangle(x + distX + lengthdir_x(triangle_size, direction-90), y + distY + lengthdir_y(triangle_size, direction-90), 
 			// x + distX + lengthdir_x(triangle_size, direction+90), y + distY + lengthdir_y(triangle_size, direction+90), 
 			// x + distX + lengthdir_x(triangle_size, direction), y + distY + lengthdir_y(triangle_size, direction), false);
-			draw_sprite_ext(global.sprArrow, 0, x + distX, y + distY, 0.7 + (i * 0.05), 0.7 + (i * 0.05), direction - (angle_difference(direction,gunangle) * (i/2)) - 90,make_color_hsv(80 - min(80,i*abs(angle_difference(direction,gunangle)/3)),160,255), 0.1 + speed/5);
+			draw_sprite_ext(global.sprArrow, 0, x + distX, y + distY, 0.7 + (i * 0.05), 0.7 + (i * 0.05), direction - (angle_difference(direction,gunangle) * (i/3)) - 90,make_color_hsv(80 - min(80,i*abs(angle_difference(direction,gunangle)/4)),160,255), 0.05 + speed/5);
 		}
+	}
+
+	if(flash > 0){
+		draw_set_fog(true, c_white, 1, 1);
+		draw_set_color(c_white);
+		draw_self();
+		draw_set_fog(false, c_white, 1, 1);
 	}
 }
 instance_destroy();
@@ -354,7 +382,7 @@ with(other){
 		break;
 
 		case EFlakBullet:
-			other.creator.bullets += 8;
+			other.creator.bullets += 4;
 		break;
 
 		default:
@@ -365,6 +393,7 @@ with(other){
 	sound_play_pitchvol(sndCrystalRicochet, random_range(0.5, 0.7), 1);
 	sound_play_pitchvol(sndSnowBotHurt, random_range(2.1, 2.3), 0.35);
 	with(other){
+		creator.flash = 1;
 		if(instance_exists(txt)) instance_delete(txt);
 		txt = PopupText;
 		with(instance_create(x,y,txt)){

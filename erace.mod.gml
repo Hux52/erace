@@ -336,14 +336,14 @@ with(Player){
 	if(race == "spider"){
 		if(chase) {erace_maxspeed_orig = maxspeed_close;}
 		else {erace_maxspeed_orig = maxspeed_base;}
-		maxspeed = min(min(erace_maxspeed_orig + (min(erace_maxspeed_orig * logn(2, max(1,(erace_maxspeed_bonus/8)+1)), erace_maxspeed_orig/2)), maxspeed_close), 5);
+		maxspeed = min(min(erace_maxspeed_orig + (min(erace_maxspeed_orig * logn(2, max(1,(erace_maxspeed_bonus/8)+1)), erace_maxspeed_orig/2)), maxspeed_close), 5 + skill_get(mut_extra_feet)/2);
 	} else if(race == "sniper"){
 		if(!isDashing){
-			maxspeed = min(erace_maxspeed_orig + (min(erace_maxspeed_orig * logn(2, max(1,(erace_maxspeed_bonus/8)+1)), erace_maxspeed_orig/2)), 4);
+			maxspeed = min(erace_maxspeed_orig + (min(erace_maxspeed_orig * logn(2, max(1,(erace_maxspeed_bonus/8)+1)), erace_maxspeed_orig/2)), 4 + skill_get(mut_extra_feet)/2);
 		}
 	} else if (race = "wolf"){
 		if(!is_rolling){
-			maxspeed = min(erace_maxspeed_orig + (min(erace_maxspeed_orig * logn(2, max(1,(erace_maxspeed_bonus/8)+1)), erace_maxspeed_orig/2)), 3.5);
+			maxspeed = min(erace_maxspeed_orig + (min(erace_maxspeed_orig * logn(2, max(1,(erace_maxspeed_bonus/8)+1)), erace_maxspeed_orig/2)), 3.1 + skill_get(mut_extra_feet)/2);
 		}
 	} else if (race != "van"){
 		maxspeed = min(erace_maxspeed_orig + (min(erace_maxspeed_orig * logn(2, max(1,(erace_maxspeed_bonus/8)+1)), erace_maxspeed_orig/2)), 4 + skill_get(mut_extra_feet)/2);
