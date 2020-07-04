@@ -58,7 +58,7 @@ can_roll = true;
 roll_cooldown = 0;
 finished_roll = 0;
 roll_time = 0;
-roll_minimum = 15;
+roll_minimum = 8;
 loop = noone;
 bullets = 0;
 firing = false;
@@ -112,14 +112,11 @@ if(can_roll){
 
 if(is_rolling){
 	roll_time += current_time_scale;
-	move_bounce_solid(true);
+	// move_bounce_solid(true);
 
 	if(button_check(index, "fire")){
 		friction = 0.35;
 		motion_add(direction - (angle_difference(direction,gunangle) * 0.7) , min(1,3/roll_time));
-
-		//add momentum while attacking enemies
-		motion_add(direction,smoke/18);
 	} else {
 		if(speed > 2) motion_add(direction - 180, speed/30);
 		// friction = 1;
@@ -154,11 +151,34 @@ if(is_rolling){
 
 	footstep = -1;
 
-	if(place_meeting(x + hspeed,y + vspeed,Wall)){
-		sound_play_pitchvol(snd_hurt, max(2, speed * 0.5), min(speed*0.1, 0.4));
-		with(instance_create(x + hspeed,y + vspeed,RainSplash)){
-			image_angle = direction;
+	if(place_meeting(x + hspeed,y,Wall)){
+		sound_play_pitchvol(snd_hurt, max(2, speed/2), min(speed*0.1, 0.4));
+		repeat(irandom_range(5,10)){
+			with(instance_create(x + hspeed,y + vspeed,Sweat)){
+				direction = other.direction + 180 + random_range(-25,25);
+				speed = other.speed/2 + random(2);
+				image_angle = direction+90;
+				image_blend = c_yellow;
+				alarm0 = 6;
+			}
 		}
+		direction = -direction + 180;
+		speed *= 0.98;
+		flash = 2;
+	}
+
+	if(place_meeting(x,y + vspeed,Wall)){
+		sound_play_pitchvol(snd_hurt, max(2, speed/2), min(speed*0.1, 0.4));
+		repeat(irandom_range(5,10)){
+			with(instance_create(x + hspeed,y + vspeed,Sweat)){
+				direction = other.direction + 180 + random_range(-25,25);
+				speed = other.speed/2 + random(2);
+				image_angle = direction + 90;
+				image_blend = c_yellow;
+				alarm0 = 6;
+			}
+		}
+		direction = -direction;
 		speed *= 0.98;
 		flash = 2;
 	}
@@ -325,6 +345,7 @@ if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 			with(other){
 				if(is_rolling) {
 					smoke = 12; 
+					roll_time = 0;
 					flash = 1;
 				}
 			}
@@ -349,9 +370,9 @@ with(Player){
 	if(flash > 0){
 		draw_set_fog(true, c_white, 1, 1);
 		draw_set_color(c_white);
-		draw_self();
-		draw_set_fog(false, c_white, 1, 1);
+		draw_sprite_ext(sprite_index,image_index, x, y, right, 1, 0, c_white, 1);
 	}
+		draw_set_fog(false, c_white, 1, 1);
 }
 instance_destroy();
 
