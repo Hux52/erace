@@ -340,7 +340,6 @@ else{
 
 #define shield_projectile
 with(other){
-<<<<<<< HEAD
 	switch(object_index){
 		case Grenade:
 		case Flame:
