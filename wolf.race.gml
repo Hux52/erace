@@ -137,6 +137,10 @@ if(is_rolling){
 		image_index = 4;
 	}
 
+	//drift
+	hspeed += (1/roll_time)*(button_check(index, "east") - button_check(index, "west"));
+	vspeed -= (1/roll_time)*(button_check(index, "nort") - button_check(index, "sout"));
+
 	if(!audio_is_playing(loop)){
 		loop = sound_play_pitchvol(sndSnowBotSlideLoop, max(0.8, speed/2), 1 - (speed/20));
 	}
@@ -197,11 +201,17 @@ if(is_rolling){
 			melee_damage = 2;
 
 			//shoot bullet
-			if(bullets < 5){
-				fireType = choose("pop", "rifle", "bounce");
+			if(bullets < 4){
+				fireType = "pop";
 			} else {
-				fireType = choose("shotgun", "eraser", "bounceShotgun");
+				fireType = choose("shotgun", "eraser");
 			}
+			bulletType = Bullet2;
+			shotgunSound = sndShotgun;
+			if(bullets > 6){
+				bulletType = FlameShell;
+				shotgunSound = sndFireShotgun;
+				}
 			bullets += 3;
 		}
 	}
@@ -220,44 +230,15 @@ if(firing){
 		switch(fireType){
 			case "pop":
 				if(fireDelay<=0){
-					with(instance_create(_x,_y,Bullet2)){
+					with(instance_create(_x,_y,bulletType)){
 						team = other.team;
-						direction = other.direction + random_range(-15,15);
+						direction = other.gunangle + random_range(-15,15);
 						image_angle = direction;
 						damage = 2;
 						friction = 0.6;
-						speed = 10 + random(2);
-						sound_play_pitchvol(sndPopgun, random_range(0.9,1.1) + other.bullets/6, 0.75);
-					}
-					bullets--;
-					fireDelay = 1;
-				}
-			break;
-
-			case "rifle":
-				if(fireDelay<=0){
-					with(instance_create(_x,_y,Bullet1)){
-						team = other.team;
-						direction = other.direction + random_range(-5,5);
-						image_angle = direction;
-						damage = 6;
 						speed = 15 + random(2);
-						sound_play_pitchvol(sndPistol, random_range(0.9,1.1) + other.bullets/6, 0.75);
-					}
-					bullets--;
-					fireDelay = 3;
-				}
-			break;
-
-			case "bounce":
-				shell = sprBulletShell;
-				if(fireDelay<=0){
-					with(instance_create(_x,_y,BouncerBullet)){
-						team = other.team;
-						direction = other.direction + random_range(-30,30);
-						damage = 6;
-						speed = 6;
-						sound_play_pitchvol(sndBouncerSmg, random_range(0.9,1.1) + other.bullets/10, 0.75);
+						wallbounce = 1;
+						sound_play_pitchvol(sndPopgun, random_range(0.9,1.1) + other.bullets/6, 0.75);
 					}
 					bullets--;
 					fireDelay = 2;
@@ -266,43 +247,31 @@ if(firing){
 			
 			case "shotgun":
 				repeat(bullets){
-						with(instance_create(_x,_y,Bullet2)){
+						with(instance_create(_x,_y,bulletType)){
 						team = other.team;
-						direction = other.direction + random_range(-25,25);
+						direction = other.gunangle + random_range(-25,25);
 						image_angle = direction;
 						friction = 0.6;
 						speed = 8 + random(8);
 					}
-				sound_play_pitchvol(sndShotgun, random_range(0.7,0.9), 0.75);
 				}
+				sound_play_pitchvol(shotgunSound, random_range(0.7,0.9), 0.75);
 				bullets = 0;
 			break;
 			
 			case "eraser":
 				repeat(bullets){
-						with(instance_create(_x,_y,Bullet2)){
+						with(instance_create(_x,_y,bulletType)){
 						team = other.team;
-						direction = other.direction + random_range(-3,3);
+						direction = other.gunangle + random_range(-3,3);
 						image_angle = direction;
 						friction = 0.6;
 						speed = 8 + random(8);
+						wallbounce = 1;
 					}
+				}
+				sound_play_pitchvol(shotgunSound, random_range(0.7,0.9), 0.75);
 				sound_play_pitchvol(sndEraser, random_range(0.7,0.9), 0.75);
-				}
-				bullets = 0;
-			break;
-			
-			case "bounceShotgun":
-				repeat(bullets){
-						with(instance_create(_x,_y,BouncerBullet)){
-						team = other.team;
-						damage = 5;
-						direction = other.direction + random_range(-60,60);
-						image_angle = direction;
-						speed = 6;
-					}
-				sound_play_pitchvol(sndBouncerShotgun, random_range(0.7,0.9), 0.75);
-				}
 				bullets = 0;
 			break;
 		}
@@ -344,8 +313,7 @@ if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 			projectile_hit(self, other.melee_damage, other.speed, other.direction);
 			with(other){
 				if(is_rolling) {
-					smoke = 12; 
-					roll_time = 0;
+					roll_time = min(roll_time, 10);
 					flash = 1;
 				}
 			}
@@ -355,11 +323,11 @@ if(collision_rectangle(x + 12, y + 10, x - 12, y - 10, enemy, 0, 1)){
 
 #define wolf_draw
 with(Player){
-	maxArrows = min(5, max(1, floor(speed - 2)*2));
+	maxArrows = min(5, max(1, floor(speed)));
 	if(is_rolling){
 		for(i = 0; i < maxArrows; i++){
-			distX = lengthdir_x(10 + (i*4),direction - (angle_difference(direction,gunangle) * (i/10)));
-			distY = lengthdir_y(10 + (i*4),direction - (angle_difference(direction,gunangle) * (i/10)));
+			distX = lengthdir_x(10 + (i*4),direction - ((speed/8) * angle_difference(direction,gunangle) * (i/10)));
+			distY = lengthdir_y(10 + (i*4),direction - ((speed/8) * angle_difference(direction,gunangle) * (i/10)));
 			// draw_triangle(x + distX + lengthdir_x(triangle_size, direction-90), y + distY + lengthdir_y(triangle_size, direction-90), 
 			// x + distX + lengthdir_x(triangle_size, direction+90), y + distY + lengthdir_y(triangle_size, direction+90), 
 			// x + distX + lengthdir_x(triangle_size, direction), y + distY + lengthdir_y(triangle_size, direction), false);
@@ -420,7 +388,7 @@ with(other){
 		with(instance_create(x,y,txt)){
 			xstart = x;
 			ystart = y;
-			if(other.creator.bullets < 5){
+			if(other.creator.bullets < 7){
 				mytext = "@y" + string(other.creator.bullets);
 			} else {
 				mytext = "@r" + string(other.creator.bullets) + "@w!";
@@ -451,7 +419,7 @@ with(other){
 // sound_play_pitchvol(sndPlantFireTB, 1.5 + creator.bullets * 0.25 + creator.shells + 0.25 + random_range(0.1, -0.1), 1);
 sound_play_pitchvol(sndChickenReturn, 1.5 + creator.bullets * 0.15, 1);
 sound_play_pitchvol(sndRecGlandProc, 0.5 + creator.bullets * 0.05 + random_range(0.1, -0.1), 1);
-if(creator.bullets > 5){
+if(creator.bullets > 6){
 	sound_play_pitchvol(sndSwapPistol, 1.5, 0.25);
 }
 #define shield_grenade
