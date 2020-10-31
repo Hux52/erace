@@ -189,7 +189,7 @@ if(bupple_cooldown == 45 or bupple_excess == 0){
 #define custom_draw
 origalpha = draw_get_alpha();
 origcolor = draw_get_color();
-with(Player){
+with(instances_matching(Player, "race", "bonefish")){
 	if(bupple_count < 10){
 		for(i = 0; i < bupple_count; i++){
 			if(i == bupple_count){

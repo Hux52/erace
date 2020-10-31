@@ -23,7 +23,7 @@ return 15;
 return 0;
 
 #define weapon_area
-return 1;
+return -1;
 
 #define weapon_swap
 return sndSwapMachinegun;

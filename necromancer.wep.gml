@@ -170,7 +170,7 @@ return 18;	// reload
 return 0;	// no ammo cost
 
 #define weapon_area
-return 0;	// never drop
+return -1;	// never drop
 
 #define weapon_swap
 return sndSwapEnergy;

@@ -86,4 +86,5 @@ secret
 /loadrace shielder
 /loadrace van
 
+/loadmod sentry/sentry
 /loadmod erace

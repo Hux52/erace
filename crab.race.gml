@@ -558,7 +558,7 @@ if(fade <= 0){
 }
 
 #define druh
-with(Player){
+with(instances_matching(Player, "race", "crab")){
 	if (ball){
 		texture_set_repeat(true);
 		draw_primitive_begin_texture(pr_trianglestrip, global.tex);

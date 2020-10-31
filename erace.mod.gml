@@ -255,6 +255,7 @@ with(AmmoChest){
 		}
 	}
 	
+	/*
 	with(WeaponChest){
 		instance_create(x, y, HealthChest);
 		instance_create(x, y, HealFX);
@@ -262,6 +263,7 @@ with(AmmoChest){
 		instance_create(x, y, RobotA);
 		instance_destroy();
 	}
+	*/
 	
 } else {
 	//stop snowbot loop in portal
@@ -281,6 +283,7 @@ with(AmmoPickup){
 }
 
 // weapons become hp, guaranteed
+/*
 with(WepPickup){
 	instance_create(x, y, HPPickup);
 	instance_create(x, y, HealFX);
@@ -291,7 +294,7 @@ with(WepPickup){
 	sound_play_pitchvol(sndSwapCursed,0.8,2);
 	
 	instance_destroy();
-}
+}*/
 
 // health doesn't despawn
 if(global.erace_health_despawn = false){

@@ -10,6 +10,10 @@ global.sprPortrait = sprite_add("/sprites/portrait/sprPortraitSnowbot.png", 1, 2
 
 global.sprIcon = sprite_add("sprites/mapIcon/LoadOut_SnowBot.png", 1, 10, 10);
 
+global.sprIceBullet = sprite_add("sprites/sprIceBullet.png", 1, 12, 12);
+
+global.sprSnowFlake2 = sprite_add("sprites/sprSnowFlake2.png", 3, 4, 4);
+
 // level start init- MUST GO AT END OF INIT
 var _race = [];
 for(var i = 0; i < maxp; i++) _race[i] = player_get_race(i);
@@ -60,7 +64,7 @@ mask_index = mskPlayer;
 spr_fire = sprSnowBotFire;	// charging sprite
 charge = 0;	// charging duration
 loop = 0;	// looped sound
-fric = 10;	// control the player has while charging- the higher, the more control
+fric = 15;	// control the player has while charging- the higher, the more control
 car = 0;	// has car or not
 lift = 0;	// lifting car duration
 melee = 1;	// can melee or not
@@ -75,6 +79,25 @@ with(instances_matching(Player, "race", "snowbot")){
 	spr_idle = sprSnowBotIdle;
 	spr_walk = sprSnowBotWalk;
 	sound_stop(loop);
+}
+
+// you wouldn't download a car
+if(array_length(instances_matching(Player, "race", "snowbot")) > 0){
+	var _pa = instances_matching_ne(prop, "object_index", Car);
+	var _pc = array_length(_pa);
+	var _pg = ceil(_pc / 3);
+	repeat(3){
+		with(prop){
+			if(object_index != Car and object_index != Generator and object_index != GeneratorInactive and object_index != CarVenus and object_index != CarVenus2 and object_index != CarVenusFixed and object_index != ProtoStatue and object_index != ProtoChest and object_index != BecomeScrapBoss and object_index != NothingInactive and object_index != NothingIntroMask and object_index != ThroneStatue and object_index != LastIntro and object_index != LastCutscene and object_index != LastExecute and object_index != ProtoStatue){
+				if(instance_number(Car) < _pg){
+					if(random(1) < 0.3){
+						instance_create(x, y, Car);
+						instance_delete(self);
+					}
+				}
+			}
+		}
+	}
 }
 
 #define game_start
@@ -101,7 +124,7 @@ if(car = 0){
 }
 
 // special- charge
-if(button_pressed(index, "fire")){
+if(button_pressed(index, "spec")){
 	if(canspec = 1 and charge = 0 and car = 0){	// if no car and not already charging
 		// charge init
 		view_shake[index] = 20;
@@ -187,13 +210,41 @@ if(charge > 0){
 				direction += fric;
 			}
 		}
-		motion_add(direction, maxspeed + 4);
+		motion_add(direction, maxspeed + 2);
 		instance_create(x, y, Dust);
 		if(collision_rectangle(x + 15, y + 15, x - 15, y - 10, enemy, 0, 1)){
 			with(instance_nearest(x, y, enemy)){
 				if(sprite_index != spr_hurt){
-					projectile_hit_push(self, 4, 12)
+					sound_play_pitchvol(sndSewerPipeBreak, random_range(1.75, 1.82), 0.3);
+					sound_play_pitchvol(sndHydrantBreak, random_range(1, 1.2), 0.2);
+					projectile_hit_push(self, 4, 12);
 					direction = other.direction;
+					if(ultra_get(mod_current, 1)){
+						if(my_health <= 0){
+							sound_play_pitchvol(sndCrystalShield, 0.8, 1);
+							sound_play_pitchvol(sndSplinterPistol, 1, 0.6);
+							var _bulletcount = 4 + (size * 2);
+							repeat(4 + 2 * size){
+								with(instance_create(x, y, Feather)){
+									image_xscale = random_range(0.9, 1.1);
+									image_yscale = image_xscale;
+									speed = random_range(2, 3);
+									direction = random(360);
+									image_angle = direction;
+									sprite_index = global.sprSnowFlake2;
+								}
+							}
+							for(i = 0; i < 360; i += ceil(360 / _bulletcount)){
+								with(instance_create(x, y, Seeker)){
+									team = 2;
+									direction = other.i;
+									image_angle = other.i;
+									sprite_index = global.sprIceBullet;
+									speed = 24;
+								}
+							}
+						}
+					}
 				}
 			}
 		}
@@ -211,27 +262,29 @@ if(charge > 0){
 }
 
 // pickup car
-if(distance_to_object(Car) < 20){
-	// car sprite
-	var _c = instance_nearest(x, y, Car);
-	if(_c.spr_idle = sprCarIdle){
-		car = 1;
-		spr_carc = [sprSnowBotRedCarIdle, sprSnowBotRedCarWalk, sprSnowBotRedCarHurt, sprSnowBotRedCarLift, sprSnowBotRedCarThrow]
+if(button_pressed(index, "fire")){
+	if(distance_to_object(Car) < 20){
+		// car sprite
+		var _c = instance_nearest(x, y, Car);
+		if(_c.spr_idle = sprCarIdle){
+			car = 1;
+			spr_carc = [sprSnowBotRedCarIdle, sprSnowBotRedCarWalk, sprSnowBotRedCarHurt, sprSnowBotRedCarLift, sprSnowBotRedCarThrow]
+		}
+		else{
+			car = 1;
+			spr_carc = [sprSnowBotCarIdle, sprSnowBotCarWalk, sprSnowBotCarHurt, sprSnowBotCarLift, sprSnowBotCarThrow]
+		}
+		instance_delete(_c);	// pickup car without blowing it up
+		// stop charging
+		charge = 0;
+		canwalk = 1;
+		spr_idle = sprSnowBotIdle;
+		spr_walk = sprSnowBotWalk;
+		sound_stop(loop);
+		sound_play(sndSnowBotPickup);
+		// start lifting anim
+		lift = 6;
 	}
-	else{
-		car = 1;
-		spr_carc = [sprSnowBotCarIdle, sprSnowBotCarWalk, sprSnowBotCarHurt, sprSnowBotCarLift, sprSnowBotCarThrow]
-	}
-	instance_delete(_c);	// pickup car without blowing it up
-	// stop charging
-	charge = 0;
-	canwalk = 1;
-	spr_idle = sprSnowBotIdle;
-	spr_walk = sprSnowBotWalk;
-	sound_stop(loop);
-	sound_play(sndSnowBotPickup);
-	// start lifting anim
-	lift = 6;
 }
 
 // lifting anim
@@ -246,6 +299,15 @@ if(lift > 0){
 		spr_walk = spr_carc[1];
 	}
 	lift-= current_time_scale;
+}
+
+if(distance_to_object(Portal) < 40 and charge != 0){
+	// stop charging
+	charge = 0;
+	canwalk = 1;
+	spr_idle = sprSnowBotIdle;
+	spr_walk = sprSnowBotWalk;
+	sound_stop(loop);
 }
 
 // spec b- throw car
@@ -359,7 +421,7 @@ return "DOES NOTHING";
 // return a name for each ultra
 // determines how many ultras are shown
 switch(argument0){
-	case 1: return "NOTHING";
+	case 1: return "'Cicle Storm";
 	default: return "";
 }
 
@@ -367,7 +429,7 @@ switch(argument0){
 #define race_ultra_text
 // recieves ultra mutation index and returns description
 switch(argument0){
-	case 1: return "DOES NOTHING";
+	case 1: return "Icecicles erupt from fallen enemies";
 	default: return "";
 }
 

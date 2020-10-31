@@ -97,7 +97,7 @@ if(firing){
 laser_alpha = 1/30 * timer;
 
 #define laser_draw
-with(Player){
+with(instances_matching(Player, "race", "sniper")){
 	oldAlpha = draw_get_alpha();
 	oldColor = draw_get_color();
 	if(firing){
